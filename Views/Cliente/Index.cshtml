@@ -1,0 +1,151 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Clientes";
+}
+
+<link rel="stylesheet" href="~/css/clientes.css" />
+
+<div class="clientes-container">
+
+    <div class="clientes-header">
+
+        <div class="titulo">
+            <div class="icon-header">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <div>
+                <h1>Clientes</h1>
+                <p>Inicio / Clientes</p>
+            </div>
+        </div>
+
+        <button class="btn-nuevo">
+            <i class="fa-solid fa-plus"></i>
+            Nuevo Cliente
+        </button>
+
+    </div>
+
+    <div class="clientes-grid">
+
+        <div class="card">
+
+            <div class="card-title">
+                <i class="fa-solid fa-user-plus"></i>
+                REGISTRO DE CLIENTE
+            </div>
+
+            <div class="form-grid">
+
+                <div>
+                    <label>ID CLIENTE (PK)</label>
+                    <input type="text" placeholder="Automático" readonly />
+                </div>
+
+                <div>
+                    <label>DNI (UQ)</label>
+                    <input type="text" placeholder="Ingrese DNI" />
+                </div>
+
+                <div>
+                    <label>NOMBRES</label>
+                    <input type="text" placeholder="Ingrese nombres" />
+                </div>
+
+                <div>
+                    <label>APELLIDOS</label>
+                    <input type="text" placeholder="Ingrese apellidos" />
+                </div>
+
+                <div>
+                    <label>TELÉFONO</label>
+                    <input type="text" placeholder="Ingrese teléfono" />
+                </div>
+
+                <div>
+                    <label>EMAIL</label>
+                    <input type="email" placeholder="Ingrese email" />
+                </div>
+
+                <div>
+                    <label>FECHA REGISTRO</label>
+                    <input type="date" />
+                </div>
+
+                <div>
+                    <label>ESTADO</label>
+                    <select>
+                        <option>Seleccione estado</option>
+                        <option>Activo</option>
+                        <option>Inactivo</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="botones">
+
+                <button class="btn-cancelar">
+                    <i class="fa-solid fa-xmark"></i>
+                    Cancelar
+                </button>
+
+                <button class="btn-guardar">
+                    <i class="fa-regular fa-floppy-disk"></i>
+                    Guardar
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <div class="card-title">
+                LISTA DE CLIENTES
+            </div>
+
+            <div class="tabla-top">
+
+                <div>
+                    Mostrar
+                    <select>
+                        <option>10</option>
+                    </select>
+                    registros
+                </div>
+
+                <input type="text"
+                       placeholder="Buscar cliente..." />
+            </div>
+
+            <table class="tabla-clientes">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>DNI</th>
+                        <th>NOMBRES</th>
+                        <th>TELÉFONO</th>
+                        <th>ESTADO</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td colspan="6" class="sin-datos">
+                            Aún no hay clientes registrados.
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+</div>

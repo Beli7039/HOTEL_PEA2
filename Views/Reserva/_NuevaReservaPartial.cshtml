@@ -1,0 +1,251 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    ViewData["Title"] = "Reservas";
+   
+}
+<link rel="stylesheet" href="~/css/reserva.css" />
+
+
+<div class="topbar">
+
+    <div class="menu-btn">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+
+    <div class="user-info">
+
+        <div class="user-icon">
+            <i class="fa-solid fa-user"></i>
+        </div>
+
+        <div>
+            <h4>Recepcionista</h4>
+            <p>Recepción</p>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="page-header">
+
+    <div class="title-section">
+
+        <div class="title-icon">
+            <i class="fa-regular fa-calendar-days"></i>
+        </div>
+
+        <div>
+            <h1>Reservas</h1>
+
+            <div class="breadcrumb">
+                Inicio /
+                Reservas /
+                <span>Nueva Reserva</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="header-buttons">
+
+        <button class="btn-cancelar">
+            <i class="fa-solid fa-xmark"></i>
+            Cancelar
+        </button>
+
+        <button class="btn-guardar">
+            <i class="fa-regular fa-floppy-disk"></i>
+            Guardar Reserva
+        </button>
+
+    </div>
+
+</div>
+
+<div class="reserva-layout">
+    <div class="reserva-main">
+
+        <div class="card-reserva">
+
+            <div class="card-title">
+                <i class="fa-regular fa-user"></i>
+                DATOS DE LA RESERVA
+            </div>
+
+            <div class="form-grid-3">
+
+                <div class="form-group">
+                    <label>Fecha de Reserva</label>
+                    <input type="date" />
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de Entrada</label>
+                    <input type="date" />
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de Salida</label>
+                    <input type="date" />
+                </div>
+
+                <div class="form-group">
+                    <label>Cantidad Personas</label>
+
+                    <select>
+                        <option>Seleccione</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Costo Total</label>
+                    <input type="text" placeholder="S/." />
+                </div>
+
+                <div class="form-group">
+                    <label>Estado</label>
+
+                    <select>
+                        <option>Seleccione estado</option>
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="card-reserva">
+
+            <div class="card-title">
+                <i class="fa-regular fa-user"></i>
+                DATOS DEL CLIENTE
+            </div>
+
+            <div class="form-grid-4">
+
+                <div class="form-group">
+                    <label>Cliente</label>
+
+                    <select>
+                        <option>Seleccione un cliente</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>DNI</label>
+                    <input type="text" placeholder="Ingrese DNI" />
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="text" placeholder="Ingrese teléfono" />
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="Ingrese email" />
+                </div>
+
+            </div>
+
+        </div>
+        <div class="card-reserva">
+
+            <div class="card-title">
+                <i class="fa-regular fa-user"></i>
+                DETALLE DE LA RESERVA
+            </div>
+
+            <div class="form-grid-4">
+
+                <div class="form-group">
+                    <label>Habitación</label>
+
+                    <select>
+                        <option>Seleccione habitación</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo Habitación</label>
+
+                    <select>
+                        <option>Seleccione tipo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Piso</label>
+
+                    <select>
+                        <option>Seleccione piso</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Precio por Noche</label>
+                    <input type="text" placeholder="S/." />
+                </div>
+
+            </div>
+
+            <div class="form-group mt-20">
+                <label>Observaciones</label>
+
+                <textarea rows="4"
+                          placeholder="Ingrese observaciones"></textarea>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="resumen-card">
+
+        <div class="card-title">
+            <i class="fa-regular fa-calendar"></i>
+            RESUMEN DE LA RESERVA
+        </div>
+
+        <div class="resumen-item">
+            <span>Habitación:</span>
+            <strong>--</strong>
+        </div>
+
+        <div class="resumen-item">
+            <span>Tipo:</span>
+            <strong>--</strong>
+        </div>
+
+        <div class="resumen-item">
+            <span>Piso:</span>
+            <strong>--</strong>
+        </div>
+
+        <div class="resumen-item">
+            <span>Entrada:</span>
+            <strong>--</strong>
+        </div>
+
+        <div class="resumen-item">
+            <span>Salida:</span>
+            <strong>--</strong>
+        </div>
+
+        <div class="resumen-item">
+            <span>Noches:</span>
+            <strong>--</strong>
+        </div>
+
+        <div class="resumen-item">
+            <span>Personas:</span>
+            <strong>--</strong>
+        </div>
+
+        <div class="total-final">
+            COSTO TOTAL:
+            <span>S/. --</span>
+        </div>
+
+    </div>
+
+</div>
