@@ -1,0 +1,87 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+    <title>Login Hotel</title>
+    <link rel="stylesheet" href="~/css/login.css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+<body>
+
+    <div class="contenedor">
+        <div class="lado-izquierdo">
+            <div class="logo-centro">
+                <p>Bienvenido al sistema</p>
+                <h2>Gestión Hotelera</h2>
+            </div>
+        </div>
+
+        <div class="login-box">
+            <div class="icono-user">
+                <i class="fa-regular fa-user"></i>
+            </div>
+            <h1>
+                INICIAR <span>SESIÓN</span>
+            </h1>
+
+            <div class="linea"></div>
+            <p class="subtitulo">
+                Ingrese sus credenciales
+            </p>
+
+            <form method="post">
+                <div class="input-box">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text"
+                           name="usuario"
+                           placeholder="Usuario"
+                           required />
+                </div>
+                <div class="input-box">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password"
+                           name="clave"
+                           placeholder="Contraseña"
+                           required />
+                </div>
+                <div class="opciones">
+                    <div>
+                        <input type="checkbox" />
+                        Recordarme
+                    </div>
+                    <a href="#">
+                        ¿Olvidó su contraseña?
+                    </a>
+                </div>
+                <button type="submit"
+                        class="btn-login">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    INGRESAR
+                </button>
+                @if (ViewBag.Error != null)
+                {
+                    <div class="error">
+
+                        @ViewBag.Error
+
+                    </div>
+                }
+            </form>
+
+            <div class="footer-login">
+                <img src="~/img/LogoHotelHuanuco.png" class="footer-logo" />
+                <h3>Real Hotel Huánuco</h3>
+                <p>
+                    Su comodidad, nuestra prioridad.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
