@@ -1,0 +1,257 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<link rel="stylesheet" href="/css/dashboard.css" />
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<link rel="stylesheet" href="/css/dashboard.css" />
+
+<div class="dashboard-header">
+
+    <div>
+        <h1>Dashboard</h1>
+
+        <p>
+            Bienvenido,
+            <span>Recepcionista</span>
+        </p>
+    </div>
+
+    <div class="date-box">
+        <i class="fa-regular fa-calendar"></i>
+        20 de mayo de 2024
+    </div>
+
+</div>
+
+    <div class="cards-premium">
+
+        <div class="card-premium">
+
+            <div class="icon blue">
+                <i class="fa-solid fa-bed"></i>
+            </div>
+
+            <div>
+                <h4>Habitaciones Ocupadas</h4>
+
+                <h1>32</h1>
+
+                <p>de 50 habitaciones</p>
+
+                <div class="progress">
+                    <div class="progress-bar blue-bar"></div>
+                </div>
+
+                <span class="percent">64%</span>
+            </div>
+
+        </div>
+
+        <div class="card-premium">
+
+            <div class="icon green">
+                <i class="fa-regular fa-calendar"></i>
+            </div>
+
+            <div>
+                <h4>Reservas Hoy</h4>
+
+                <h1>18</h1>
+
+                <p>Total de reservas</p>
+
+                <a href="#">Ver detalles →</a>
+            </div>
+
+        </div>
+
+        <div class="card-premium">
+
+            <div class="icon orange">
+                <i class="fa-regular fa-user"></i>
+            </div>
+
+            <div>
+                <h4>Check-In Hoy</h4>
+
+                <h1>7</h1>
+
+                <p>Llegadas programadas</p>
+
+                <a href="#">Ver llegadas →</a>
+            </div>
+
+        </div>
+
+        <div class="card-premium">
+
+            <div class="icon purple">
+                <i class="fa-solid fa-house"></i>
+            </div>
+
+            <div>
+                <h4>Check-Out Hoy</h4>
+
+                <h1>5</h1>
+
+                <p>Salidas programadas</p>
+
+                <a href="#">Ver salidas →</a>
+            </div>
+
+        </div>
+
+        <div class="card-premium">
+
+            <div class="icon cyan">
+                <i class="fa-solid fa-dollar-sign"></i>
+            </div>
+
+            <div>
+                <h4>Ingresos Hoy</h4>
+
+                <h1>S/. 3,850</h1>
+
+                <p>Total ingresos</p>
+
+                <a href="#">Ver detalle →</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div class="panel panel-large">
+
+            <div class="panel-top">
+                <h2>Ocupación de Habitaciones</h2>
+
+                <select>
+                    <option>Últimos 7 días</option>
+                </select>
+            </div>
+
+            <div class="chart-area">
+                <div class="fake-line"></div>
+            </div>
+
+            <div class="chart-labels">
+                <span>14 May</span>
+                <span>15 May</span>
+                <span>16 May</span>
+                <span>17 May</span>
+                <span>18 May</span>
+                <span>19 May</span>
+                <span>20 May</span>
+            </div>
+
+            <div class="chart-stats">
+
+                <div>
+                    <p>Promedio ocupación</p>
+                    <h3>61%</h3>
+                </div>
+
+                <div>
+                    <p>Habitaciones ocupadas</p>
+                    <h3>32</h3>
+                </div>
+
+                <div>
+                    <p>Habitaciones disponibles</p>
+                    <h3>18</h3>
+                </div>
+
+                <div>
+                    <p>Total habitaciones</p>
+                    <h3>50</h3>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="panel panel-large">
+
+            <h2>Habitaciones por Estado</h2>
+
+            <div class="donut"></div>
+
+            <div class="estado-list">
+
+                <div>
+                    <span class="dot blue"></span>
+                    Ocupadas
+                </div>
+
+                <div>
+                    <span class="dot green"></span>
+                    Disponibles
+                </div>
+
+                <div>
+                    <span class="dot orange"></span>
+                    Mantenimiento
+                </div>
+
+                <div>
+                    <span class="dot red"></span>
+                    Fuera de servicio
+                </div>
+
+            </div>
+
+        </div>
+        <div class="panel panel-large">
+
+            <div class="panel-top">
+                <h2>Próximas Llegadas</h2>
+
+                <a href="#">Ver todas →</a>
+            </div>
+
+            <div class="guest">
+
+                <div class="guest-avatar yellow"></div>
+
+                <div>
+                    <h4>María Fernández</h4>
+                    <p>Habitación 201</p>
+                </div>
+
+            </div>
+
+            <div class="guest">
+
+                <div class="guest-avatar blue"></div>
+
+                <div>
+                    <h4>Carlos Gómez</h4>
+                    <p>Habitación 305</p>
+                </div>
+
+            </div>
+
+            <div class="guest">
+
+                <div class="guest-avatar purple"></div>
+
+                <div>
+                    <h4>Lucía Ramírez</h4>
+                    <p>Habitación 102</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

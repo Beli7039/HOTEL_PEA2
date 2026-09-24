@@ -1,49 +1,131 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@{
+    var controlador = ViewContext.RouteData.Values["Controller"]?.ToString();
+}
+<!DOCTYPE html>
+<html lang="es">
 <head>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - HOTEL_PEA2</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/HOTEL_PEA2.styles.css" asp-append-version="true" />
+
+    <title>@ViewData["Title"] - ProyectoHotel</title>
+
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/dashboard.css" />
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HOTEL_PEA2</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+
+    <div class="sidebar">
+
+        <div>
+
+            <div class="logo">
+                <img src="~/img/LogoFormulario.png" />
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+            <div class="menu">
+
+                <a asp-controller="Home"
+                   asp-action="Dashboard"
+                   class="menu-item @(controlador == "Home" ? "active" : "")">
+
+                    <i class="fa-solid fa-border-all"></i>
+                    <span>Dashboard</span>
+
+                </a>
+
+                <a asp-controller="Reserva"
+                   asp-action="NuevaReserva"
+                   class="menu-item @(controlador == "Reserva" ? "active" : "")">
+
+                    <i class="fa-regular fa-calendar-days"></i>
+                    <span>Reservas</span>
+
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-bed"></i>
+                    <span>Habitaciones</span>
+                </a>
+
+                <a asp-controller="Cliente"
+                   asp-action="Index"
+                   class="menu-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Cliente" ? "active" : "")">
+
+                    <i class="fa-regular fa-user"></i>
+                    <span>Clientes</span>
+
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Recepcionistas</span>
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    <span>Check-In</span>
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Check-Out</span>
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span>Servicios</span>
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-regular fa-credit-card"></i>
+                    <span>Pagos</span>
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-regular fa-file-lines"></i>
+                    <span>Facturación</span>
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-chart-column"></i>
+                    <span>Reportes</span>
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Configuración</span>
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="logout">
+
+            <a asp-controller="Login" asp-action="Index">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Cerrar sesión</span>
+
+            </a>
+
+        </div>
+
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - HOTEL_PEA2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <div class="main-content">
+
+        @RenderBody()
+
+    </div>
+
+    @RenderSection("Scripts", required: false)
+
 </body>
 </html>

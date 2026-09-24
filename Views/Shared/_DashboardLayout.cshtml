@@ -1,0 +1,142 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="~/css/dashboard.css" />
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+
+<body>
+
+    <div class="dashboard-layout">
+
+        <aside class="sidebar">
+
+            <div class="logo-container">
+                <img src="~/images/LogoHotelHuanuco.png" />
+            </div>
+
+            <nav class="menu">
+
+                <a asp-controller="Home"
+                   asp-action="Dashboard"
+                   class="menu-item active">
+
+                    <i class="fa-solid fa-table-cells-large"></i>
+                    Dashboard
+                </a>
+
+                <a asp-controller="Reserva"
+                   asp-action="NuevaReserva"
+                   class="menu-item">
+
+                    <i class="fa-regular fa-calendar-days"></i>
+                    Reservas
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-bed"></i>
+                    Habitaciones
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-regular fa-user"></i>
+                    Clientes
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-regular fa-id-badge"></i>
+                    Recepcionistas
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-right-left"></i>
+                    Check-In
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    Check-Out
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    Servicios
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-regular fa-credit-card"></i>
+                    Pagos
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-regular fa-file-lines"></i>
+                    Facturación
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-chart-column"></i>
+                    Reportes
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-gear"></i>
+                    Configuración
+                </a>
+
+            </nav>
+
+            <div class="logout">
+                <a asp-controller="Login"
+                   asp-action="Index"
+                   class="menu-item">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Cerrar sesión
+                </a>
+            </div>
+
+        </aside>
+        <main class="main-content">
+            <div class="topbar">
+
+                <div class="menu-button">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+
+                <div class="user-info">
+
+                    <div class="user-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div>
+                        <h4>Recepcionista</h4>
+                        <p>Recepción</p>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="page-content">
+
+                @RenderBody()
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

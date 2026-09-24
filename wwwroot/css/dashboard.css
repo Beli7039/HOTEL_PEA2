@@ -1,0 +1,373 @@
+﻿/* ==========================================
+   VARIABLES Y CONFIGURACIÓN GLOBAL
+   ========================================== */
+:root {
+    /* Paleta de colores */
+    --bg-main: #f5f7fb;
+    --bg-card: #ffffff;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --accent-red: #e10000;
+    --accent-red-hover: #b80000;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    /* Indicadores / Badges */
+    --blue-bg: #eaf1ff;
+    --blue-color: #2d7cff;
+    --green-bg: #e8f9ea;
+    --green-color: #28a745;
+    --orange-bg: #fff4e5;
+    --orange-color: #ff9800;
+    --purple-bg: #f3e8ff;
+    --purple-color: #8e44ec;
+    --cyan-bg: #e6fbff;
+    --cyan-color: #00bcd4;
+    /* Dimensiones clave */
+    --sidebar-width: 260px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    /* Sombras y transiciones */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+/* ==========================================
+   SIDEBAR (BARRA LATERAL)
+   ========================================== */
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: linear-gradient(180deg, #03142b 0%, #02101f 100%);
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px 16px;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+    z-index: 1000;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+    .logo img {
+        width: 140px;
+        max-width: 100%;
+        height: auto;
+    }
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+    .menu-item i {
+        width: 20px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    .menu-item:hover {
+        background-color: var(--accent-red);
+        transform: translateX(4px);
+    }
+
+    .menu-item.active {
+        background-color: var(--accent-red);
+        box-shadow: 0 4px 12px rgba(225, 0, 0, 0.35);
+    }
+
+.logout {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 16px;
+}
+
+    .logout a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px 16px;
+        border-radius: var(--radius-md);
+        font-size: 14px;
+        font-weight: 500;
+        transition: background-color var(--transition-fast);
+    }
+
+        .logout a:hover {
+            background-color: var(--accent-red);
+        }
+
+/* ==========================================
+   CONTENIDO PRINCIPAL
+   ========================================== */
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 32px;
+    min-height: 100vh;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 28px;
+}
+
+    .dashboard-header h1 {
+        margin: 0;
+        font-size: 28px; /* Ajustado de 48px a estándar UI */
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1.2;
+    }
+
+    .dashboard-header p {
+        margin: 6px 0 0 0;
+        color: var(--text-secondary);
+        font-size: 14px;
+    }
+
+    .dashboard-header span {
+        color: var(--accent-red);
+        font-weight: 600;
+    }
+
+.date-box {
+    background: var(--bg-card);
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+/* ==========================================
+   TARJETAS MÉTRICAS (CARDS PREMIUM)
+   ========================================== */
+.cards-premium {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Grid fluido */
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.card-premium {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+    .card-premium h4 {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .card-premium h1 {
+        margin: 8px 0;
+        font-size: 28px; /* Ajustado de 42px */
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .card-premium p {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+
+/* Iconos de tarjetas */
+.icon {
+    width: 48px; /* Reducido de 65px */
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.blue {
+    background: var(--blue-bg);
+    color: var(--blue-color);
+}
+
+.green {
+    background: var(--green-bg);
+    color: var(--green-color);
+}
+
+.orange {
+    background: var(--orange-bg);
+    color: var(--orange-color);
+}
+
+.purple {
+    background: var(--purple-bg);
+    color: var(--purple-color);
+}
+
+.cyan {
+    background: var(--cyan-bg);
+    color: var(--cyan-color);
+}
+
+/* ==========================================
+   PANEL Y GRÁFICOS
+   ========================================== */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;
+}
+
+.panel {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.panel-large {
+    min-height: 400px;
+}
+
+.panel h2 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.chart-area {
+    height: 240px;
+    background: linear-gradient(180deg, rgba(45, 124, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
+    border-radius: var(--radius-md);
+    position: relative;
+    margin-top: 16px;
+}
+
+.fake-line {
+    position: absolute;
+    width: 80%;
+    height: 3px;
+    background: var(--blue-color);
+    top: 50%;
+    left: 10%;
+    border-radius: 4px;
+}
+
+.donut {
+    width: 160px; /* Reducido de 220px */
+    height: 160px;
+    border-radius: 50%;
+    margin: 20px auto;
+    background: conic-gradient(var(--blue-color) 0% 64%, var(--green-color) 64% 100%);
+    position: relative;
+}
+
+    .donut::after {
+        content: "";
+        width: 100px; /* Reducido proporcionalmente */
+        height: 100px;
+        background: var(--bg-card);
+        border-radius: 50%;
+        position: absolute;
+        top: 30px;
+        left: 30px;
+    }
+
+/* ==========================================
+   RESPONSIVIDAD (MEDIA QUERIES)
+   ========================================== */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 992px) {
+    .sidebar {
+        width: 80px;
+        padding: 20px 10px;
+    }
+
+    .logo img {
+        width: 40px;
+    }
+
+    .menu-item span,
+    .logout a span {
+        display: none; /* Oculta el texto y deja solo iconos en tablets */
+    }
+
+    .menu-item {
+        justify-content: center;
+        padding: 12px;
+    }
+
+    .main-content {
+        margin-left: 80px;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .cards-premium {
+        grid-template-columns: 1fr;
+    }
+}
