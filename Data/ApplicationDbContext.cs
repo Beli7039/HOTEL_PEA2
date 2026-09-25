@@ -11,5 +11,15 @@ namespace HOTEL_PEA2.Data
         }
 
         public DbSet<Usuario> Usuario { get; set; }
+
+        public DbSet<Cliente> Cliente { get; set; }
+
+        public DbSet<Habitacion> Habitacion { get; set; }
+
+        public DbSet<Tipo_Habitacion> Tipo_Habitacion { get; set; }
+
+        public DbSet<Reserva> Reserva { get; set; }
+
+        public DbSet<Recepcionista> Recepcionista { get; set; }
     }
 }

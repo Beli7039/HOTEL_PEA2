@@ -1,19 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProyectoHotel.Models
+namespace HOTEL_PEA2.Models
 {
     public class Reserva
     {
         [Key]
         public int IdReserva { get; set; }
 
-        public DateTime FechaReserva { get; set; }
-
         public DateTime FechaEntrada { get; set; }
 
         public DateTime FechaSalida { get; set; }
 
         public int CantidadPersonas { get; set; }
+
+        public string TipoHabitacion { get; set; } = string.Empty;
 
         public decimal CostoTotal { get; set; }
 
