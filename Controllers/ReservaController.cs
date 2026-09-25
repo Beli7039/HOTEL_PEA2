@@ -16,12 +16,8 @@ namespace HOTEL_PEA2.Controllers
         }
         public IActionResult Index()
         {
-            var listaReservas = _context.Reserva
-                .Include(r => r.IdCliente)
-                .Include(r => r.IdHabitacion)
-                .ToList();
-
-            return View(listaReservas);
+            
+            return View();
         }
 
         public IActionResult NuevaReserva()

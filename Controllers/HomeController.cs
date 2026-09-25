@@ -14,9 +14,9 @@ namespace HOTEL_PEA2.Controllers
             return PartialView("_DashboardHome");
         }
 
-        public IActionResult Reservas()
-        {
-            return View();
-        }
+        //public IActionResult Reservas()
+        //{
+        //    return View();
+        //}
     }
 }

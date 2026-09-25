@@ -1,0 +1,135 @@
+﻿.clientes-container {
+    width: 100%;
+    max-width: none;
+    padding: 20px;
+}
+
+.clientes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.titulo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.icon-header {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #e00000;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+}
+
+.titulo h1 {
+    margin: 0;
+    font-size: 48px;
+}
+
+.titulo p {
+    margin-top: 8px;
+    color: #888;
+}
+
+.btn-nuevo,
+.btn-guardar {
+    background: #e00000;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 25px;
+    cursor: pointer;
+}
+
+.btn-cancelar {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 14px 25px;
+}
+
+.clientes-grid {
+    display: grid;
+    grid-template-columns: 48% 52%;
+    gap: 20px;
+    width: 100%;
+}
+
+.card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    min-height: 700px;
+}
+
+.card-title {
+    color: #e00000;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+    .form-grid label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    .form-grid input,
+    .form-grid select {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-sizing: border-box;
+    }
+
+.botones {
+    margin-top: 25px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.tabla-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.tabla-clientes {
+    width: 100%;
+}
+
+    .tabla-clientes tbody {
+        height: 450px;
+    }
+
+.sin-datos {
+    height: 450px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 18px;
+    color: #888;
+}
+
+.info-card {
+    margin-top: 25px;
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+}
