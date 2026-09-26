@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HOTEL_PEA2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260926140850_PermitirObservacionesNull")]
-    partial class PermitirObservacionesNull
+    [Migration("20260926144817_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,7 +78,6 @@ namespace HOTEL_PEA2.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Estado")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdTipoHabitacion")
@@ -88,8 +87,8 @@ namespace HOTEL_PEA2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Piso")
-                        .HasColumnType("int");
+                    b.Property<string>("Piso")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
@@ -165,9 +164,6 @@ namespace HOTEL_PEA2.Migrations
                     b.Property<DateTime>("FechaSalida")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("HabitacionIdHabitacion")
-                        .HasColumnType("int");
-
                     b.Property<int>("IdCliente")
                         .HasColumnType("int");
 
@@ -184,8 +180,6 @@ namespace HOTEL_PEA2.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdReserva");
-
-                    b.HasIndex("HabitacionIdHabitacion");
 
                     b.HasIndex("IdCliente");
 
@@ -269,10 +263,6 @@ namespace HOTEL_PEA2.Migrations
 
             modelBuilder.Entity("HOTEL_PEA2.Models.Reserva", b =>
                 {
-                    b.HasOne("HOTEL_PEA2.Models.Habitacion", null)
-                        .WithMany("Reservas")
-                        .HasForeignKey("HabitacionIdHabitacion");
-
                     b.HasOne("HOTEL_PEA2.Models.Cliente", "Cliente")
                         .WithMany()
                         .HasForeignKey("IdCliente")
@@ -295,11 +285,6 @@ namespace HOTEL_PEA2.Migrations
                     b.Navigation("Habitacion");
 
                     b.Navigation("Recepcionista");
-                });
-
-            modelBuilder.Entity("HOTEL_PEA2.Models.Habitacion", b =>
-                {
-                    b.Navigation("Reservas");
                 });
 #pragma warning restore 612, 618
         }

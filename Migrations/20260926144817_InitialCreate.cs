@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HOTEL_PEA2.Migrations
 {
     /// <inheritdoc />
-    public partial class inicio : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -89,10 +89,10 @@ namespace HOTEL_PEA2.Migrations
                     IdHabitacion = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Numero = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Piso = table.Column<int>(type: "int", nullable: false),
+                    Piso = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Capacidad = table.Column<int>(type: "int", nullable: false),
                     Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IdTipoHabitacion = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -121,8 +121,7 @@ namespace HOTEL_PEA2.Migrations
                     IdCliente = table.Column<int>(type: "int", nullable: false),
                     IdHabitacion = table.Column<int>(type: "int", nullable: false),
                     IdRecepcionista = table.Column<int>(type: "int", nullable: true),
-                    Observaciones = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    HabitacionIdHabitacion = table.Column<int>(type: "int", nullable: true)
+                    Observaciones = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -133,11 +132,6 @@ namespace HOTEL_PEA2.Migrations
                         principalTable: "Cliente",
                         principalColumn: "IdCliente",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Reserva_Habitacion_HabitacionIdHabitacion",
-                        column: x => x.HabitacionIdHabitacion,
-                        principalTable: "Habitacion",
-                        principalColumn: "IdHabitacion");
                     table.ForeignKey(
                         name: "FK_Reserva_Habitacion_IdHabitacion",
                         column: x => x.IdHabitacion,
@@ -162,11 +156,6 @@ namespace HOTEL_PEA2.Migrations
                 name: "IX_Habitacion_IdTipoHabitacion",
                 table: "Habitacion",
                 column: "IdTipoHabitacion");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reserva_HabitacionIdHabitacion",
-                table: "Reserva",
-                column: "HabitacionIdHabitacion");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reserva_IdCliente",

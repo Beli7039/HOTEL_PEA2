@@ -36,14 +36,14 @@ namespace HOTEL_PEA2.Migrations
 
                     b.Property<string>("Dni")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Estado")
-                        .HasColumnType("bit");
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FechaRegistro")
                         .HasColumnType("datetime2");
@@ -53,12 +53,14 @@ namespace HOTEL_PEA2.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Telefono")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdCliente");
 
-                    b.ToTable("Cliente");
+                    b.HasIndex("Dni")
+                        .IsUnique();
+
+                    b.ToTable("Cliente", (string)null);
                 });
 
             modelBuilder.Entity("HOTEL_PEA2.Models.Habitacion", b =>
@@ -73,17 +75,17 @@ namespace HOTEL_PEA2.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Estado")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdTipoHabitacion")
                         .HasColumnType("int");
 
-                    b.Property<int>("NumeroHabitacion")
-                        .HasColumnType("int");
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Piso")
-                        .HasColumnType("int");
+                    b.Property<string>("Piso")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
@@ -92,7 +94,7 @@ namespace HOTEL_PEA2.Migrations
 
                     b.HasIndex("IdTipoHabitacion");
 
-                    b.ToTable("Habitacion");
+                    b.ToTable("Habitacion", (string)null);
                 });
 
             modelBuilder.Entity("HOTEL_PEA2.Models.Recepcionista", b =>
@@ -133,7 +135,7 @@ namespace HOTEL_PEA2.Migrations
 
                     b.HasKey("IdRecepcionista");
 
-                    b.ToTable("Recepcionista");
+                    b.ToTable("Recepcionista", (string)null);
                 });
 
             modelBuilder.Entity("HOTEL_PEA2.Models.Reserva", b =>
@@ -151,7 +153,6 @@ namespace HOTEL_PEA2.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Estado")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FechaEntrada")
@@ -166,15 +167,13 @@ namespace HOTEL_PEA2.Migrations
                     b.Property<int>("IdHabitacion")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdRecepcionista")
+                    b.Property<int?>("IdRecepcionista")
                         .HasColumnType("int");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TipoHabitacion")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdReserva");
@@ -183,7 +182,9 @@ namespace HOTEL_PEA2.Migrations
 
                     b.HasIndex("IdHabitacion");
 
-                    b.ToTable("Reserva");
+                    b.HasIndex("IdRecepcionista");
+
+                    b.ToTable("Reserva", (string)null);
                 });
 
             modelBuilder.Entity("HOTEL_PEA2.Models.Tipo_Habitacion", b =>
@@ -210,7 +211,7 @@ namespace HOTEL_PEA2.Migrations
 
                     b.HasKey("IdTipoHabitacion");
 
-                    b.ToTable("Tipo_Habitacion");
+                    b.ToTable("Tipo_Habitacion", (string)null);
                 });
 
             modelBuilder.Entity("HOTEL_PEA2.Models.Usuario", b =>
@@ -225,24 +226,25 @@ namespace HOTEL_PEA2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Estado")
-                        .HasColumnType("int");
+                    b.Property<bool>("Estado")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Nombre")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Rol")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("IdUsuario");
 
-                    b.ToTable("Usuario");
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
+                    b.ToTable("Usuario", (string)null);
                 });
 
             modelBuilder.Entity("HOTEL_PEA2.Models.Habitacion", b =>
@@ -250,7 +252,7 @@ namespace HOTEL_PEA2.Migrations
                     b.HasOne("HOTEL_PEA2.Models.Tipo_Habitacion", "TipoHabitacion")
                         .WithMany()
                         .HasForeignKey("IdTipoHabitacion")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("TipoHabitacion");
@@ -261,23 +263,25 @@ namespace HOTEL_PEA2.Migrations
                     b.HasOne("HOTEL_PEA2.Models.Cliente", "Cliente")
                         .WithMany()
                         .HasForeignKey("IdCliente")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("HOTEL_PEA2.Models.Habitacion", "Habitacion")
-                        .WithMany("Reservas")
+                        .WithMany()
                         .HasForeignKey("IdHabitacion")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("HOTEL_PEA2.Models.Recepcionista", "Recepcionista")
+                        .WithMany()
+                        .HasForeignKey("IdRecepcionista")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Cliente");
 
                     b.Navigation("Habitacion");
-                });
 
-            modelBuilder.Entity("HOTEL_PEA2.Models.Habitacion", b =>
-                {
-                    b.Navigation("Reservas");
+                    b.Navigation("Recepcionista");
                 });
 #pragma warning restore 612, 618
         }

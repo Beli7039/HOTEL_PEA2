@@ -10,7 +10,9 @@
 
 <section class="page-header">
     <div class="title-section">
-        <div class="title-icon"><i class="fa-regular fa-calendar-days"></i></div>
+        <div class="title-icon">
+            <i class="fa-regular fa-calendar-days"></i>
+        </div>
         <div>
             <h1>Reservas</h1>
             <nav class="breadcrumb">
@@ -37,17 +39,21 @@
     <div class="reserva-main">
 
         <article class="card-reserva">
-            <h2 class="card-title"><i class="fa-regular fa-calendar-check"></i> DATOS DE LA RESERVA</h2>
+            <h2 class="card-title">
+                <i class="fa-regular fa-calendar-check"></i> DATOS DE LA RESERVA
+            </h2>
 
             <div class="form-grid-3">
                 <div class="form-group">
                     <label asp-for="Reserva.FechaEntrada">Fecha de Entrada</label>
                     <input asp-for="Reserva.FechaEntrada" type="date" id="fechaEntrada" />
                 </div>
+
                 <div class="form-group">
                     <label asp-for="Reserva.FechaSalida">Fecha de Salida</label>
                     <input asp-for="Reserva.FechaSalida" type="date" id="fechaSalida" />
                 </div>
+
                 <div class="form-group">
                     <label asp-for="Reserva.CantidadPersonas">Cantidad Personas</label>
                     <input asp-for="Reserva.CantidadPersonas" id="cantPersonas" required min="1" />
@@ -120,7 +126,9 @@
         </article>
 
         <article class="card-reserva">
-            <h2 class="card-title"><i class="fa-solid fa-bed"></i> DETALLE DE LA HABITACIÓN</h2>
+            <h2 class="card-title">
+                <i class="fa-solid fa-bed"></i> DETALLE DE LA HABITACIÓN
+            </h2>
 
             <div class="form-grid-4">
                 <div class="form-group">
@@ -129,10 +137,12 @@
                         <option value="">Seleccione tipo</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label asp-for="Habitacion.Precio">Precio por Noche</label>
                     <input asp-for="Habitacion.Precio" id="precioHabitacion" type="text" placeholder="S/." />
                 </div>
+
                 <div class="form-group">
                     <label asp-for="Habitacion.Piso">Piso</label>
                     <input asp-for="Habitacion.Piso" type="text" placeholder="Piso" />
@@ -188,12 +198,10 @@
             <strong id="lblPrecioNoches">S/. 0.00</strong>
         </div>
 
-        <div class="resumen-item"><span>Habitación:</span><strong id="lblHabitacion">--</strong></div>
-        <div class="resumen-item"><span>Tipo:</span><strong id="lblTipo">--</strong></div>
-        <div class="resumen-item"><span>Entrada:</span><strong id="lblEntrada">--</strong></div>
-        <div class="resumen-item"><span>Salida:</span><strong id="lblSalida">--</strong></div>
-        <div class="resumen-item"><span>Noches:</span><strong id="lblNoches">0</strong></div>
-        <div class="resumen-item"><span>Personas:</span><strong id="lblPersonas">--</strong></div>
+        <div class="resumen-item">
+            <span>Personas:</span>
+            <strong id="lblPersonas">--</strong>
+        </div>
 
         <div class="total-final">
             <span>COSTO TOTAL:</span>

@@ -16,25 +16,26 @@ namespace HOTEL_PEA2.Models
 
         public decimal CostoTotal { get; set; }
 
-        public string Estado { get; set; } = string.Empty;
+        public string? Estado { get; set; }
 
-        public string Observaciones { get; set; } = string.Empty;
+        // PROPIEDAD AGREGADA
+        public string? TipoHabitacion { get; set; }
 
-        // ==========================================
-        // FOREIGN KEYS Y PROPIEDADES DE NAVEGACIÓN
-        // ==========================================
-
+        // FOREIGN KEYS
         public int IdCliente { get; set; }
-        [ForeignKey("IdCliente")]
-        public virtual Cliente? Cliente { get; set; }
-
         public int IdHabitacion { get; set; }
-        [ForeignKey("IdHabitacion")]
-        public virtual Habitacion? Habitacion { get; set; }
+        public int? IdRecepcionista { get; set; }
 
-        public int IdRecepcionista { get; set; }
-        // Si tienes una tabla o modelo Recepcionista, puedes agregarlo igual:
-        // [ForeignKey("IdRecepcionista")]
-        // public virtual Recepcionista? Recepcionista { get; set; }
+        // PROPIEDADES DE NAVEGACIÓN
+        [ForeignKey("IdCliente")]
+        public Cliente? Cliente { get; set; }
+
+        [ForeignKey("IdHabitacion")]
+        public Habitacion? Habitacion { get; set; }
+
+        [ForeignKey("IdRecepcionista")]
+        public Recepcionista? Recepcionista { get; set; }
+
+        public string? Observaciones { get; set; }
     }
 }

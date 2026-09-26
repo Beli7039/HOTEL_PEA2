@@ -16,31 +16,29 @@ namespace HOTEL_PEA2.Controllers
             _context = context;
         }
 
-        // GET: /Reserva
-        public async Task<IActionResult> Index(string? criterio)
+        public async Task<IActionResult> Index(string criterio)
         {
             var query = _context.Reserva
                 .Include(r => r.Cliente)
                 .Include(r => r.Habitacion)
-                .Include(r => r.Recepcionista)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(criterio))
             {
-                query = query.Where(r =>
-                    r.Cliente!.Nombres.Contains(criterio) ||
-                    r.Cliente!.Apellidos.Contains(criterio));
+                query = query.Where(r => r.Cliente != null &&
+                    (r.Cliente.Nombres.Contains(criterio) || r.Cliente.Apellidos.Contains(criterio)));
             }
 
-            var lista = await query.OrderByDescending(r => r.IdReserva).ToListAsync();
-            ViewBag.Criterio = criterio;
-            return View(lista);
+            var listaReservas = await query.ToListAsync();
+            return View(listaReservas);
         }
 
-        // GET: /Reserva/NuevaReserva
-        public IActionResult NuevaReserva()
+
+        public async Task<IActionResult> NuevaReserva(int? id)
         {
-            var vm = new ReservaViewModel
+            ReservaViewModel vm = new ReservaViewModel();
+
+            if (id == null || id == 0)
             {
                 vm.Reserva = new Reserva();
             }
@@ -53,162 +51,84 @@ namespace HOTEL_PEA2.Controllers
                 }
             }
 
-                ListaClientes = _context.Cliente
-                    .Where(c => c.Estado == "ACTIVO")
-                    .Select(x => new SelectListItem
-                    {
-                        Text = x.Nombres + " " + x.Apellidos,
-                        Value = x.IdCliente.ToString()
-                    }).ToList(),
-
-                ListaHabitaciones = _context.Habitacion
-                    .Select(x => new SelectListItem
-                    {
-                        Text = x.Numero,
-                        Value = x.IdHabitacion.ToString()
-                    }).ToList(),
-
-                ListaTipoHabitacion = _context.Tipo_Habitacion
-                    .Select(x => new SelectListItem
-                    {
-                        Text = x.NombreTipo,
-                        Value = x.IdTipoHabitacion.ToString()
-                    }).ToList()
-            };
-
-            return PartialView("_NuevaReservaPartial", vm);
-        }
-
-        // POST: /Reserva/NuevaReserva
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> NuevaReserva(ReservaViewModel vm)
-        {
-            if (ModelState.IsValid)
-            {
-                vm.Reserva.FechaReserva = DateTime.Now;
-
-                // Asignar recepcionista desde la sesión
-                var usuarioSesion = HttpContext.Session.GetString("Usuario");
-                var recep = await _context.Recepcionista
-                    .FirstOrDefaultAsync(r => r.Usuario == usuarioSesion);
-
-                vm.Reserva.IdRecepcionista = recep?.IdRecepcionista ?? 1;
-
-                // Calcular costo
-                var habitacion = await _context.Habitacion
-                    .FindAsync(vm.Reserva.IdHabitacion);
-
-                if (habitacion != null)
-                {
-                    int noches = (vm.Reserva.FechaSalida - vm.Reserva.FechaEntrada).Days;
-                    if (noches <= 0) noches = 1;
-                    vm.Reserva.CostoTotal = habitacion.Precio * noches;
-                }
-
-                _context.Reserva.Add(vm.Reserva);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-
-            // Recargar listas si hay error
-            vm.ListaClientes = _context.Cliente
+            vm.ListaClientes = await _context.Cliente
                 .Select(x => new SelectListItem
                 {
                     Text = x.Nombres + " " + x.Apellidos,
                     Value = x.IdCliente.ToString()
-                }).ToList();
+                }).ToListAsync();
 
-            vm.ListaHabitaciones = _context.Habitacion
+            vm.ListaHabitaciones = await _context.Habitacion
                 .Select(x => new SelectListItem
                 {
                     Text = x.Numero,
                     Value = x.IdHabitacion.ToString()
-                }).ToList();
+                }).ToListAsync();
 
-            vm.ListaTipoHabitacion = _context.Tipo_Habitacion
+            vm.ListaTipoHabitacion = await _context.Tipo_Habitacion
                 .Select(x => new SelectListItem
                 {
                     Text = x.NombreTipo,
                     Value = x.IdTipoHabitacion.ToString()
-                }).ToList();
+                }).ToListAsync();
 
-            return PartialView("_NuevaReservaPartial", vm);
+            return View(vm);
         }
 
-        // GET: /Reserva/Detalles/5
-        public async Task<IActionResult> Detalles(int? id)
-        {
-            if (id == null) return NotFound();
 
-            var reserva = await _context.Reserva
-                .Include(r => r.Cliente)
-                .Include(r => r.Habitacion)
-                .Include(r => r.Recepcionista)
-                .FirstOrDefaultAsync(r => r.IdReserva == id);
-
-            if (reserva == null) return NotFound();
-
-            return View(reserva);
-        }
-
-        // GET: /Reserva/Editar/5
-        public async Task<IActionResult> Editar(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var reserva = await _context.Reserva.FindAsync(id);
-            if (reserva == null) return NotFound();
-
-            ViewBag.Clientes = new SelectList(_context.Cliente, "IdCliente", "Nombres", reserva.IdCliente);
-            ViewBag.Habitaciones = new SelectList(_context.Habitacion, "IdHabitacion", "Numero", reserva.IdHabitacion);
-            ViewBag.Recepcionistas = new SelectList(_context.Recepcionista, "IdRecepcionista", "Nombres", reserva.IdRecepcionista);
-
-            return View(reserva);
-        }
-
-        // POST: /Reserva/Editar/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Editar(int id, Reserva reserva)
+        public async Task<IActionResult> GuardarReserva(ReservaViewModel vm)
         {
-            if (id != reserva.IdReserva) return NotFound();
-
-            if (ModelState.IsValid)
+            if (vm.Reserva.IdReserva == 0)
             {
-                _context.Update(reserva);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.Reserva.Add(vm.Reserva);
             }
-            return View(reserva);
+            else
+            {
+
+                var reservaEnDb = await _context.Reserva.FindAsync(vm.Reserva.IdReserva);
+                if (reservaEnDb == null)
+                {
+                    return NotFound();
+                }
+                reservaEnDb.FechaEntrada = vm.Reserva.FechaEntrada;
+                reservaEnDb.FechaSalida = vm.Reserva.FechaSalida;
+                reservaEnDb.CantidadPersonas = vm.Reserva.CantidadPersonas;
+
+
+                if (!string.IsNullOrEmpty(vm.Reserva.TipoHabitacion))
+                {
+                    reservaEnDb.TipoHabitacion = vm.Reserva.TipoHabitacion;
+                }
+
+                reservaEnDb.CostoTotal = vm.Reserva.CostoTotal;
+                reservaEnDb.Estado = vm.Reserva.Estado;
+                reservaEnDb.Observaciones = vm.Reserva.Observaciones;
+                reservaEnDb.IdCliente = vm.Reserva.IdCliente;
+                reservaEnDb.IdHabitacion = vm.Reserva.IdHabitacion;
+                reservaEnDb.IdRecepcionista = vm.Reserva.IdRecepcionista;
+
+                _context.Reserva.Update(reservaEnDb);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: /Reserva/Eliminar/5
-        public async Task<IActionResult> Eliminar(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var reserva = await _context.Reserva
-                .Include(r => r.Cliente)
-                .Include(r => r.Habitacion)
-                .FirstOrDefaultAsync(r => r.IdReserva == id);
-
-            if (reserva == null) return NotFound();
-
-            return View(reserva);
-        }
-
-        // POST: /Reserva/Eliminar/5
-        [HttpPost, ActionName("Eliminar")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EliminarConfirmed(int id)
+        public async Task<IActionResult> Eliminar(int id)
         {
             var reserva = await _context.Reserva.FindAsync(id);
-            if (reserva != null)
+            if (reserva == null)
             {
-                _context.Reserva.Remove(reserva);
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
+
+            _context.Reserva.Remove(reserva);
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
     }
