@@ -1,0 +1,34 @@
+﻿@model HOTEL_PEA2.Models.Recepcionista
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/clientes.css" />
+
+<div class="clientes-container">
+    <div class="card">
+        <div class="card-title">EDITAR RECEPCIONISTA</div>
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="IdRecepcionista" />
+            <div class="form-grid">
+                <div><label>Nombres</label><input asp-for="Nombres" /></div>
+                <div><label>Apellidos</label><input asp-for="Apellidos" /></div>
+                <div><label>Usuario</label><input asp-for="Usuario" /></div>
+                <div><label>Contraseña</label><input asp-for="Contrasena" type="password" /></div>
+                <div><label>Teléfono</label><input asp-for="Telefono" /></div>
+                <div><label>Email</label><input asp-for="Email" type="email" /></div>
+                <div>
+                    <label>Estado</label>
+                    <select asp-for="Estado">
+                        <option value="ACTIVO">ACTIVO</option>
+                        <option value="INACTIVO">INACTIVO</option>
+                    </select>
+                </div>
+            </div>
+            <div class="botones">
+                <a asp-action="Index" class="btn-cancelar"><i class="fa-solid fa-xmark"></i> Cancelar</a>
+                <button type="submit" class="btn-guardar"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>

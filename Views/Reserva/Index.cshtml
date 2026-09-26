@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="~/css/reserva.css" asp-append-version="true" />
 
 <div class="panel">
-
     <div class="dashboard-header" style="margin-bottom: 20px;">
         <div>
             <h1>Listado de Reservas</h1>
@@ -16,61 +15,60 @@
     </div>
 
     <div style="margin-bottom: 20px;">
-        <a asp-action="NuevaReserva" class="btn-guardar" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; background-color: #28a745;">
-            <i class="fa-solid fa-plus"></i> Create New
+        <a asp-action="NuevaReserva" class="btn-guardar"
+           style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; background-color:#28a745;">
+            <i class="fa-solid fa-plus"></i> Nueva Reserva
         </a>
     </div>
 
     <form asp-action="Index" method="get" style="margin-bottom: 25px;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <label style="font-weight: 600; color: var(--text-primary);">Buscar:</label>
-            <input type="text" name="criterio" placeholder="Ingrese nombre..."
-                   style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; width: 250px; font-size: 14px;" />
-            <button type="submit" class="btn-cancelar" style="background-color: #212529; color: white; border: none; padding: 8px 16px; border-radius: 6px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <label style="font-weight:600;">Buscar:</label>
+            <input type="text" name="criterio" value="@ViewBag.Criterio"
+                   placeholder="Ingrese nombre..."
+                   style="padding:8px 12px; border:1px solid #ccc; border-radius:6px; width:250px;" />
+            <button type="submit" class="btn-cancelar"
+                    style="background:#212529; color:white; border:none; padding:8px 16px; border-radius:6px;">
                 Buscar
             </button>
         </div>
     </form>
 
-    <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+    <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:14px;">
             <thead>
-                <tr style="border-bottom: 2px solid #111;">
-                    <th style="padding: 12px 8px; color: #2d7cff;">Nombre</th>
-                    <th style="padding: 12px 8px; color: #2d7cff;">Fecha Entrada</th>
-                    <th style="padding: 12px 8px; color: #2d7cff;">Estado</th>
-                    <th style="padding: 12px 8px; text-align: right;">Acciones</th>
+                <tr style="border-bottom:2px solid #111;">
+                    <th style="padding:12px 8px; color:#2d7cff;">Cliente</th>
+                    <th style="padding:12px 8px; color:#2d7cff;">Habitación</th>
+                    <th style="padding:12px 8px; color:#2d7cff;">Fecha Entrada</th>
+                    <th style="padding:12px 8px; color:#2d7cff;">Fecha Salida</th>
+                    <th style="padding:12px 8px; color:#2d7cff;">Costo Total</th>
+                    <th style="padding:12px 8px; color:#2d7cff;">Estado</th>
+                    <th style="padding:12px 8px; text-align:right;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
-               @*  @if (Model != null && Model.Any())
+                @if (Model != null && Model.Any())
                 {
                     @foreach (var item in Model)
                     {
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td style="padding: 12px 8px; font-weight: 500;">
+                        <tr style="border-bottom:1px solid #e5e7eb;">
+                            <td style="padding:12px 8px; font-weight:500;">
                                 @(item.Cliente != null ? item.Cliente.Nombres + " " + item.Cliente.Apellidos : "Sin Cliente")
                             </td>
-                            <td style="padding: 12px 8px; color: #555;">
-                                @item.FechaEntrada.ToString("dd/MM/yyyy HH:mm:ss")
-                            </td>
-                            <td style="padding: 12px 8px; color: #555;">
-                                @item.Estado
-                            </td>
-                            <td style="padding: 12px 8px; text-align: right;">
-                                <div style="display: inline-flex; gap: 6px;">
+                            <td style="padding:12px 8px;">@item.Habitacion?.Numero</td>
+                            <td style="padding:12px 8px;">@item.FechaEntrada.ToString("dd/MM/yyyy")</td>
+                            <td style="padding:12px 8px;">@item.FechaSalida.ToString("dd/MM/yyyy")</td>
+                            <td style="padding:12px 8px;">S/. @item.CostoTotal</td>
+                            <td style="padding:12px 8px;">@item.Estado</td>
+                            <td style="padding:12px 8px; text-align:right;">
+                                <div style="display:inline-flex; gap:6px;">
                                     <a asp-action="Editar" asp-route-id="@item.IdReserva"
-                                       style="background-color: #ffc107; color: #000; padding: 6px 14px; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 13px;">
-                                        Edit
-                                    </a>
+                                       style="background:#ffc107; color:#000; padding:6px 14px; border-radius:4px; text-decoration:none; font-weight:600; font-size:13px;">Edit</a>
                                     <a asp-action="Detalles" asp-route-id="@item.IdReserva"
-                                       style="background-color: #0d6efd; color: #fff; padding: 6px 14px; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 13px;">
-                                        Details
-                                    </a>
+                                       style="background:#0d6efd; color:#fff; padding:6px 14px; border-radius:4px; text-decoration:none; font-weight:600; font-size:13px;">Details</a>
                                     <a asp-action="Eliminar" asp-route-id="@item.IdReserva"
-                                       style="background-color: #dc3545; color: #fff; padding: 6px 14px; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 13px;">
-                                        Delete
-                                    </a>
+                                       style="background:#dc3545; color:#fff; padding:6px 14px; border-radius:4px; text-decoration:none; font-weight:600; font-size:13px;">Delete</a>
                                 </div>
                             </td>
                         </tr>
@@ -79,13 +77,12 @@
                 else
                 {
                     <tr>
-                        <td colspan="4" style="padding: 20px; text-align: center; color: #777;">
+                        <td colspan="7" style="padding:20px; text-align:center; color:#777;">
                             No hay registros disponibles.
                         </td>
                     </tr>
-                } *@
+                }
             </tbody>
         </table>
     </div>
-
 </div>

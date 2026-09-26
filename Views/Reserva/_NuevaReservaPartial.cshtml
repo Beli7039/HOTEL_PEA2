@@ -6,25 +6,15 @@
 
 <link rel="stylesheet" href="~/css/reserva.css" asp-append-version="true" />
 
-<!-- Barra superior de usuario -->
 <header class="topbar">
     <div class="user-info">
-        <div class="user-icon">
-            <i class="fa-solid fa-user"></i>
-        </div>
-        <div>
-           @*  <h4>Recepcionista</h4>
-            <p>Recepción</p> *@
-        </div>
+        <div class="user-icon"><i class="fa-solid fa-user"></i></div>
     </div>
 </header>
 
-<!-- Encabezado de la página -->
 <section class="page-header">
     <div class="title-section">
-        <div class="title-icon">
-            <i class="fa-regular fa-calendar-days"></i>
-        </div>
+        <div class="title-icon"><i class="fa-regular fa-calendar-days"></i></div>
         <div>
             <h1>Reservas</h1>
             <nav class="breadcrumb">
@@ -34,43 +24,33 @@
     </div>
 
     <div class="header-buttons">
-        <a asp-action="Index" class="btn-cancelar">
-            <i class="fa-solid fa-xmark"></i> Cancelar
-        </a>
+        <a asp-action="Index" class="btn-cancelar"><i class="fa-solid fa-xmark"></i> Cancelar</a>
         <button type="submit" form="formReserva" class="btn-guardar">
             <i class="fa-regular fa-floppy-disk"></i> Guardar Reserva
         </button>
     </div>
 </section>
 
-<!-- Formulario principal de Reserva -->
 <form id="formReserva" asp-action="NuevaReserva" method="post" class="reserva-layout">
 
-    <!-- Columna Izquierda: Datos e Entradas -->
     <div class="reserva-main">
 
-        <!-- Card 1: Datos de Reserva -->
         <article class="card-reserva">
-            <h2 class="card-title">
-                <i class="fa-regular fa-calendar-check"></i> DATOS DE LA RESERVA
-            </h2>
+            <h2 class="card-title"><i class="fa-regular fa-calendar-check"></i> DATOS DE LA RESERVA</h2>
 
             <div class="form-grid-3">
                 <div class="form-group">
                     <label asp-for="Reserva.FechaEntrada">Fecha de Entrada</label>
                     <input asp-for="Reserva.FechaEntrada" type="date" id="fechaEntrada" />
                 </div>
-
                 <div class="form-group">
                     <label asp-for="Reserva.FechaSalida">Fecha de Salida</label>
                     <input asp-for="Reserva.FechaSalida" type="date" id="fechaSalida" />
                 </div>
-
                 <div class="form-group">
                     <label asp-for="Reserva.CantidadPersonas">Cantidad Personas</label>
-                    <input asp-for="Reserva.CantidadPersonas" id="cantPersonas"/>
+                    <input asp-for="Reserva.CantidadPersonas" id="cantPersonas" />
                 </div>
-               
                 <div class="form-group">
                     <label asp-for="Reserva.Estado">Estado</label>
                     <select asp-for="Reserva.Estado">
@@ -82,11 +62,8 @@
             </div>
         </article>
 
-        <!-- Card 2: Datos del Cliente -->
         <article class="card-reserva">
-            <h2 class="card-title">
-                <i class="fa-regular fa-user"></i> DATOS DEL CLIENTE
-            </h2>
+            <h2 class="card-title"><i class="fa-regular fa-user"></i> DATOS DEL CLIENTE</h2>
 
             <div class="form-grid-4">
                 <div class="form-group">
@@ -95,100 +72,59 @@
                         <option value="">Seleccione un cliente</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label asp-for="Cliente.Dni">DNI / Pasaporte</label>
-                    <input asp-for="Cliente.Dni" type="text" placeholder="Ingrese documento" readonly />
+                    <input asp-for="Cliente.Dni" type="text" readonly />
                 </div>
-
                 <div class="form-group">
                     <label asp-for="Cliente.Telefono">Teléfono</label>
-                    <input asp-for="Cliente.Telefono" type="tel" placeholder="Ingrese teléfono" readonly />
+                    <input asp-for="Cliente.Telefono" type="tel" readonly />
                 </div>
-
                 <div class="form-group">
                     <label asp-for="Cliente.Email">Email</label>
-                    <input asp-for="Cliente.Email" type="email" placeholder="Ingrese email" readonly />
+                    <input asp-for="Cliente.Email" type="email" readonly />
                 </div>
             </div>
         </article>
 
-        <!-- Card 3: Detalle de la Habitación -->
         <article class="card-reserva">
-            <h2 class="card-title">
-                <i class="fa-solid fa-bed"></i> DETALLE DE LA HABITACIÓN
-            </h2>
+            <h2 class="card-title"><i class="fa-solid fa-bed"></i> DETALLE DE LA HABITACIÓN</h2>
 
             <div class="form-grid-4">
                 <div class="form-group">
-                    <label asp-for="Reserva.Estado">Tipo de Habitacion</label>
-                    <select asp-for="Reserva.Estado">
-                        <option value="Individual"> Habitacion Individual</option>
-                        <option value="Doble">Habitación cama doble</option>
-                        <option value="Triple">Habitación cama triple</option>
-                        <option value="Familiar">Habitación para 4 a mas personas.</option>
+                    <label>Habitación</label>
+                    <select asp-for="Reserva.IdHabitacion" asp-items="@Model.ListaHabitaciones">
+                        <option value="">Seleccione habitación</option>
                     </select>
                 </div>
-
+                <div class="form-group">
+                    <label>Tipo de Habitación</label>
+                    <select id="tipoHabitacion" asp-items="@Model.ListaTipoHabitacion">
+                        <option value="">-- Tipo --</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label asp-for="Habitacion.Precio">Precio por Noche</label>
-                    <input asp-for="Habitacion.Precio" type="text" placeholder="S/." readonly />
+                    <input asp-for="Habitacion.Precio" type="text" readonly />
                 </div>
-
                 <div class="form-group">
                     <label asp-for="Habitacion.Piso">Piso</label>
-                    <input asp-for="Habitacion.Piso" type="text" placeholder="Piso" readonly />
+                    <input asp-for="Habitacion.Piso" type="text" readonly />
                 </div>
-                <div class="form-group">
-                    <label asp-for="Habitacion.Piso">Numero de Habitación</label>
-                    <input asp-for="Habitacion.Piso" type="text" placeholder="Piso" readonly />
-                </div>
-
-            </div>
-
-            <div class="form-group mt-20">
-                <label asp-for="Reserva.Observaciones">Observaciones</label>
-                <textarea asp-for="Reserva.Observaciones" rows="3" placeholder="Ingrese observaciones adicionales..."></textarea>
             </div>
         </article>
 
     </div>
 
-    <!-- Columna Derecha: Tarjeta Lateral de Resumen -->
     <aside class="resumen-card">
-        <h2 class="card-title">
-            <i class="fa-regular fa-clipboard"></i> RESUMEN DE LA RESERVA
-        </h2>
+        <h2 class="card-title"><i class="fa-regular fa-clipboard"></i> RESUMEN DE LA RESERVA</h2>
 
-        <div class="resumen-item">
-            <span>Habitación:</span>
-            <strong id="lblHabitacion">--</strong>
-        </div>
-
-        <div class="resumen-item">
-            <span>Tipo:</span>
-            <strong id="lblTipo">--</strong>
-        </div>
-
-        <div class="resumen-item">
-            <span>Entrada:</span>
-            <strong id="lblEntrada">--</strong>
-        </div>
-
-        <div class="resumen-item">
-            <span>Salida:</span>
-            <strong id="lblSalida">--</strong>
-        </div>
-
-        <div class="resumen-item">
-            <span>Noches:</span>
-            <strong id="lblNoches">0</strong>
-        </div>
-
-        <div class="resumen-item">
-            <span>Personas:</span>
-            <strong id="lblPersonas">--</strong>
-        </div>
+        <div class="resumen-item"><span>Habitación:</span><strong id="lblHabitacion">--</strong></div>
+        <div class="resumen-item"><span>Tipo:</span><strong id="lblTipo">--</strong></div>
+        <div class="resumen-item"><span>Entrada:</span><strong id="lblEntrada">--</strong></div>
+        <div class="resumen-item"><span>Salida:</span><strong id="lblSalida">--</strong></div>
+        <div class="resumen-item"><span>Noches:</span><strong id="lblNoches">0</strong></div>
+        <div class="resumen-item"><span>Personas:</span><strong id="lblPersonas">--</strong></div>
 
         <div class="total-final">
             <span>COSTO TOTAL:</span>

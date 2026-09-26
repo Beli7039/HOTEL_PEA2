@@ -7,18 +7,18 @@ namespace HOTEL_PEA2.Models
         [Key]
         public int IdCliente { get; set; }
 
-        public string Dni { get; set; }
+        public string Dni { get; set; } = string.Empty;
 
-        public string Nombres { get; set; }
+        public string Nombres { get; set; } = string.Empty;
 
-        public string Apellidos { get; set; }
+        public string Apellidos { get; set; } = string.Empty;
 
-        public string Telefono { get; set; }
+        public string? Telefono { get; set; }
 
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
-        public DateTime FechaRegistro { get; set; }
+        public DateTime FechaRegistro { get; set; } = DateTime.Now;
 
-        public bool Estado { get; set; }
+        public string Estado { get; set; } = "ACTIVO";
     }
 }

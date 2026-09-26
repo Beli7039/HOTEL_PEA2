@@ -47,7 +47,8 @@
 
                 </a>
 
-                <a href="#" class="menu-item">
+                <a asp-controller="Habitacion" asp-action="Index"
+                   class="menu-item @(controlador == "Habitacion" ? "active" : "")">
                     <i class="fa-solid fa-bed"></i>
                     <span>Habitaciones</span>
                 </a>
@@ -61,7 +62,8 @@
 
                 </a>
 
-                <a href="#" class="menu-item">
+                <a asp-controller="Recepcionista" asp-action="Index"
+                   class="menu-item @(controlador == "Recepcionista" ? "active" : "")">
                     <i class="fa-solid fa-users"></i>
                     <span>Recepcionistas</span>
                 </a>

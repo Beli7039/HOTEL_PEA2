@@ -1,0 +1,33 @@
+﻿@model HOTEL_PEA2.Models.Cliente
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Detalles del Cliente";
+}
+
+<link rel="stylesheet" href="~/css/clientes.css" />
+
+<div class="clientes-container">
+    <div class="card">
+        <div class="card-title">DETALLES DEL CLIENTE</div>
+
+        <dl class="form-grid">
+            <div><dt>ID</dt><dd>@Model.IdCliente</dd></div>
+            <div><dt>DNI</dt><dd>@Model.Dni</dd></div>
+            <div><dt>Nombres</dt><dd>@Model.Nombres</dd></div>
+            <div><dt>Apellidos</dt><dd>@Model.Apellidos</dd></div>
+            <div><dt>Teléfono</dt><dd>@Model.Telefono</dd></div>
+            <div><dt>Email</dt><dd>@Model.Email</dd></div>
+            <div><dt>Fecha Registro</dt><dd>@Model.FechaRegistro.ToString("dd/MM/yyyy")</dd></div>
+            <div><dt>Estado</dt><dd>@Model.Estado</dd></div>
+        </dl>
+
+        <div class="botones">
+            <a asp-action="Edit" asp-route-id="@Model.IdCliente" class="btn-guardar">
+                <i class="fa-solid fa-pen"></i> Editar
+            </a>
+            <a asp-action="Index" class="btn-cancelar">
+                <i class="fa-solid fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+</div>

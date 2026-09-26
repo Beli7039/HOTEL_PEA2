@@ -1,0 +1,60 @@
+﻿@model IEnumerable<HOTEL_PEA2.Models.Habitacion>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Habitaciones";
+}
+
+<link rel="stylesheet" href="~/css/clientes.css" />
+
+<div class="clientes-container">
+    <div class="clientes-header">
+        <div class="titulo">
+            <div class="icon-header"><i class="fa-solid fa-bed"></i></div>
+            <div>
+                <h1>Habitaciones</h1>
+                <p>Inicio / Habitaciones</p>
+            </div>
+        </div>
+        <a asp-action="Create" class="btn-nuevo">
+            <i class="fa-solid fa-plus"></i> Nueva Habitación
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-title">LISTA DE HABITACIONES</div>
+
+        <table class="tabla-clientes">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Número</th>
+                    <th>Piso</th>
+                    <th>Capacidad</th>
+                    <th>Precio</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var h in Model)
+                {
+                    <tr>
+                        <td>@h.IdHabitacion</td>
+                        <td>@h.Numero</td>
+                        <td>@h.Piso</td>
+                        <td>@h.Capacidad</td>
+                        <td>S/. @h.Precio</td>
+                        <td>@h.TipoHabitacion?.NombreTipo</td>
+                        <td>@h.Estado</td>
+                        <td style="display:flex; gap:6px;">
+                            <a asp-action="Edit" asp-route-id="@h.IdHabitacion" class="btn-guardar" style="background:#ffc107;color:#000;"><i class="fa-solid fa-pen"></i></a>
+                            <a asp-action="Details" asp-route-id="@h.IdHabitacion" class="btn-guardar" style="background:#0d6efd;"><i class="fa-solid fa-eye"></i></a>
+                            <a asp-action="Delete" asp-route-id="@h.IdHabitacion" class="btn-guardar" style="background:#dc3545;"><i class="fa-solid fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

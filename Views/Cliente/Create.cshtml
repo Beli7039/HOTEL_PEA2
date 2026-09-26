@@ -1,0 +1,69 @@
+﻿@model HOTEL_PEA2.Models.Cliente
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Nuevo Cliente";
+}
+
+<link rel="stylesheet" href="~/css/clientes.css" />
+
+<div class="clientes-container">
+    <div class="clientes-header">
+        <div class="titulo">
+            <div class="icon-header"><i class="fa-solid fa-user-plus"></i></div>
+            <div>
+                <h1>Nuevo Cliente</h1>
+                <p>Inicio / Clientes / Nuevo</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">REGISTRO DE CLIENTE</div>
+
+        <form asp-action="Create" method="post">
+            <div class="form-grid">
+                <div>
+                    <label asp-for="Dni">DNI</label>
+                    <input asp-for="Dni" placeholder="Ingrese DNI" />
+                    <span asp-validation-for="Dni" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Nombres">Nombres</label>
+                    <input asp-for="Nombres" placeholder="Ingrese nombres" />
+                </div>
+                <div>
+                    <label asp-for="Apellidos">Apellidos</label>
+                    <input asp-for="Apellidos" placeholder="Ingrese apellidos" />
+                </div>
+                <div>
+                    <label asp-for="Telefono">Teléfono</label>
+                    <input asp-for="Telefono" placeholder="Ingrese teléfono" />
+                </div>
+                <div>
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" type="email" placeholder="Ingrese email" />
+                </div>
+                <div>
+                    <label asp-for="Estado">Estado</label>
+                    <select asp-for="Estado">
+                        <option value="ACTIVO">ACTIVO</option>
+                        <option value="INACTIVO">INACTIVO</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="botones">
+                <a asp-action="Index" class="btn-cancelar">
+                    <i class="fa-solid fa-xmark"></i> Cancelar
+                </a>
+                <button type="submit" class="btn-guardar">
+                    <i class="fa-regular fa-floppy-disk"></i> Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -24,7 +24,7 @@ namespace HOTEL_PEA2.Controllers
                 .FirstOrDefault(x =>
                 x.UserName == usuario &&
                 x.Clave == clave &&
-                x.Estado == 1);
+                x.Estado == true);
 
             if (usuarioEncontrado != null)
             {

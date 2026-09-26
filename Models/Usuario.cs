@@ -9,14 +9,14 @@ namespace HOTEL_PEA2.Models
         [Key]
         public int IdUsuario { get; set; }
 
-        public string Nombre { get; set; }
+        public string? Nombre { get; set; }
 
-        public string UserName { get; set; }
+        public string UserName { get; set; } = string.Empty;
 
-        public string Clave { get; set; }
+        public string Clave { get; set; } = string.Empty;
 
-        public string Rol { get; set; }
+        public string? Rol { get; set; }
 
-        public int Estado { get; set; }
+        public bool Estado { get; set; }
     }
 }

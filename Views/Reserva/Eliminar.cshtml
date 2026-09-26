@@ -1,0 +1,21 @@
+﻿@model HOTEL_PEA2.Models.Reserva
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Eliminar Reserva";
+}
+
+<link rel="stylesheet" href="~/css/reserva.css" asp-append-version="true" />
+
+<div class="panel" style="padding:30px;">
+    <h1 style="color:#dc3545;">¿Eliminar Reserva #@Model.IdReserva?</h1>
+    <p>Cliente: <strong>@Model.Cliente?.Nombres @Model.Cliente?.Apellidos</strong></p>
+    <p>Habitación: <strong>@Model.Habitacion?.Numero</strong></p>
+
+    <form asp-action="Eliminar" method="post" style="margin-top:20px;">
+        <input type="hidden" asp-for="IdReserva" />
+        <div style="display:flex; gap:10px;">
+            <a asp-action="Index" class="btn-cancelar"><i class="fa-solid fa-xmark"></i> Cancelar</a>
+            <button type="submit" class="btn-guardar" style="background:#dc3545;"><i class="fa-solid fa-trash"></i> Eliminar</button>
+        </div>
+    </form>
+</div>

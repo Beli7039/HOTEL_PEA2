@@ -1,0 +1,28 @@
+﻿@model HOTEL_PEA2.Models.Reserva
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Detalles de Reserva";
+}
+
+<link rel="stylesheet" href="~/css/reserva.css" asp-append-version="true" />
+
+<div class="panel" style="padding:30px;">
+    <h1>Reserva #@Model.IdReserva</h1>
+
+    <dl class="form-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:20px; margin-top:20px;">
+        <div><dt>Cliente</dt><dd>@Model.Cliente?.Nombres @Model.Cliente?.Apellidos</dd></div>
+        <div><dt>Habitación</dt><dd>@Model.Habitacion?.Numero</dd></div>
+        <div><dt>Recepcionista</dt><dd>@Model.Recepcionista?.Nombres @Model.Recepcionista?.Apellidos</dd></div>
+        <div><dt>Fecha Reserva</dt><dd>@Model.FechaReserva.ToString("dd/MM/yyyy HH:mm")</dd></div>
+        <div><dt>Fecha Entrada</dt><dd>@Model.FechaEntrada.ToString("dd/MM/yyyy")</dd></div>
+        <div><dt>Fecha Salida</dt><dd>@Model.FechaSalida.ToString("dd/MM/yyyy")</dd></div>
+        <div><dt>Cantidad Personas</dt><dd>@Model.CantidadPersonas</dd></div>
+        <div><dt>Costo Total</dt><dd>S/. @Model.CostoTotal</dd></div>
+        <div><dt>Estado</dt><dd>@Model.Estado</dd></div>
+    </dl>
+
+    <div style="margin-top:30px; display:flex; gap:10px;">
+        <a asp-action="Editar" asp-route-id="@Model.IdReserva" class="btn-guardar"><i class="fa-solid fa-pen"></i> Editar</a>
+        <a asp-action="Index" class="btn-cancelar"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+    </div>
+</div>

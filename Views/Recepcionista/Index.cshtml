@@ -1,0 +1,44 @@
+﻿@model IEnumerable<HOTEL_PEA2.Models.Recepcionista>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Recepcionistas";
+}
+
+<link rel="stylesheet" href="~/css/clientes.css" />
+
+<div class="clientes-container">
+    <div class="clientes-header">
+        <div class="titulo">
+            <div class="icon-header"><i class="fa-solid fa-users"></i></div>
+            <div><h1>Recepcionistas</h1><p>Inicio / Recepcionistas</p></div>
+        </div>
+        <a asp-action="Create" class="btn-nuevo"><i class="fa-solid fa-plus"></i> Nuevo</a>
+    </div>
+
+    <div class="card">
+        <div class="card-title">LISTA DE RECEPCIONISTAS</div>
+        <table class="tabla-clientes">
+            <thead>
+                <tr><th>ID</th><th>Nombres</th><th>Usuario</th><th>Teléfono</th><th>Email</th><th>Estado</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td>@r.IdRecepcionista</td>
+                        <td>@r.Nombres @r.Apellidos</td>
+                        <td>@r.Usuario</td>
+                        <td>@r.Telefono</td>
+                        <td>@r.Email</td>
+                        <td>@r.Estado</td>
+                        <td style="display:flex; gap:6px;">
+                            <a asp-action="Edit" asp-route-id="@r.IdRecepcionista" class="btn-guardar" style="background:#ffc107;color:#000;"><i class="fa-solid fa-pen"></i></a>
+                            <a asp-action="Details" asp-route-id="@r.IdRecepcionista" class="btn-guardar" style="background:#0d6efd;"><i class="fa-solid fa-eye"></i></a>
+                            <a asp-action="Delete" asp-route-id="@r.IdRecepcionista" class="btn-guardar" style="background:#dc3545;"><i class="fa-solid fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

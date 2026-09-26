@@ -1,0 +1,29 @@
+﻿@model HOTEL_PEA2.Models.Cliente
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Eliminar Cliente";
+}
+
+<link rel="stylesheet" href="~/css/clientes.css" />
+
+<div class="clientes-container">
+    <div class="card">
+        <div class="card-title" style="color:#dc3545;">
+            ¿ELIMINAR CLIENTE?
+        </div>
+
+        <p>¿Seguro que deseas eliminar a <strong>@Model.Nombres @Model.Apellidos</strong> (DNI: @Model.Dni)?</p>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="IdCliente" />
+            <div class="botones">
+                <a asp-action="Index" class="btn-cancelar">
+                    <i class="fa-solid fa-xmark"></i> Cancelar
+                </a>
+                <button type="submit" class="btn-guardar" style="background:#dc3545;">
+                    <i class="fa-solid fa-trash"></i> Eliminar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

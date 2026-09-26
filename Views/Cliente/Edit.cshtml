@@ -1,0 +1,66 @@
+﻿@model HOTEL_PEA2.Models.Cliente
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Editar Cliente";
+}
+
+<link rel="stylesheet" href="~/css/clientes.css" />
+
+<div class="clientes-container">
+    <div class="clientes-header">
+        <div class="titulo">
+            <div class="icon-header"><i class="fa-solid fa-user-pen"></i></div>
+            <div>
+                <h1>Editar Cliente</h1>
+                <p>Inicio / Clientes / Editar</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">EDITAR CLIENTE</div>
+
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="IdCliente" />
+
+            <div class="form-grid">
+                <div>
+                    <label asp-for="Dni">DNI</label>
+                    <input asp-for="Dni" />
+                </div>
+                <div>
+                    <label asp-for="Nombres">Nombres</label>
+                    <input asp-for="Nombres" />
+                </div>
+                <div>
+                    <label asp-for="Apellidos">Apellidos</label>
+                    <input asp-for="Apellidos" />
+                </div>
+                <div>
+                    <label asp-for="Telefono">Teléfono</label>
+                    <input asp-for="Telefono" />
+                </div>
+                <div>
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" type="email" />
+                </div>
+                <div>
+                    <label asp-for="Estado">Estado</label>
+                    <select asp-for="Estado">
+                        <option value="ACTIVO">ACTIVO</option>
+                        <option value="INACTIVO">INACTIVO</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="botones">
+                <a asp-action="Index" class="btn-cancelar">
+                    <i class="fa-solid fa-xmark"></i> Cancelar
+                </a>
+                <button type="submit" class="btn-guardar">
+                    <i class="fa-regular fa-floppy-disk"></i> Guardar cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

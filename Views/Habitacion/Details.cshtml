@@ -1,0 +1,25 @@
+﻿@model HOTEL_PEA2.Models.Habitacion
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/clientes.css" />
+
+<div class="clientes-container">
+    <div class="card">
+        <div class="card-title">DETALLES DE HABITACIÓN</div>
+        <dl class="form-grid">
+            <div><dt>ID</dt><dd>@Model.IdHabitacion</dd></div>
+            <div><dt>Número</dt><dd>@Model.Numero</dd></div>
+            <div><dt>Piso</dt><dd>@Model.Piso</dd></div>
+            <div><dt>Capacidad</dt><dd>@Model.Capacidad</dd></div>
+            <div><dt>Precio</dt><dd>S/. @Model.Precio</dd></div>
+            <div><dt>Tipo</dt><dd>@Model.TipoHabitacion?.NombreTipo</dd></div>
+            <div><dt>Estado</dt><dd>@Model.Estado</dd></div>
+        </dl>
+        <div class="botones">
+            <a asp-action="Edit" asp-route-id="@Model.IdHabitacion" class="btn-guardar"><i class="fa-solid fa-pen"></i> Editar</a>
+            <a asp-action="Index" class="btn-cancelar"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+        </div>
+    </div>
+</div>

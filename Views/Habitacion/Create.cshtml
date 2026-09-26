@@ -1,0 +1,41 @@
+﻿@model HOTEL_PEA2.Models.Habitacion
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Nueva Habitación";
+}
+
+<link rel="stylesheet" href="~/css/clientes.css" />
+
+<div class="clientes-container">
+    <div class="card">
+        <div class="card-title">REGISTRO DE HABITACIÓN</div>
+
+        <form asp-action="Create" method="post">
+            <div class="form-grid">
+                <div><label>Número</label><input asp-for="Numero" /></div>
+                <div><label>Piso</label><input asp-for="Piso" /></div>
+                <div><label>Capacidad</label><input asp-for="Capacidad" type="number" /></div>
+                <div><label>Precio</label><input asp-for="Precio" type="number" step="0.01" /></div>
+                <div>
+                    <label>Estado</label>
+                    <select asp-for="Estado">
+                        <option value="DISPONIBLE">DISPONIBLE</option>
+                        <option value="OCUPADA">OCUPADA</option>
+                        <option value="MANTENIMIENTO">MANTENIMIENTO</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Tipo de Habitación</label>
+                    <select asp-for="IdTipoHabitacion" asp-items="ViewBag.Tipos">
+                        <option value="">-- Seleccione --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="botones">
+                <a asp-action="Index" class="btn-cancelar"><i class="fa-solid fa-xmark"></i> Cancelar</a>
+                <button type="submit" class="btn-guardar"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+﻿@model HOTEL_PEA2.Models.Reserva
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Editar Reserva";
+}
+
+<link rel="stylesheet" href="~/css/reserva.css" asp-append-version="true" />
+
+<div class="panel" style="padding:30px;">
+    <h1>Editar Reserva #@Model.IdReserva</h1>
+
+    <form asp-action="Editar" method="post">
+        <input type="hidden" asp-for="IdReserva" />
+        <input type="hidden" asp-for="FechaReserva" />
+
+        <div class="form-grid-3" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:20px;">
+            <div>
+                <label>Fecha Entrada</label>
+                <input asp-for="FechaEntrada" type="date" />
+            </div>
+            <div>
+                <label>Fecha Salida</label>
+                <input asp-for="FechaSalida" type="date" />
+            </div>
+            <div>
+                <label>Cantidad Personas</label>
+                <input asp-for="CantidadPersonas" type="number" />
+            </div>
+            <div>
+                <label>Cliente</label>
+                <select asp-for="IdCliente" asp-items="ViewBag.Clientes"></select>
+            </div>
+            <div>
+                <label>Habitación</label>
+                <select asp-for="IdHabitacion" asp-items="ViewBag.Habitaciones"></select>
+            </div>
+            <div>
+                <label>Recepcionista</label>
+                <select asp-for="IdRecepcionista" asp-items="ViewBag.Recepcionistas"></select>
+            </div>
+            <div>
+                <label>Costo Total</label>
+                <input asp-for="CostoTotal" type="number" step="0.01" />
+            </div>
+            <div>
+                <label>Estado</label>
+                <select asp-for="Estado">
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Confirmada">Confirmada</option>
+                    <option value="Cancelada">Cancelada</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="margin-top:30px; display:flex; gap:10px;">
+            <a asp-action="Index" class="btn-cancelar"><i class="fa-solid fa-xmark"></i> Cancelar</a>
+            <button type="submit" class="btn-guardar"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
+        </div>
+    </form>
+</div>
