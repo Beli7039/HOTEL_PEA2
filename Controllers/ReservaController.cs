@@ -42,9 +42,16 @@ namespace HOTEL_PEA2.Controllers
         {
             var vm = new ReservaViewModel
             {
-                Reserva = new Reserva(),
-                Cliente = new Cliente(),
-                Habitacion = new Habitacion(),
+                vm.Reserva = new Reserva();
+            }
+            else
+            {
+                vm.Reserva = await _context.Reserva.FindAsync(id);
+                if (vm.Reserva == null)
+                {
+                    return NotFound();
+                }
+            }
 
                 ListaClientes = _context.Cliente
                     .Where(c => c.Estado == "ACTIVO")

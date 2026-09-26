@@ -1,88 +1,158 @@
 ﻿@model IEnumerable<HOTEL_PEA2.Models.Reserva>
+
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Listado de Reservas";
 }
 
 <link rel="stylesheet" href="~/css/reserva.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/botones.css" asp-append-version="true" />
+
+<partial name="_Header" />
 
 <div class="panel">
-    <div class="dashboard-header" style="margin-bottom: 20px;">
+    <div class="dashboard-header">
         <div>
             <h1>Listado de Reservas</h1>
             <p>Gestión y administración de reservas registradas</p>
         </div>
     </div>
 
-    <div style="margin-bottom: 20px;">
-        <a asp-action="NuevaReserva" class="btn-guardar"
-           style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; background-color:#28a745;">
-            <i class="fa-solid fa-plus"></i> Nueva Reserva
+    <!-- =========================
+         AGREGAR RESERVA
+         ========================= -->
+    <div class="reserva-toolbar">
+        <a asp-action="NuevaReserva"
+           class="btn btn-agregar">
+            <i class="fa-solid fa-plus"></i>
+            Agregar Reserva
         </a>
     </div>
 
-    <form asp-action="Index" method="get" style="margin-bottom: 25px;">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <label style="font-weight:600;">Buscar:</label>
-            <input type="text" name="criterio" value="@ViewBag.Criterio"
-                   placeholder="Ingrese nombre..."
-                   style="padding:8px 12px; border:1px solid #ccc; border-radius:6px; width:250px;" />
-            <button type="submit" class="btn-cancelar"
-                    style="background:#212529; color:white; border:none; padding:8px 16px; border-radius:6px;">
-                Buscar
-            </button>
-        </div>
+    <!-- =========================
+         BUSCADOR
+         ========================= -->
+    <form asp-action="Index"
+          method="get"
+          class="reserva-search">
+        <label>
+            Buscar:
+        </label>
+        <input type="text"
+               name="criterio"
+               placeholder="Ingrese nombre o apellido..." />
+        <button type="submit"
+                class="btn btn-sm btn-buscar">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            Buscar
+        </button>
     </form>
-
-    <div style="overflow-x:auto;">
-        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:14px;">
+    <!-- =========================
+         TABLA
+         ========================= -->
+    <div class="tabla-container">
+        <table class="tabla-reservas">
             <thead>
-                <tr style="border-bottom:2px solid #111;">
-                    <th style="padding:12px 8px; color:#2d7cff;">Cliente</th>
-                    <th style="padding:12px 8px; color:#2d7cff;">Habitación</th>
-                    <th style="padding:12px 8px; color:#2d7cff;">Fecha Entrada</th>
-                    <th style="padding:12px 8px; color:#2d7cff;">Fecha Salida</th>
-                    <th style="padding:12px 8px; color:#2d7cff;">Costo Total</th>
-                    <th style="padding:12px 8px; color:#2d7cff;">Estado</th>
-                    <th style="padding:12px 8px; text-align:right;">Acciones</th>
+                <tr>
+                    <th>
+                        Nombre del Cliente
+                    </th>
+                    <th>
+                        Documento
+                    </th>
+                    <th>
+                        Fecha Entrada
+                    </th>
+                    <th>
+                        Fecha Salida
+                    </th>
+                    <th>
+                        Estado
+                    </th>
+                    <th class="columna-acciones">
+                        Acciones
+                    </th>
                 </tr>
             </thead>
             <tbody>
+
                 @if (Model != null && Model.Any())
                 {
-                    @foreach (var item in Model)
+                    foreach (var item in Model)
                     {
-                        <tr style="border-bottom:1px solid #e5e7eb;">
-                            <td style="padding:12px 8px; font-weight:500;">
-                                @(item.Cliente != null ? item.Cliente.Nombres + " " + item.Cliente.Apellidos : "Sin Cliente")
+                        <tr>
+                            <td class="cliente">
+                                @(item.Cliente != null
+                                                        ? item.Cliente.Nombres + " " + item.Cliente.Apellidos
+                                                        : "Sin Cliente")
+                             </td>
+                             <td class="cliente">
+                                 @(item.Cliente!= null ? item.Cliente.Dni : "")
+                             </td>
+
+                            <td class="fecha">
+                                @item.FechaEntrada.ToString("dd/MM/yyyy HH:mm:ss")
                             </td>
-                            <td style="padding:12px 8px;">@item.Habitacion?.Numero</td>
-                            <td style="padding:12px 8px;">@item.FechaEntrada.ToString("dd/MM/yyyy")</td>
-                            <td style="padding:12px 8px;">@item.FechaSalida.ToString("dd/MM/yyyy")</td>
-                            <td style="padding:12px 8px;">S/. @item.CostoTotal</td>
-                            <td style="padding:12px 8px;">@item.Estado</td>
-                            <td style="padding:12px 8px; text-align:right;">
-                                <div style="display:inline-flex; gap:6px;">
-                                    <a asp-action="Editar" asp-route-id="@item.IdReserva"
-                                       style="background:#ffc107; color:#000; padding:6px 14px; border-radius:4px; text-decoration:none; font-weight:600; font-size:13px;">Edit</a>
-                                    <a asp-action="Detalles" asp-route-id="@item.IdReserva"
-                                       style="background:#0d6efd; color:#fff; padding:6px 14px; border-radius:4px; text-decoration:none; font-weight:600; font-size:13px;">Details</a>
-                                    <a asp-action="Eliminar" asp-route-id="@item.IdReserva"
-                                       style="background:#dc3545; color:#fff; padding:6px 14px; border-radius:4px; text-decoration:none; font-weight:600; font-size:13px;">Delete</a>
+                            <td class="fecha">
+                                @item.FechaSalida.ToString("dd/MM/yyyy HH:mm:ss")
+                            </td>
+                            <td class="estado">
+                                @item.Estado
+                            </td>
+                            <td>
+                                <div class="acciones">
+                                    <!-- EDITAR -->
+                                    <a asp-action="NuevaReserva"
+                                       asp-route-id="@item.IdReserva"
+                                       class="btn btn-sm btn-modificar">
+
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                        Editar
+
+                                    </a>
+
+
+                                    <!-- ELIMINAR -->
+
+                                    <form asp-action="Eliminar"
+                                          asp-route-id="@item.IdReserva"
+                                          method="post">
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-eliminar"
+                                                onclick="return confirm('¿Estás seguro de eliminar esta reserva?');">
+
+                                            <i class="fa-solid fa-trash"></i>
+                                            Eliminar
+
+                                        </button>
+
+                                    </form>
+
                                 </div>
+
                             </td>
+
                         </tr>
-                    }
+                                }
                 }
                 else
                 {
                     <tr>
-                        <td colspan="7" style="padding:20px; text-align:center; color:#777;">
+
+                        <td colspan="4" class="sin-registros">
+
                             No hay registros disponibles.
+
                         </td>
+
                     </tr>
                 }
+
             </tbody>
+
         </table>
+
     </div>
+
 </div>

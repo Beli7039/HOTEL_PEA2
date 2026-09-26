@@ -18,6 +18,7 @@ namespace HOTEL_PEA2.Models
 
         public string? Estado { get; set; }
 
+        // Llave foránea hacia Tipo_Habitacion
         public int IdTipoHabitacion { get; set; }
 
         [ForeignKey("IdTipoHabitacion")]

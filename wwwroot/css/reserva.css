@@ -1,46 +1,46 @@
 ﻿/* ==========================================
    TOPBAR Y ENCABEZADOS DE PÁGINA
    ========================================== */
+
 .topbar {
     position: fixed;
     top: 0;
-    left: var(--sidebar-width, 240px); /* Comienza exactamente donde termina el sidebar */
-    width: calc(100% - var(--sidebar-width, 240px)); /* Ocupa todo el resto de la pantalla */
+    left: var(--sidebar-width, 240px);
+    width: calc(100% - var(--sidebar-width, 240px));
     height: 70px;
     background-color: var(--bg-card, #ffffff);
     display: flex;
     justify-content: flex-end;
     align-items: center;
     padding: 0 32px;
-    box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.05));
+    box-shadow: var( --shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.05) );
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    z-index: 999; /* Por debajo del sidebar (1000) pero por encima del contenido */
+    z-index: 999;
 }
-/* Compensación para el contenido debajo de la topbar fija */
+
+
+/* ==========================================
+   CONTENIDO PRINCIPAL
+   ========================================== */
+
 .main-content {
     margin-left: var(--sidebar-width, 240px);
-    padding-top: 102px; /* 70px de la topbar + 32px de espacio interior */
+    padding-top: 102px;
     padding-left: 32px;
     padding-right: 32px;
     padding-bottom: 32px;
     min-height: 100vh;
 }
 
-/* Ajustes de responsividad cuando el sidebar cambia de tamaño */
-@media (max-width: 992px) {
-    .topbar {
-        left: 80px;
-        width: calc(100% - 80px);
-    }
 
-    .main-content {
-        margin-left: 80px;
-    }
-}
+/* ==========================================
+   BOTÓN DEL MENÚ
+   ========================================== */
+
 .menu-btn {
     width: 42px;
     height: 42px;
-    background: var(--accent-red, #e10000);
+    background: var(--accent-red, #F00000);
     color: #ffffff;
     border-radius: 50%;
     display: flex;
@@ -48,12 +48,17 @@
     align-items: center;
     font-size: 18px;
     cursor: pointer;
-    transition: background-color var(--transition-fast, 0.2s ease);
+    transition: background-color 0.2s ease;
 }
 
     .menu-btn:hover {
-        background: var(--accent-red-hover, #b80000);
+        background: var(--accent-red-hover, #D90000);
     }
+
+
+/* ==========================================
+   INFORMACIÓN DEL USUARIO
+   ========================================== */
 
 .user-info {
     display: flex;
@@ -64,7 +69,7 @@
 .user-icon {
     width: 40px;
     height: 40px;
-    background: var(--accent-red, #e10000);
+    background: var(--accent-red, #F00000);
     color: #ffffff;
     border-radius: 50%;
     display: flex;
@@ -72,6 +77,11 @@
     align-items: center;
     font-size: 16px;
 }
+
+
+/* ==========================================
+   ENCABEZADO DE PÁGINA
+   ========================================== */
 
 .page-header {
     display: flex;
@@ -92,7 +102,7 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: var(--accent-red, #e10000);
+    background: var(--accent-red, #F00000);
     color: #ffffff;
     display: flex;
     justify-content: center;
@@ -115,50 +125,25 @@
 }
 
     .breadcrumb span {
-        color: var(--accent-red, #e10000);
+        color: var(--accent-red, #F00000);
         font-weight: 600;
     }
+
+
+/* ==========================================
+   BOTONES DEL HEADER
+   ========================================== */
 
 .header-buttons {
     display: flex;
     gap: 12px;
 }
 
-.btn-cancelar,
-.btn-guardar {
-    border: none;
-    padding: 10px 20px;
-    border-radius: var(--radius-md, 12px);
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-fast, 0.2s ease);
-}
-
-.btn-cancelar {
-    background: var(--bg-card, #ffffff);
-    color: var(--text-secondary, #6b7280);
-    border: 1px solid #e5e7eb;
-}
-
-    .btn-cancelar:hover {
-        background: #f9fafb;
-        color: var(--text-primary, #111827);
-    }
-
-.btn-guardar {
-    background: var(--accent-red, #e10000);
-    color: #ffffff;
-}
-
-    .btn-guardar:hover {
-        background: var(--accent-red-hover, #b80000);
-        box-shadow: 0 4px 12px rgba(225, 0, 0, 0.25);
-    }
 
 /* ==========================================
-   LAYOUT Y TARJETAS DE FORMULARIO
+   LAYOUT DEL FORMULARIO
    ========================================== */
+
 .reserva-layout {
     display: grid;
     grid-template-columns: 1fr 320px;
@@ -166,24 +151,38 @@
     align-items: start;
 }
 
+
+/* ==========================================
+   TARJETAS DE FORMULARIO
+   ========================================== */
+
 .card-reserva,
 .resumen-card {
     background: var(--bg-card, #ffffff);
     border-radius: var(--radius-lg, 16px);
     padding: 24px;
     margin-bottom: 20px;
-    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.05));
+    box-shadow: var( --shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.05) );
     border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
+
+/* ==========================================
+   TÍTULO DE TARJETA
+   ========================================== */
+
 .card-title {
-    color: var(--accent-red, #e10000);
+    color: var(--accent-red, #F00000);
     font-weight: 700;
     font-size: 18px;
     margin-bottom: 20px;
 }
 
-/* Grillas de Formulario */
+
+/* ==========================================
+   GRILLA DE FORMULARIO
+   ========================================== */
+
 .form-grid-3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -196,45 +195,120 @@
     gap: 16px;
 }
 
+
+/* ==========================================
+   GRUPO DEL FORMULARIO
+   ========================================== */
+
 .form-group {
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
+
+    /* ==========================================
+   LABEL
+   ========================================== */
+
     .form-group label {
+        display: block;
         margin-bottom: 6px;
         font-size: 13px;
         font-weight: 600;
         color: var(--text-primary, #111827);
     }
 
+
+    /* ==========================================
+   INPUT / SELECT / TEXTAREA
+   ========================================== */
+
     .form-group input,
     .form-group select,
     .form-group textarea {
+        width: 100%;
+        box-sizing: border-box;
         border: 1px solid #d1d5db;
         border-radius: var(--radius-sm, 8px);
         padding: 10px 14px;
+        font-family: inherit;
         font-size: 14px;
         color: var(--text-primary, #111827);
         background-color: #ffffff;
         outline: none;
-        transition: border-color var(--transition-fast, 0.2s ease), box-shadow var(--transition-fast, 0.2s ease);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     }
+
+
+    /* Altura consistente */
+
+    .form-group input,
+    .form-group select {
+        height: 42px;
+    }
+
+
+    /* Textarea */
+
+    .form-group textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+
+        /* Placeholder */
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #9ca3af;
+        }
+
+
+        /* ==========================================
+   FOCUS
+   ========================================== */
 
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-            border-color: var(--accent-red, #e10000);
-            box-shadow: 0 0 0 3px rgba(225, 0, 0, 0.1);
+            border-color: var(--accent-red, #F00000);
+            box-shadow: 0 0 0 3px rgba(240, 0, 0, 0.10);
+            background-color: #ffffff;
         }
+
+
+        /* ==========================================
+   ESTADOS DE VALIDACIÓN
+   ========================================== */
+
+        .form-group input.input-validation-error,
+        .form-group select.input-validation-error,
+        .form-group textarea.input-validation-error {
+            border-color: #dc2626;
+        }
+
+.field-validation-error {
+    display: block;
+    margin-top: 5px;
+    color: #dc2626;
+    font-size: 12px;
+}
+
+
+/* ==========================================
+   MARGEN
+   ========================================== */
 
 .mt-20 {
     margin-top: 20px;
 }
 
+
 /* ==========================================
-   RESUMEN Y TOTALES
+   RESUMEN
    ========================================== */
+
 .resumen-item {
     display: flex;
     justify-content: space-between;
@@ -249,6 +323,11 @@
         color: var(--text-primary, #111827);
     }
 
+
+/* ==========================================
+   TOTAL
+   ========================================== */
+
 .total-final {
     display: flex;
     justify-content: space-between;
@@ -257,18 +336,218 @@
     padding-top: 16px;
     border-top: 2px dashed #e5e7eb;
     font-size: 20px;
-    color: var(--accent-red, #e10000);
+    color: var(--accent-red, #F00000);
     font-weight: 700;
 }
 
     .total-final span {
-        float: none; /* Reemplazado float por flexbox */
+        float: none;
     }
 
+
+/* =========================================================
+   LISTADO DE RESERVAS
+   ========================================================= */
+
+.reserva-toolbar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
 /* ==========================================
-   RESPONSIVIDAD (MEDIA QUERIES)
+   BUSCADOR
    ========================================== */
+
+.reserva-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+    .reserva-search label {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary, #111827);
+    }
+
+    .reserva-search input {
+        width: 250px;
+        height: 38px;
+        box-sizing: border-box;
+        padding: 0 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 7px;
+        background: #ffffff;
+        color: #111827;
+        font-family: inherit;
+        font-size: 13px;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .reserva-search input::placeholder {
+            color: #9ca3af;
+        }
+
+        .reserva-search input:focus {
+            border-color: var(--accent-red, #F00000);
+            box-shadow: 0 0 0 3px rgba(240, 0, 0, 0.08);
+        }
+
+
+/* =========================================================
+   TABLA
+   ========================================================= */
+
+.tabla-container {
+    width: 100%;
+    overflow-x: auto;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+
+/* ==========================================
+   TABLA PRINCIPAL
+   ========================================== */
+
+.tabla-reservas {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+
+    /* ==========================================
+   CABECERA
+   ========================================== */
+
+    .tabla-reservas thead {
+        background: #f8fafc;
+    }
+
+        .tabla-reservas thead tr {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+    .tabla-reservas th {
+        padding: 13px 14px;
+        color: #001426;
+        font-size: 12px;
+        font-weight: 700;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+
+    /* ==========================================
+   FILAS
+   ========================================== */
+
+    .tabla-reservas tbody tr {
+        border-bottom: 1px solid #eef0f2;
+        transition: background-color 0.15s ease;
+    }
+
+        .tabla-reservas tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .tabla-reservas tbody tr:hover {
+            background-color: #fafbfc;
+        }
+
+
+    /* ==========================================
+   CELDAS
+   ========================================== */
+
+    .tabla-reservas td {
+        padding: 13px 14px;
+        vertical-align: middle;
+    }
+
+
+    /* Cliente */
+
+    .tabla-reservas .cliente {
+        color: #1f2937;
+        font-weight: 600;
+    }
+
+
+    /* Fecha */
+
+    .tabla-reservas .fecha {
+        color: #6b7280;
+        font-size: 12px;
+    }
+
+
+    /* Estado */
+
+    .tabla-reservas .estado {
+        color: #4b5563;
+        font-size: 12px;
+    }
+
+
+/* ==========================================
+   COLUMNA ACCIONES
+   ========================================== */
+
+.columna-acciones {
+    width: 180px;
+    text-align: right !important;
+}
+
+.tabla-reservas td:last-child {
+    padding-right: 18px;
+    text-align: right;
+}
+
+
+/* ==========================================
+   ACCIONES
+   ========================================== */
+
+.acciones {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+    .acciones form {
+        display: flex;
+        margin: 0;
+        padding: 0;
+    }
+
+
+/* ==========================================
+   SIN REGISTROS
+   ========================================== */
+
+.sin-registros {
+    padding: 40px 20px !important;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
 @media (max-width: 1200px) {
+
     .reserva-layout {
         grid-template-columns: 1fr;
     }
@@ -278,7 +557,22 @@
     }
 }
 
+
+@media (max-width: 992px) {
+
+    .topbar {
+        left: 80px;
+        width: calc(100% - 80px);
+    }
+
+    .main-content {
+        margin-left: 80px;
+    }
+}
+
+
 @media (max-width: 768px) {
+
     .form-grid-3,
     .form-grid-4 {
         grid-template-columns: 1fr;
@@ -293,9 +587,29 @@
         width: 100%;
     }
 
-    .btn-cancelar,
-    .btn-guardar {
-        flex: 1;
-        text-align: center;
+    .reserva-search {
+        flex-wrap: wrap;
+    }
+
+        .reserva-search input {
+            width: 100%;
+            max-width: 300px;
+        }
+}
+
+
+@media (max-width: 700px) {
+
+    .acciones {
+        flex-wrap: wrap;
+    }
+
+    .tabla-reservas th,
+    .tabla-reservas td {
+        padding: 10px;
+    }
+
+    .columna-acciones {
+        width: auto;
     }
 }

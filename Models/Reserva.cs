@@ -8,31 +8,33 @@ namespace HOTEL_PEA2.Models
         [Key]
         public int IdReserva { get; set; }
 
-        public DateTime FechaReserva { get; set; } = DateTime.Now;
+        public DateTime FechaEntrada { get; set; } = DateTime.Today;
 
-        public DateTime FechaEntrada { get; set; }
-
-        public DateTime FechaSalida { get; set; }
+        public DateTime FechaSalida { get; set; } = DateTime.Today;
 
         public int CantidadPersonas { get; set; }
 
         public decimal CostoTotal { get; set; }
 
-        public string? Estado { get; set; }
+        public string Estado { get; set; } = string.Empty;
 
-        // FOREIGN KEYS
+        public string Observaciones { get; set; } = string.Empty;
+
+        // ==========================================
+        // FOREIGN KEYS Y PROPIEDADES DE NAVEGACIÓN
+        // ==========================================
+
         public int IdCliente { get; set; }
-        public int IdHabitacion { get; set; }
-        public int IdRecepcionista { get; set; }
-
-        // PROPIEDADES DE NAVEGACIÓN
         [ForeignKey("IdCliente")]
-        public Cliente? Cliente { get; set; }
+        public virtual Cliente? Cliente { get; set; }
 
+        public int IdHabitacion { get; set; }
         [ForeignKey("IdHabitacion")]
-        public Habitacion? Habitacion { get; set; }
+        public virtual Habitacion? Habitacion { get; set; }
 
-        [ForeignKey("IdRecepcionista")]
-        public Recepcionista? Recepcionista { get; set; }
+        public int IdRecepcionista { get; set; }
+        // Si tienes una tabla o modelo Recepcionista, puedes agregarlo igual:
+        // [ForeignKey("IdRecepcionista")]
+        // public virtual Recepcionista? Recepcionista { get; set; }
     }
 }

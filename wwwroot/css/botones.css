@@ -1,0 +1,264 @@
+﻿/* =========================================================
+   REAL HOTEL HUÁNUCO
+   BOTONES
+   ========================================================= */
+
+:root {
+    --hotel-red: #F00000;
+    --hotel-red-hover: #D90000;
+    --hotel-red-dark: #B80000;
+    --hotel-blue: #001426;
+    --hotel-blue-hover: #09243A;
+    --hotel-gold: #C9A227;
+    --hotel-white: #FFFFFF;
+    --hotel-gray-light: #F3F4F6;
+    --hotel-gray-border: #D1D5DB;
+    --hotel-gray-text: #374151;
+}
+
+
+/* =========================================================
+   BOTÓN BASE
+   ========================================================= */
+
+.btn {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 38px;
+    padding: 0 15px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+
+/* BUTTON */
+
+button.btn {
+    appearance: none;
+    -webkit-appearance: none;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+
+/* HOVER */
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+
+/* ACTIVE */
+
+.btn:active {
+    transform: translateY(0);
+}
+
+
+/* DISABLED */
+
+.btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   BOTÓN PEQUEÑO
+   ========================================================= */
+
+.btn-sm {
+    height: 32px;
+    padding: 0 11px;
+    font-size: 12px;
+    border-radius: 6px;
+}
+
+
+/* =========================================================
+   AGREGAR / NUEVO
+   ========================================================= */
+
+.btn-agregar,
+.btn-nuevo {
+    background: var(--hotel-red) !important;
+    color: #ffffff !important;
+    border-color: var(--hotel-red) !important;
+    box-shadow: 0 3px 8px rgba(240, 0, 0, 0.20);
+}
+
+    .btn-agregar:hover,
+    .btn-nuevo:hover {
+        background: var(--hotel-red-hover) !important;
+        color: #ffffff !important;
+        border-color: var(--hotel-red-hover) !important;
+        box-shadow: 0 5px 12px rgba(240, 0, 0, 0.28);
+    }
+
+
+/* =========================================================
+   MODIFICAR / EDITAR
+   ========================================================= */
+
+.btn-modificar,
+.btn-editar {
+    background: var(--hotel-blue) !important;
+    color: #ffffff !important;
+    border-color: var(--hotel-blue) !important;
+    box-shadow: 0 2px 6px rgba(0, 20, 38, 0.15);
+}
+
+    .btn-modificar:hover,
+    .btn-editar:hover {
+        background: var(--hotel-blue-hover) !important;
+        color: #ffffff !important;
+        border-color: var(--hotel-blue-hover) !important;
+        box-shadow: 0 4px 9px rgba(0, 20, 38, 0.22);
+    }
+
+
+/* =========================================================
+   ELIMINAR
+   ========================================================= */
+
+.btn-eliminar {
+    background: #FFF1F1 !important;
+    color: var(--hotel-red-dark) !important;
+    border-color: #F2B8B8 !important;
+}
+
+    .btn-eliminar:hover {
+        background: var(--hotel-red) !important;
+        color: #ffffff !important;
+        border-color: var(--hotel-red) !important;
+        box-shadow: 0 4px 9px rgba(240, 0, 0, 0.20);
+    }
+
+
+/* =========================================================
+   BUSCAR
+   ========================================================= */
+
+.btn-buscar {
+    background: var(--hotel-blue) !important;
+    color: #ffffff !important;
+    border-color: var(--hotel-blue) !important;
+}
+
+    .btn-buscar:hover {
+        background: var(--hotel-blue-hover) !important;
+        color: #ffffff !important;
+        border-color: var(--hotel-blue-hover) !important;
+    }
+
+
+/* =========================================================
+   GUARDAR
+   ========================================================= */
+
+/* =========================================================
+   CANCELAR
+   ========================================================= */
+
+.btn-cancelar {
+    background: #ffffff !important;
+    color: #001426 !important;
+    border: 1px solid #C9A227 !important;
+    box-shadow: 0 2px 6px rgba(0, 20, 38, 0.08);
+}
+
+    .btn-cancelar:hover {
+        background: #FFFDF5 !important;
+        color: #001426 !important;
+        border-color: #B8941F !important;
+        box-shadow: 0 4px 10px rgba(201, 162, 39, 0.18);
+    }
+
+
+/* =========================================================
+   GUARDAR
+   ========================================================= */
+
+.btn-guardar {
+    background: #F00000 !important;
+    color: #FFFFFF !important;
+    border: 1px solid #F00000 !important;
+    box-shadow: 0 3px 8px rgba(240, 0, 0, 0.20);
+}
+
+    .btn-guardar:hover {
+        background: #D90000 !important;
+        color: #FFFFFF !important;
+        border-color: #D90000 !important;
+        box-shadow: 0 5px 12px rgba(240, 0, 0, 0.28);
+    }
+/* =========================================================
+   VOLVER
+   ========================================================= */
+
+.btn-volver {
+    background: var(--hotel-blue) !important;
+    color: #ffffff !important;
+    border-color: var(--hotel-blue) !important;
+}
+
+    .btn-volver:hover {
+        background: var(--hotel-blue-hover) !important;
+        color: #ffffff !important;
+        border-color: var(--hotel-blue-hover) !important;
+    }
+
+
+/* =========================================================
+   OUTLINE ROJO
+   ========================================================= */
+
+.btn-outline-rojo {
+    background: transparent !important;
+    color: var(--hotel-red) !important;
+    border-color: var(--hotel-red) !important;
+}
+
+    .btn-outline-rojo:hover {
+        background: var(--hotel-red) !important;
+        color: #ffffff !important;
+    }
+
+
+/* =========================================================
+   OUTLINE AZUL
+   ========================================================= */
+
+.btn-outline-azul {
+    background: transparent !important;
+    color: var(--hotel-blue) !important;
+    border-color: var(--hotel-blue) !important;
+}
+
+    .btn-outline-azul:hover {
+        background: var(--hotel-blue) !important;
+        color: #ffffff !important;
+    }
+
+
+/* =========================================================
+   ICONOS
+   ========================================================= */
+
+.btn i {
+    font-size: 12px;
+    line-height: 1;
+}
