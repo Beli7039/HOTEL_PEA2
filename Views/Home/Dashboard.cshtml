@@ -2,253 +2,247 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<link rel="stylesheet" href="/css/dashboard.css" />
+<link rel="stylesheet" href="~/css/dashboard.css" />
 
-@{
-    ViewData["Title"] = "Dashboard";
-}
+<!-- Chart.js: librería gratuita para gráficos en el navegador -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<link rel="stylesheet" href="/css/dashboard.css" />
-
+<!-- ============================================================ -->
+<!-- ENCABEZADO CON FECHA REAL Y USUARIO LOGUEADO                 -->
+<!-- ============================================================ -->
 <div class="dashboard-header">
 
     <div>
         <h1>Dashboard</h1>
         <p>
             Bienvenido,
-            <span>Recepcionista</span>
+            <span>@ViewBag.Usuario</span>
         </p>
     </div>
 
     <div class="date-box">
         <i class="fa-regular fa-calendar"></i>
-        20 de mayo de 2024
+        @ViewBag.FechaActual
     </div>
 
 </div>
 
-    <div class="cards-premium">
+<!-- ============================================================ -->
+<!-- TARJETAS DE ESTADÍSTICAS (datos reales)                      -->
+<!-- ============================================================ -->
+<div class="cards-premium">
 
-        <div class="card-premium">
-
-            <div class="icon blue">
-                <i class="fa-solid fa-bed"></i>
-            </div>
-
-            <div>
-                <h4>Habitaciones Ocupadas</h4>
-
-                <h1>32</h1>
-
-                <p>de 50 habitaciones</p>
-
-                <div class="progress">
-                    <div class="progress-bar blue-bar"></div>
-                </div>
-
-                <span class="percent">64%</span>
-            </div>
-
+    <!-- TARJETA 1: Habitaciones Ocupadas -->
+    <div class="card-premium">
+        <div class="icon blue">
+            <i class="fa-solid fa-bed"></i>
         </div>
+        <div>
+            <h4>Habitaciones Ocupadas</h4>
+            <h1>@ViewBag.HabitacionesOcupadas</h1>
+            <p>de @ViewBag.TotalHabitaciones habitaciones</p>
 
-        <div class="card-premium">
-
-            <div class="icon green">
-                <i class="fa-regular fa-calendar"></i>
+            <!-- Barra de progreso: el width se calcula con el % real -->
+            <div class="progress">
+                <div class="progress-bar blue-bar"
+                     style="width: @ViewBag.PorcentajeOcupacion%"></div>
             </div>
-
-            <div>
-                <h4>Reservas Hoy</h4>
-
-                <h1>18</h1>
-
-                <p>Total de reservas</p>
-
-                <a href="#">Ver detalles →</a>
-            </div>
-
+            <span class="percent">@ViewBag.PorcentajeOcupacion%</span>
         </div>
-
-        <div class="card-premium">
-
-            <div class="icon orange">
-                <i class="fa-regular fa-user"></i>
-            </div>
-
-            <div>
-                <h4>Check-In Hoy</h4>
-
-                <h1>7</h1>
-
-                <p>Llegadas programadas</p>
-
-                <a href="#">Ver llegadas →</a>
-            </div>
-
-        </div>
-
-        <div class="card-premium">
-
-            <div class="icon purple">
-                <i class="fa-solid fa-house"></i>
-            </div>
-
-            <div>
-                <h4>Check-Out Hoy</h4>
-
-                <h1>5</h1>
-
-                <p>Salidas programadas</p>
-
-                <a href="#">Ver salidas →</a>
-            </div>
-
-        </div>
-
-        <div class="card-premium">
-
-            <div class="icon cyan">
-                <i class="fa-solid fa-dollar-sign"></i>
-            </div>
-
-            <div>
-                <h4>Ingresos Hoy</h4>
-
-                <h1>S/. 3,850</h1>
-
-                <p>Total ingresos</p>
-
-                <a href="#">Ver detalle →</a>
-            </div>
-
-        </div>
-
     </div>
 
-    <div class="dashboard-grid">
-
-        <div class="panel panel-large">
-
-            <div class="panel-top">
-                <h2>Ocupación de Habitaciones</h2>
-
-                <select>
-                    <option>Últimos 7 días</option>
-                </select>
-            </div>
-
-            <div class="chart-area">
-                <div class="fake-line"></div>
-            </div>
-
-            <div class="chart-labels">
-                <span>14 May</span>
-                <span>15 May</span>
-                <span>16 May</span>
-                <span>17 May</span>
-                <span>18 May</span>
-                <span>19 May</span>
-                <span>20 May</span>
-            </div>
-
-            <div class="chart-stats">
-
-                <div>
-                    <p>Promedio ocupación</p>
-                    <h3>61%</h3>
-                </div>
-
-                <div>
-                    <p>Habitaciones ocupadas</p>
-                    <h3>32</h3>
-                </div>
-
-                <div>
-                    <p>Habitaciones disponibles</p>
-                    <h3>18</h3>
-                </div>
-
-                <div>
-                    <p>Total habitaciones</p>
-                    <h3>50</h3>
-                </div>
-
-            </div>
-
+    <!-- TARJETA 2: Reservas Hoy -->
+    <div class="card-premium">
+        <div class="icon green">
+            <i class="fa-regular fa-calendar"></i>
         </div>
-
-        <div class="panel panel-large">
-
-            <h2>Habitaciones por Estado</h2>
-
-            <div class="donut"></div>
-
-            <div class="estado-list">
-
-                <div>
-                    <span class="dot blue"></span>
-                    Ocupadas
-                </div>
-
-                <div>
-                    <span class="dot green"></span>
-                    Disponibles
-                </div>
-
-                <div>
-                    <span class="dot orange"></span>
-                    Mantenimiento
-                </div>
-
-                <div>
-                    <span class="dot red"></span>
-                    Fuera de servicio
-                </div>
-
-            </div>
-
+        <div>
+            <h4>Reservas Hoy</h4>
+            <h1>@ViewBag.ReservasHoy</h1>
+            <p>Total de reservas</p>
+            <a asp-controller="Reserva" asp-action="Index">Ver detalles →</a>
         </div>
-        <div class="panel panel-large">
-
-            <div class="panel-top">
-                <h2>Próximas Llegadas</h2>
-
-                <a href="#">Ver todas →</a>
-            </div>
-
-            <div class="guest">
-
-                <div class="guest-avatar yellow"></div>
-
-                <div>
-                    <h4>María Fernández</h4>
-                    <p>Habitación 201</p>
-                </div>
-
-            </div>
-
-            <div class="guest">
-
-                <div class="guest-avatar blue"></div>
-
-                <div>
-                    <h4>Carlos Gómez</h4>
-                    <p>Habitación 305</p>
-                </div>
-
-            </div>
-
-            <div class="guest">
-
-                <div class="guest-avatar purple"></div>
-
-                <div>
-                    <h4>Lucía Ramírez</h4>
-                    <p>Habitación 102</p>
-                </div>
-
-            </div>
-
-        </div>
-
     </div>
+
+    <!-- TARJETA 3: Check-In Hoy -->
+    <div class="card-premium">
+        <div class="icon orange">
+            <i class="fa-regular fa-user"></i>
+        </div>
+        <div>
+            <h4>Check-In Hoy</h4>
+            <h1>@ViewBag.CheckInHoy</h1>
+            <p>Llegadas programadas</p>
+            <a asp-controller="Reserva" asp-action="Index">Ver llegadas →</a>
+        </div>
+    </div>
+
+    <!-- TARJETA 4: Check-Out Hoy -->
+    <div class="card-premium">
+        <div class="icon purple">
+            <i class="fa-solid fa-house"></i>
+        </div>
+        <div>
+            <h4>Check-Out Hoy</h4>
+            <h1>@ViewBag.CheckOutHoy</h1>
+            <p>Salidas programadas</p>
+            <a asp-controller="Reserva" asp-action="Index">Ver salidas →</a>
+        </div>
+    </div>
+
+    <!-- TARJETA 5: Ingresos del Día -->
+    <div class="card-premium">
+        <div class="icon cyan">
+            <i class="fa-solid fa-dollar-sign"></i>
+        </div>
+        <div>
+            <h4>Ingresos Hoy</h4>
+            <h1>S/. @(((decimal)ViewBag.IngresosHoy).ToString("N2"))</h1>
+            <p>Total ingresos</p>
+            <a asp-controller="Reserva" asp-action="Index">Ver detalle →</a>
+        </div>
+    </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- GRID INFERIOR: gráficos y paneles                            -->
+<!-- ============================================================ -->
+<div class="dashboard-grid">
+
+    <!-- PANEL 1: Gráfico de ocupación con Chart.js -->
+    <div class="panel panel-large">
+        <div class="panel-top">
+            <h2>Ocupación de Habitaciones</h2>
+            <select>
+                <option>Últimos 7 días</option>
+            </select>
+        </div>
+
+        <!-- El <canvas> es donde Chart.js dibuja el gráfico -->
+        <canvas id="graficoOcupacion" height="120"></canvas>
+    </div>
+
+    <!-- PANEL 2: Donut con Chart.js -->
+    <div class="panel panel-large">
+        <h2>Habitaciones por Estado</h2>
+
+        <canvas id="graficoEstados" height="150"></canvas>
+
+        <div class="estado-list">
+            <div>
+                <span class="dot blue"></span>
+                Ocupadas (@ViewBag.HabitacionesOcupadas)
+            </div>
+            <div>
+                <span class="dot green"></span>
+                Disponibles (@ViewBag.HabitacionesDisponibles)
+            </div>
+            <div>
+                <span class="dot orange"></span>
+                Mantenimiento (@ViewBag.HabitacionesMantenimiento)
+            </div>
+            <div>
+                <span class="dot red"></span>
+                Fuera de servicio (@ViewBag.HabitacionesFueraServicio)
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL 3: Próximas llegadas (datos reales) -->
+    <div class="panel panel-large">
+        <div class="panel-top">
+            <h2>Próximas Llegadas</h2>
+            <a asp-controller="Reserva" asp-action="Index">Ver todas →</a>
+        </div>
+
+        <!-- Si no hay próximas llegadas, mostramos un mensaje -->
+        @if (ViewBag.ProximasLlegadas == null || ViewBag.ProximasLlegadas.Count == 0)
+        {
+            <p style="text-align:center; color:#888; padding:20px;">
+                No hay llegadas próximas registradas.
+            </p>
+        }
+        else
+        {
+            @foreach (var r in ViewBag.ProximasLlegadas)
+            {
+                <div class="guest">
+                    <div class="guest-avatar yellow"></div>
+                    <div>
+                        <!-- Cliente y Habitacion vienen de las propiedades de navegación -->
+                        <h4>@r.Cliente?.Nombres @r.Cliente?.Apellidos</h4>
+                        <p>
+                            Habitación @r.Habitacion?.Numero
+                            — @r.FechaEntrada.ToString("dd/MM/yyyy")
+                        </p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- SCRIPTS DE CHART.JS                                           -->
+<!-- Se ejecutan al final para que el DOM ya esté listo            -->
+<!-- ============================================================ -->
+<script>
+    // === GRÁFICO 1: Línea de ocupación ===
+
+    // Convertimos los datos que envió el controlador (ViewBag)
+    // a un array de JavaScript que Chart.js pueda leer.
+    const labelsOcupacion = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.GraficoLabels));
+    const valoresOcupacion = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.GraficoValores));
+
+    new Chart(document.getElementById('graficoOcupacion'), {
+        type: 'line',
+        data: {
+            labels: labelsOcupacion,
+            datasets: [{
+                label: 'Reservas activas',
+                data: valoresOcupacion,
+                borderColor: '#4facfe',
+                backgroundColor: 'rgba(79, 172, 254, 0.15)',
+                tension: 0.4,        // suaviza las curvas
+                fill: true,
+                pointRadius: 5,
+                pointBackgroundColor: '#4facfe'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+        }
+    });
+
+    // === GRÁFICO 2: Donut de estados ===
+    new Chart(document.getElementById('graficoEstados'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Ocupadas', 'Disponibles', 'Mantenimiento', 'Fuera de servicio'],
+            datasets: [{
+                data: [
+                    @ViewBag.HabitacionesOcupadas,
+                    @ViewBag.HabitacionesDisponibles,
+                    @ViewBag.HabitacionesMantenimiento,
+                    @ViewBag.HabitacionesFueraServicio
+                ],
+                backgroundColor: ['#4facfe', '#28a745', '#fd7e14', '#dc3545'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>

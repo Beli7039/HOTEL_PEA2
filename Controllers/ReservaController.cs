@@ -16,6 +16,7 @@ namespace HOTEL_PEA2.Controllers
             _context = context;
         }
 
+        // GET: /Reserva
         public async Task<IActionResult> Index(string criterio)
         {
             var query = _context.Reserva
@@ -26,21 +27,28 @@ namespace HOTEL_PEA2.Controllers
             if (!string.IsNullOrEmpty(criterio))
             {
                 query = query.Where(r => r.Cliente != null &&
-                    (r.Cliente.Nombres.Contains(criterio) || r.Cliente.Apellidos.Contains(criterio)));
+                    (r.Cliente.Nombres.Contains(criterio) ||
+                     r.Cliente.Apellidos.Contains(criterio)));
             }
 
             var listaReservas = await query.ToListAsync();
             return View(listaReservas);
         }
 
-
+        // GET: /Reserva/NuevaReserva
         public async Task<IActionResult> NuevaReserva(int? id)
         {
             ReservaViewModel vm = new ReservaViewModel();
 
             if (id == null || id == 0)
             {
-                vm.Reserva = new Reserva();
+                vm.Reserva = new Reserva
+                {
+                    FechaEntrada = DateTime.Today,
+                    FechaSalida = DateTime.Today.AddDays(1),
+                    Estado = "Pendiente",
+                    CantidadPersonas = 1
+                };
             }
             else
             {
@@ -51,6 +59,7 @@ namespace HOTEL_PEA2.Controllers
                 }
             }
 
+            // Listas simples para los dropdowns del ViewModel
             vm.ListaClientes = await _context.Cliente
                 .Select(x => new SelectListItem
                 {
@@ -72,30 +81,64 @@ namespace HOTEL_PEA2.Controllers
                     Value = x.IdTipoHabitacion.ToString()
                 }).ToListAsync();
 
+            // === DATOS EXTRA PARA EL AUTO-RELLENO (data-*) ===
+
+            // Clientes: DNI, Teléfono, Email
+            ViewBag.ClientesData = await _context.Cliente
+                .Select(c => new
+                {
+                    Id = c.IdCliente,
+                    Nombre = c.Nombres + " " + c.Apellidos,
+                    Dni = c.Dni,
+                    Telefono = c.Telefono,
+                    Email = c.Email
+                })
+                .ToListAsync();
+
+            // Habitaciones: Precio, Piso, Tipo
+            ViewBag.HabitacionesData = await _context.Habitacion
+                .Include(h => h.TipoHabitacion)
+                .Select(h => new
+                {
+                    Id = h.IdHabitacion,
+                    Numero = h.Numero,
+                    Precio = h.Precio,
+                    Piso = h.Piso,
+                    TipoNombre = h.TipoHabitacion != null ? h.TipoHabitacion.NombreTipo : ""
+                })
+                .ToListAsync();
+
             return View(vm);
         }
 
-
+        // POST: /Reserva/GuardarReserva
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GuardarReserva(ReservaViewModel vm)
         {
+            // Si el modelo de la reserva viene vacío, evitamos NullReference
+            if (vm == null || vm.Reserva == null)
+            {
+                return BadRequest();
+            }
+
             if (vm.Reserva.IdReserva == 0)
             {
+                // Nueva reserva
                 _context.Reserva.Add(vm.Reserva);
             }
             else
             {
-
+                // Editar reserva existente
                 var reservaEnDb = await _context.Reserva.FindAsync(vm.Reserva.IdReserva);
                 if (reservaEnDb == null)
                 {
                     return NotFound();
                 }
+
                 reservaEnDb.FechaEntrada = vm.Reserva.FechaEntrada;
                 reservaEnDb.FechaSalida = vm.Reserva.FechaSalida;
                 reservaEnDb.CantidadPersonas = vm.Reserva.CantidadPersonas;
-
 
                 if (!string.IsNullOrEmpty(vm.Reserva.TipoHabitacion))
                 {
@@ -116,6 +159,7 @@ namespace HOTEL_PEA2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // POST: /Reserva/Eliminar/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Eliminar(int id)

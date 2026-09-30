@@ -385,3 +385,72 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ============================================================ */
+/* MEJORAS VISUALES PREMIUM                                      */
+/* ============================================================ */
+
+/* Animación de elevación al pasar el mouse por las tarjetas */
+.card-premium {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .card-premium:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Los números grandes de las tarjetas con efecto sutil */
+    .card-premium h1 {
+        font-weight: 700;
+        color: #1a1a2e;
+        font-size: 2.2rem;
+        margin: 6px 0;
+    }
+
+/* Iconos con fondo degradado moderno */
+.icon.blue {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.icon.green {
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+}
+
+.icon.orange {
+    background: linear-gradient(135deg, #fa709a, #fee140);
+}
+
+.icon.purple {
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+}
+
+.icon.cyan {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+}
+
+/* Enlaces "Ver detalles →" con efecto al hover */
+.card-premium a {
+    color: #4facfe;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+    .card-premium a:hover {
+        color: #0072ff;
+        text-decoration: underline;
+    }
+
+/* Los paneles inferiores con sombra suave */
+.panel {
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    background: white;
+    padding: 20px;
+}
+
+/* El canvas del gráfico ocupa todo el ancho */
+canvas {
+    max-width: 100%;
+}

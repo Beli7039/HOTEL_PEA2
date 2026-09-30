@@ -35,6 +35,7 @@
 <form id="formReserva" asp-action="GuardarReserva" method="post" class="reserva-layout">
 
     <input type="hidden" asp-for="Reserva.IdReserva" />
+    <input type="hidden" asp-for="Reserva.CostoTotal" id="inputCostoTotal" />
 
     <div class="reserva-main">
 
@@ -77,50 +78,37 @@
             </h2>
             <div class="form-grid-4">
                 <div class="form-group">
-                    <label asp-for="Reserva.IdCliente">
-                        Cliente
-                    </label>
-                    <select asp-for="Reserva.IdCliente"
-                            asp-items="@Model.ListaClientes"
-                            class="form-control"
-                            id="clienteSelect" required>
-                        <option value="">
-                            Seleccione un cliente
-                        </option>
+                    <label asp-for="Reserva.IdCliente">Cliente</label>
+                    <select asp-for="Reserva.IdCliente" id="clienteSelect" required class="form-control">
+                        <option value="">Seleccione un cliente</option>
+                        @if (ViewBag.ClientesData != null)
+                        {
+                            foreach (var c in ViewBag.ClientesData)
+                            {
+                                <option value="@c.Id"
+                                        data-dni="@c.Dni"
+                                        data-telefono="@c.Telefono"
+                                        data-email="@c.Email">
+                                    @c.Nombre
+                                </option>
+                            }
+                        }
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label asp-for="Cliente.Dni">
-                        DNI / Pasaporte
-                    </label>
-                    <input asp-for="Cliente.Dni"
-                           id="clienteDni"
-                           type="text"
-                           placeholder="Documento"
-                           readonly />
+                    <label asp-for="Cliente.Dni">DNI / Pasaporte</label>
+                    <input asp-for="Cliente.Dni" id="clienteDni" type="text" placeholder="Documento" readonly />
                 </div>
+
                 <div class="form-group">
-
-                    <label asp-for="Cliente.Telefono">
-                        Teléfono
-                    </label>
-
-                    <input asp-for="Cliente.Telefono"
-                           id="clienteTelefono"
-                           type="tel"
-                           placeholder="Teléfono"
-                           readonly />
+                    <label asp-for="Cliente.Telefono">Teléfono</label>
+                    <input asp-for="Cliente.Telefono" id="clienteTelefono" type="tel" placeholder="Teléfono" readonly />
                 </div>
-                <div class="form-group">
-                    <label asp-for="Cliente.Email">
-                        Email
-                    </label>
 
-                    <input asp-for="Cliente.Email"
-                           id="clienteEmail"
-                           type="email"
-                           placeholder="Email"
-                           readonly />
+                <div class="form-group">
+                    <label asp-for="Cliente.Email">Email</label>
+                    <input asp-for="Cliente.Email" id="clienteEmail" type="email" placeholder="Email" readonly />
                 </div>
             </div>
         </article>
@@ -140,18 +128,30 @@
 
                 <div class="form-group">
                     <label asp-for="Habitacion.Precio">Precio por Noche</label>
-                    <input asp-for="Habitacion.Precio" id="precioHabitacion" type="text" placeholder="S/." />
+                    <input asp-for="Habitacion.Precio" id="precioHabitacion" type="text" placeholder="S/." readonly />
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Habitacion.Piso">Piso</label>
-                    <input asp-for="Habitacion.Piso" type="text" placeholder="Piso" />
+                    <input asp-for="Habitacion.Piso" id="pisoHabitacion" type="text" placeholder="Piso" readonly />
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Reserva.IdHabitacion">Nro. de Habitación</label>
-                    <select asp-for="Reserva.IdHabitacion" id="habitacionSelect" asp-items="@Model.ListaHabitaciones" class="form-control" required>
+                    <select asp-for="Reserva.IdHabitacion" id="habitacionSelect" required class="form-control">
                         <option value="">Seleccione habitación</option>
+                        @if (ViewBag.HabitacionesData != null)
+                        {
+                            foreach (var h in ViewBag.HabitacionesData)
+                            {
+                                <option value="@h.Id"
+                                        data-precio="@h.Precio"
+                                        data-piso="@h.Piso"
+                                        data-tipo="@h.TipoNombre">
+                                    @h.Numero
+                                </option>
+                            }
+                        }
                     </select>
                 </div>
             </div>
@@ -193,6 +193,7 @@
             <span>Noches:</span>
             <strong id="lblNoches">0</strong>
         </div>
+
         <div class="resumen-item">
             <span>Precio Por Noche:</span>
             <strong id="lblPrecioNoches">S/. 0.00</strong>
