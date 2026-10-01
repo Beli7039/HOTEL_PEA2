@@ -1,40 +1,71 @@
-﻿/* ==========================================
-   VARIABLES Y CONFIGURACIÓN GLOBAL
-   ========================================== */
+﻿/* ============================================================
+   DASHBOARD MIRABUS — HOJA DE ESTILOS
+   Estructura:
+     1) Design tokens (variables)
+     2) Reset y base
+     3) Layout principal
+     4) Sidebar (logo, menú, logout)
+     5) Encabezado del dashboard
+     6) Tarjetas métricas (cards)
+     7) Iconos
+     8) Paneles y gráficos
+     9) Responsividad
+    10) Efectos y detalles premium
+   ============================================================ */
+
+
+/* ============================================================
+   1) DESIGN TOKENS
+   Todas las variables reutilizables viven aquí.
+   Cambiar un valor actualiza toda la UI automáticamente.
+   ============================================================ */
 :root {
-    /* Paleta de colores */
+    /* --- Colores base --- */
     --bg-main: #f5f7fb;
     --bg-card: #ffffff;
     --text-primary: #111827;
     --text-secondary: #6b7280;
     --text-muted: #9ca3af;
+    /* --- Color de acento (marca MiraBus) --- */
     --accent-red: #e10000;
     --accent-red-hover: #b80000;
+    /* --- Bordes --- */
     --border-subtle: rgba(255, 255, 255, 0.08);
-    /* Indicadores / Badges */
-    --blue-bg: #eaf1ff;
+    --border-card: rgba(0, 0, 0, 0.03);
+    /* --- Badges / indicadores --- */
     --blue-color: #2d7cff;
-    --green-bg: #e8f9ea;
+    --blue-bg: #eaf1ff;
     --green-color: #28a745;
-    --orange-bg: #fff4e5;
+    --green-bg: #e8f9ea;
     --orange-color: #ff9800;
-    --purple-bg: #f3e8ff;
+    --orange-bg: #fff4e5;
     --purple-color: #8e44ec;
-    --cyan-bg: #e6fbff;
+    --purple-bg: #f3e8ff;
     --cyan-color: #00bcd4;
-    /* Dimensiones clave */
+    --cyan-bg: #e6fbff;
+    /* --- Dimensiones --- */
     --sidebar-width: 240px;
+    --sidebar-collapsed-width: 80px;
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
-    /* Sombras y transiciones */
+    /* --- Sombras --- */
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.15);
+    --shadow-sidebar: 5px 0 20px rgba(0, 0, 0, 0.08);
+    /* --- Transiciones --- */
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
 }
 
-*, *::before, *::after {
+
+/* ============================================================
+   2) RESET Y BASE
+   ============================================================ */
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
 
@@ -47,27 +78,38 @@ body {
     line-height: 1.5;
 }
 
-/* ==========================================
-   SIDEBAR (BARRA LATERAL)
-   ========================================== */
+
+/* ============================================================
+   3) LAYOUT PRINCIPAL
+   ============================================================ */
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 32px;
+    min-height: 100vh;
+}
+
+
+/* ============================================================
+   4) SIDEBAR
+   ============================================================ */
 .sidebar {
-    width: 240px;
+    width: var(--sidebar-width);
     height: 100vh;
-    max-height: 100vh; /* Garantiza que no exceda el alto de la ventana */
-    background: linear-gradient(180deg,#03142b,#02101f);
+    max-height: 100vh;
+    background: linear-gradient(180deg, #03142b, #02101f);
     position: fixed;
     left: 0;
     top: 0;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Cambiado para permitir scroll natural */
+    justify-content: flex-start;
     padding: 15px 12px;
-    box-sizing: border-box;
-    box-shadow: 5px 0 20px rgba(0,0,0,.08);
+    box-shadow: var(--shadow-sidebar);
     z-index: 1000;
-    overflow-y: auto; /* Habilita el scroll vertical */
+    overflow-y: auto;
 }
 
+    /* Scrollbar personalizada (WebKit) */
     .sidebar::-webkit-scrollbar {
         width: 5px;
     }
@@ -77,6 +119,7 @@ body {
         border-radius: 4px;
     }
 
+/* --- Logo --- */
 .logo {
     text-align: center;
     margin-bottom: 15px;
@@ -88,6 +131,7 @@ body {
         max-width: 100%;
     }
 
+/* --- Menú de navegación --- */
 .menu {
     display: flex;
     flex-direction: column;
@@ -105,7 +149,7 @@ body {
     border-radius: 10px;
     font-size: 13.5px;
     font-weight: 500;
-    transition: all .3s ease;
+    transition: var(--transition-normal);
 }
 
     .menu-item i {
@@ -124,38 +168,34 @@ body {
         box-shadow: 0 4px 12px rgba(225, 0, 0, 0.35);
     }
 
+/* --- Logout --- */
 .logout {
-    border-top: 1px solid rgba(255,255,255,.08);
+    border-top: 1px solid var(--border-subtle);
     padding-top: 10px;
     margin-top: 15px;
-    flex-shrink:0;
+    flex-shrink: 0;
 }
 
     .logout a {
         display: flex;
         align-items: center;
         gap: 12px;
-        color: white;
+        color: #ffffff;
         text-decoration: none;
         padding: 10px 12px;
         border-radius: 10px;
         font-size: 13.5px;
-        transition: .3s;
+        transition: var(--transition-normal);
     }
 
         .logout a:hover {
             background-color: var(--accent-red);
         }
 
-/* ==========================================
-   CONTENIDO PRINCIPAL
-   ========================================== */
-.main-content {
-    margin-left: var(--sidebar-width);
-    padding: 32px;
-    min-height: 100vh;
-}
 
+/* ============================================================
+   5) ENCABEZADO DEL DASHBOARD
+   ============================================================ */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -182,6 +222,7 @@ body {
         font-weight: 600;
     }
 
+/* --- Caja de fecha (esquina derecha) --- */
 .date-box {
     background: var(--bg-card);
     padding: 10px 16px;
@@ -190,12 +231,13 @@ body {
     font-weight: 500;
     color: var(--text-secondary);
     box-shadow: var(--shadow-sm);
-    border: 1px solid rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border-card);
 }
 
-/* ==========================================
-   TARJETAS MÉTRICAS (CARDS PREMIUM)
-   ========================================== */
+
+/* ============================================================
+   6) TARJETAS MÉTRICAS
+   ============================================================ */
 .cards-premium {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -208,11 +250,18 @@ body {
     border-radius: var(--radius-lg);
     padding: 20px;
     box-shadow: var(--shadow-sm);
-    border: 1px solid rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border-card);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
 }
+
+    /* Hover: eleva la tarjeta y refuerza la sombra */
+    .card-premium:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-lg);
+    }
 
     .card-premium h4 {
         margin: 0;
@@ -224,10 +273,10 @@ body {
     }
 
     .card-premium h1 {
-        margin: 8px 0;
-        font-size: 28px;
+        margin: 6px 0;
+        font-size: 2.2rem;
         font-weight: 700;
-        color: var(--text-primary);
+        color: #1a1a2e;
     }
 
     .card-premium p {
@@ -236,7 +285,24 @@ body {
         font-size: 12px;
     }
 
-/* Iconos de tarjetas */
+    /* Enlaces dentro de la tarjeta (ej. "Ver detalles →") */
+    .card-premium a {
+        color: #4facfe;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color var(--transition-fast);
+    }
+
+        .card-premium a:hover {
+            color: #0072ff;
+            text-decoration: underline;
+        }
+
+
+/* ============================================================
+   7) ICONOS CIRCULARES
+   Base común + variantes con gradiente moderno.
+   ============================================================ */
 .icon {
     width: 48px;
     height: 48px;
@@ -248,34 +314,30 @@ body {
     margin-bottom: 12px;
 }
 
-.blue {
-    background: var(--blue-bg);
-    color: var(--blue-color);
-}
+    .icon.blue {
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+    }
 
-.green {
-    background: var(--green-bg);
-    color: var(--green-color);
-}
+    .icon.green {
+        background: linear-gradient(135deg, #43e97b, #38f9d7);
+    }
 
-.orange {
-    background: var(--orange-bg);
-    color: var(--orange-color);
-}
+    .icon.orange {
+        background: linear-gradient(135deg, #fa709a, #fee140);
+    }
 
-.purple {
-    background: var(--purple-bg);
-    color: var(--purple-color);
-}
+    .icon.purple {
+        background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    }
 
-.cyan {
-    background: var(--cyan-bg);
-    color: var(--cyan-color);
-}
+    .icon.cyan {
+        background: linear-gradient(135deg, #00c6ff, #0072ff);
+    }
 
-/* ==========================================
-   PANEL Y GRÁFICOS
-   ========================================== */
+
+/* ============================================================
+   8) PANELES Y GRÁFICOS
+   ============================================================ */
 .dashboard-grid {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
@@ -284,10 +346,10 @@ body {
 
 .panel {
     background: var(--bg-card);
-    border-radius: var(--radius-lg);
-    padding: 24px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-card);
 }
 
 .panel-large {
@@ -301,6 +363,7 @@ body {
     color: var(--text-primary);
 }
 
+/* --- Área del gráfico --- */
 .chart-area {
     height: 240px;
     background: linear-gradient(180deg, rgba(45, 124, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
@@ -309,6 +372,7 @@ body {
     margin-top: 16px;
 }
 
+/* Línea decorativa (simula una tendencia) */
 .fake-line {
     position: absolute;
     width: 80%;
@@ -319,6 +383,7 @@ body {
     border-radius: 4px;
 }
 
+/* --- Gráfico donut (hecho con conic-gradient) --- */
 .donut {
     width: 160px;
     height: 160px;
@@ -328,6 +393,7 @@ body {
     position: relative;
 }
 
+    /* Círculo interior que crea el efecto de "dona" */
     .donut::after {
         content: "";
         width: 100px;
@@ -339,18 +405,27 @@ body {
         left: 30px;
     }
 
-/* ==========================================
-   RESPONSIVIDAD (MEDIA QUERIES)
-   ========================================== */
+/* --- Canvas para librerías de gráficos --- */
+canvas {
+    max-width: 100%;
+}
+
+
+/* ============================================================
+   9) RESPONSIVIDAD
+   ============================================================ */
+
+/* Pantallas ≤1200px: el grid de paneles pasa a 1 columna */
 @media (max-width: 1200px) {
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
 }
 
+/* Tablets ≤992px: sidebar colapsado (solo íconos) */
 @media (max-width: 992px) {
     .sidebar {
-        width: 80px;
+        width: var(--sidebar-collapsed-width);
         padding: 20px 10px;
     }
 
@@ -369,11 +444,12 @@ body {
     }
 
     .main-content {
-        margin-left: 80px;
+        margin-left: var(--sidebar-collapsed-width);
         padding: 20px;
     }
 }
 
+/* Móviles ≤576px: header apilado y tarjetas en 1 columna */
 @media (max-width: 576px) {
     .dashboard-header {
         flex-direction: column;
@@ -386,71 +462,9 @@ body {
     }
 }
 
-/* ============================================================ */
-/* MEJORAS VISUALES PREMIUM                                      */
-/* ============================================================ */
 
-/* Animación de elevación al pasar el mouse por las tarjetas */
-.card-premium {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-    .card-premium:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Los números grandes de las tarjetas con efecto sutil */
-    .card-premium h1 {
-        font-weight: 700;
-        color: #1a1a2e;
-        font-size: 2.2rem;
-        margin: 6px 0;
-    }
-
-/* Iconos con fondo degradado moderno */
-.icon.blue {
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
-}
-
-.icon.green {
-    background: linear-gradient(135deg, #43e97b, #38f9d7);
-}
-
-.icon.orange {
-    background: linear-gradient(135deg, #fa709a, #fee140);
-}
-
-.icon.purple {
-    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
-}
-
-.icon.cyan {
-    background: linear-gradient(135deg, #00c6ff, #0072ff);
-}
-
-/* Enlaces "Ver detalles →" con efecto al hover */
-.card-premium a {
-    color: #4facfe;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s;
-}
-
-    .card-premium a:hover {
-        color: #0072ff;
-        text-decoration: underline;
-    }
-
-/* Los paneles inferiores con sombra suave */
-.panel {
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
-    border-radius: 12px;
-    background: white;
-    padding: 20px;
-}
-
-/* El canvas del gráfico ocupa todo el ancho */
-canvas {
-    max-width: 100%;
-}
+/* ============================================================
+   10) EFECTOS Y DETALLES PREMIUM
+   (reservado para futuras animaciones específicas;
+    los hover de cards y links ya se manejan arriba)
+   ============================================================ */

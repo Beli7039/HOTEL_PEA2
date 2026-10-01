@@ -1,22 +1,75 @@
+﻿/* ============================================================
+   SITE.CSS — ESTILOS BASE GLOBALES
+   Estructura:
+     1) Design tokens
+     2) Tipografía base (tamaño de raíz)
+     3) Foco accesible para controles de formulario y botones
+     4) Layout base (posición del html y margen del body)
+   ============================================================ */
+
+
+/* ============================================================
+   1) DESIGN TOKENS
+   ============================================================ */
+:root {
+    /* --- Tipografía --- */
+    --root-font-size-mobile: 14px; /* Tamaño raíz por defecto */
+    --root-font-size-desktop: 16px; /* Tamaño raíz en pantallas ≥768px */
+    /* --- Accesibilidad (outline de foco) --- */
+    --focus-inner-color: #ffffff; /* Halo interno blanco */
+    --focus-outer-color: #258cfb; /* Halo externo azul */
+    --focus-inner-width: 0.1rem;
+    --focus-outer-width: 0.25rem;
+    /* --- Layout --- */
+    --body-bottom-offset: 60px; /* Espacio reservado para el footer fijo */
+}
+
+
+/* ============================================================
+   2) TIPOGRAFÍA BASE
+   Se define un tamaño raíz que escala con el viewport:
+   - Móvil: 14px
+   - Desktop (≥768px): 16px
+   Todos los `rem` del sitio se calculan a partir de este valor.
+   ============================================================ */
 html {
-  font-size: 14px;
+    font-size: var(--root-font-size-mobile);
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: var(--root-font-size-desktop);
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+
+/* ============================================================
+   3) FOCO ACCESIBLE
+   Aplica un doble halo (blanco + azul) a los elementos
+   interactivos cuando reciben foco vía teclado o clic.
+   Mejora la visibilidad del foco para usuarios con teclado.
+   ============================================================ */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 var(--focus-inner-width) var(--focus-inner-color), 0 0 0 var(--focus-outer-width) var(--focus-outer-color);
 }
 
+
+/* ============================================================
+   4) LAYOUT BASE
+   - `html`: se posiciona relativamente para que elementos
+     con `position: absolute` puedan anclarse a él.
+   - `body`: reserva espacio abajo para que el footer fijo
+     no tape el contenido.
+   ============================================================ */
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: var(--body-bottom-offset);
 }

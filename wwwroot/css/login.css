@@ -1,41 +1,118 @@
-﻿* {
+﻿/* ============================================================
+   PANTALLA DE LOGIN — MIRABUS
+   Estructura:
+     1) Design tokens (variables)
+     2) Reset y base
+     3) Fondo con overlay
+     4) Layout del contenedor
+     5) Lado izquierdo (logos)
+     6) Caja de login
+     7) Icono de usuario
+     8) Título y separador
+     9) Inputs y opciones
+    10) Botón de login
+    11) Footer de la caja
+    12) Mensaje de error
+   ============================================================ */
+
+
+/* ============================================================
+   1) DESIGN TOKENS
+   Todos los valores reutilizables viven aquí. Cambiar uno
+   actualiza toda la pantalla automáticamente.
+   ============================================================ */
+:root {
+    /* --- Colores base --- */
+    --bg-overlay: rgba(0, 0, 0, 0.55); /* Capa oscura sobre la imagen */
+    --bg-card: rgba(255, 255, 255, 0.96); /* Fondo semitransparente de la caja */
+    --text-dark: #111111; /* Texto principal oscuro */
+    --text-gray: gray; /* Texto secundario */
+    --text-light: #ffffff; /* Texto sobre fondos oscuros */
+    --border-soft: #f1dede; /* Borde rosado muy claro de inputs */
+    --line-gray: #d3d3d3; /* Línea separadora gris */
+    /* --- Rojos de la marca (semánticos) --- */
+    --brand-red: #d80000; /* Rojo principal (icono, links, botón) */
+    --brand-red-bright: #ff0000; /* Rojo brillante (gradiente, énfasis) */
+    --brand-red-dark: #b00000; /* Rojo oscuro (fin del gradiente) */
+    /* --- Sombras --- */
+    --shadow-card: 0 0 35px rgba(0, 0, 0, 0.5); /* Sombra fuerte de la caja */
+    /* --- Transiciones --- */
+    --transition-fast: 0.3s ease;
+    /* --- Tamaños tipográficos fluidos (escalan con viewport) --- */
+    --fs-xs: clamp(12px, 1.4vw, 22px); /* Textos muy pequeños */
+    --fs-sm: clamp(13px, 1.4vw, 22px); /* Textos pequeños */
+    --fs-base: clamp(14px, 1.6vw, 28px); /* Texto base */
+    --fs-input: clamp(16px, 1.8vw, 28px); /* Texto de los inputs */
+    --fs-btn: clamp(20px, 2.2vw, 35px); /* Texto del botón */
+    --fs-h1: clamp(28px, 3.5vw, 60px); /* Título principal */
+    --fs-h2: clamp(35px, 4.5vw, 70px); /* Marca "MIRABUS" */
+    --fs-h3: clamp(18px, 2.1vw, 34px); /* Título del footer */
+    --fs-tag: clamp(20px, 2.2vw, 38px); /* Subtítulo "Bienvenido" */
+    /* --- Espaciados y dimensiones fluidas --- */
+    --radius-card: clamp(25px, 2.8vw, 45px);
+    --radius-input: clamp(12px, 1.2vw, 20px);
+    --gap-v-sm: clamp(15px, 2.2vh, 35px); /* Separación vertical pequeña */
+    --gap-v-md: clamp(20px, 2.8vh, 45px); /* Separación vertical media */
+    --gap-v-lg: clamp(20px, 3.2vh, 55px); /* Separación vertical grande */
+}
+
+
+/* ============================================================
+   2) RESET Y BASE
+   ============================================================ */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
 }
 
 body {
     width: 100%;
     min-height: 100vh;
     overflow-x: hidden;
-    overflow-y: auto; 
+    overflow-y: auto;
+    font-family: 'Segoe UI', sans-serif;
     background: url('/img/ImagenDeFondoHotel.png');
     background-size: cover;
     background-position: center;
     position: relative;
 }
 
+
+    /* ============================================================
+   3) CAPA OSCURA SOBRE LA IMAGEN DE FONDO
+   Pseudo-elemento ::before que oscurece la imagen para que
+   el contenido blanco resalte y sea legible.
+   ============================================================ */
     body::before {
         content: '';
         position: absolute;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.55);
+        background: var(--bg-overlay);
         top: 0;
         left: 0;
     }
 
+
+/* ============================================================
+   4) LAYOUT DEL CONTENEDOR PRINCIPAL
+   Flexbox horizontal: logos a la izquierda, caja de login a la derecha.
+   ============================================================ */
 .contenedor {
     width: 100%;
     min-height: 100vh;
     display: flex;
-    align-items: center; 
+    align-items: center;
     position: relative;
-    z-index: 1;
-    padding: 3vh 0; 
+    z-index: 1; /* Por encima del overlay */
+    padding: 3vh 0;
 }
 
+
+/* ============================================================
+   5) LADO IZQUIERDO (LOGOS Y MARCA)
+   ============================================================ */
 .lado-izquierdo {
     width: 45%;
     height: 100%;
@@ -45,6 +122,7 @@ body {
     align-items: center;
 }
 
+/* Logo secundario en la esquina superior izquierda */
 .logo-superior {
     position: absolute;
     top: 4vh;
@@ -52,9 +130,10 @@ body {
     width: clamp(140px, 15vw, 220px);
 }
 
+/* Bloque central: logo + texto "Bienvenido" + marca */
 .logo-centro {
     text-align: center;
-    color: white;
+    color: var(--text-light);
 }
 
 .logo-principal {
@@ -63,61 +142,79 @@ body {
 
 .logo-centro p {
     margin-top: 2vh;
-    font-size: clamp(20px, 2.2vw, 38px);
+    font-size: var(--fs-tag);
     font-weight: 500;
 }
 
 .logo-centro h2 {
     margin-top: 1.5vh;
-    color: #ff0000;
-    font-size: clamp(35px, 4.5vw, 70px);
+    color: var(--brand-red-bright);
+    font-size: var(--fs-h2);
     font-weight: bold;
 }
 
+
+/* ============================================================
+   6) CAJA DE LOGIN (DERECHA)
+   Caja blanca semitransparente, con sombra fuerte y esquinas
+   redondeadas. Su ancho y padding son fluidos.
+   ============================================================ */
 .login-box {
     width: clamp(320px, 42vw, 700px);
-    max-height: 90vh; 
-    background: rgba(255, 255, 255, 0.96);
+    max-height: 90vh;
+    background: var(--bg-card);
     margin: auto;
-    border-radius: clamp(25px, 2.8vw, 45px);
+    border-radius: var(--radius-card);
     padding: clamp(30px, 4.5vh, 70px) clamp(25px, 3.5vw, 70px) clamp(20px, 3vh, 55px);
     position: relative;
-    box-shadow: 0 0 35px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-card);
 }
 
+
+/* ============================================================
+   7) ICONO CIRCULAR DE USUARIO
+   Círculo rojo con ícono, posicionado de forma que sobresale
+   por encima del borde superior de la caja (efecto flotante).
+   ============================================================ */
 .icono-user {
     width: clamp(65px, 6.5vw, 110px);
     height: clamp(65px, 6.5vw, 110px);
-    background: #d80000;
+    background: var(--brand-red);
     border-radius: 50%;
     position: absolute;
-    top: calc(-1 * clamp(32px, 3.25vw, 55px)); 
+    top: calc(-1 * clamp(32px, 3.25vw, 55px)); /* La mitad de su altura, hacia arriba */
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%); /* Centrado horizontal */
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: var(--text-light);
     font-size: clamp(24px, 2.6vw, 45px);
-    border: clamp(3px, 0.4vw, 6px) solid white;
+    border: clamp(3px, 0.4vw, 6px) solid var(--text-light);
 }
 
+
+/* ============================================================
+   8) TÍTULO Y SEPARADOR DECORATIVO
+   ============================================================ */
 .login-box h1 {
     text-align: center;
     margin-top: clamp(10px, 1.8vh, 35px);
-    font-size: clamp(28px, 3.5vw, 60px);
-    color: #111;
+    font-size: var(--fs-h1);
+    color: var(--text-dark);
 }
 
+    /* Palabra destacada del título (ej. "MiraBus" en rojo) */
     .login-box h1 span {
-        color: #e00000;
+        color: var(--brand-red);
     }
 
+/* Línea gris horizontal con un punto rojo al centro */
 .linea {
     width: clamp(120px, 14vw, 220px);
     height: 3px;
-    background: #d3d3d3;
-    margin: clamp(12px, 1.8vh, 25px) auto;
+    background: var(--line-gray);
+    margin: var(--gap-v-sm) auto;
     position: relative;
 }
 
@@ -125,7 +222,7 @@ body {
         content: '';
         width: clamp(10px, 1vw, 18px);
         height: clamp(10px, 1vw, 18px);
-        background: red;
+        background: var(--brand-red-bright);
         border-radius: 50%;
         position: absolute;
         top: -7px;
@@ -133,76 +230,94 @@ body {
         transform: translateX(-50%);
     }
 
+/* Texto descriptivo debajo del separador */
 .subtitulo {
     text-align: center;
-    color: gray;
-    font-size: clamp(14px, 1.6vw, 28px);
-    margin-bottom: clamp(20px, 2.8vh, 45px);
+    color: var(--text-gray);
+    font-size: var(--fs-base);
+    margin-bottom: var(--gap-v-md);
 }
 
+
+/* ============================================================
+   9) INPUTS Y OPCIONES (recordarme / olvidé contraseña)
+   ============================================================ */
 .input-box {
     width: 100%;
     height: clamp(48px, 5.5vh, 85px);
-    border: 2px solid #f1dede;
-    border-radius: clamp(12px, 1.2vw, 20px);
-    margin-bottom: clamp(15px, 2.2vh, 35px);
+    border: 2px solid var(--border-soft);
+    border-radius: var(--radius-input);
+    margin-bottom: var(--gap-v-sm);
     display: flex;
     align-items: center;
     padding: 0 clamp(12px, 1.5vw, 25px);
-    background: white;
+    background: var(--text-light);
 }
 
+    /* Ícono rojo a la izquierda del input */
     .input-box i {
         font-size: clamp(18px, 1.8vw, 28px);
-        color: red;
+        color: var(--brand-red-bright);
     }
 
+    /* Campo de texto: sin bordes, ocupa todo el ancho restante */
     .input-box input {
         width: 100%;
         border: none;
         outline: none;
-        font-size: clamp(16px, 1.8vw, 28px);
+        font-size: var(--fs-input);
         margin-left: clamp(10px, 1.2vw, 20px);
         background: transparent;
     }
 
+/* Fila con checkbox de "recordarme" y link de "olvidé contraseña" */
 .opciones {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: clamp(20px, 2.5vh, 40px);
-    font-size: clamp(13px, 1.3vw, 22px);
+    margin-bottom: var(--gap-v-md);
+    font-size: var(--fs-sm);
 }
 
     .opciones a {
         text-decoration: none;
-        color: #d80000;
+        color: var(--brand-red);
     }
 
+
+/* ============================================================
+   10) BOTÓN DE LOGIN
+   Botón grande con gradiente rojo que crece ligeramente al hover.
+   ============================================================ */
 .btn-login {
     width: 100%;
     height: clamp(50px, 6vh, 90px);
     border: none;
-    border-radius: clamp(12px, 1.2vw, 20px);
-    background: linear-gradient(to bottom, #ff0000, #b00000);
-    color: white;
-    font-size: clamp(20px, 2.2vw, 35px);
+    border-radius: var(--radius-input);
+    background: linear-gradient(to bottom, var(--brand-red-bright), var(--brand-red-dark));
+    color: var(--text-light);
+    font-size: var(--fs-btn);
     font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
+    transition: var(--transition-fast);
 }
 
     .btn-login:hover {
         transform: scale(1.02);
     }
 
+    /* Ícono dentro del botón (ej. candado o flecha) */
     .btn-login i {
         margin-right: 15px;
     }
 
+
+/* ============================================================
+   11) FOOTER DE LA CAJA (logo pequeño + nombre + descripción)
+   ============================================================ */
 .footer-login {
     text-align: center;
-    margin-top: clamp(20px, 3.2vh, 55px);
+    margin-top: var(--gap-v-lg);
 }
 
 .footer-logo {
@@ -210,21 +325,26 @@ body {
 }
 
 .footer-login h3 {
-    font-size: clamp(18px, 2.1vw, 34px);
+    font-size: var(--fs-h3);
     margin-top: 5px;
 }
 
 .footer-login p {
     margin-top: 5px;
-    color: gray;
-    font-size: clamp(12px, 1.4vw, 22px);
+    color: var(--text-gray);
+    font-size: var(--fs-xs);
     font-style: italic;
 }
 
+
+/* ============================================================
+   12) MENSAJE DE ERROR
+   Se muestra cuando las credenciales son incorrectas.
+   ============================================================ */
 .error {
     margin-top: 15px;
-    color: red;
+    color: var(--brand-red-bright);
     text-align: center;
-    font-size: clamp(13px, 1.4vw, 22px);
+    font-size: var(--fs-sm);
     font-weight: bold;
 }

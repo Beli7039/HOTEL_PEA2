@@ -1,49 +1,90 @@
 ﻿/* =========================================================
-   REAL HOTEL HUÁNUCO
-   BOTONES
+   REAL HOTEL HUÁNUCO — BOTONES
+   Estructura:
+     1) Design tokens
+     2) Botón base
+     3) Reset de <button> nativo
+     4) Estados interactivos (hover, active, disabled)
+     5) Variante pequeña
+     6) Botones primarios rojos   (agregar / nuevo / guardar)
+     7) Botones primarios azules  (modificar / editar / buscar / volver)
+     8) Botón de eliminar         (rojo suave)
+     9) Botón de cancelar         (blanco con acento dorado)
+    10) Botones outline (rojo / azul)
+    11) Íconos dentro de botones
    ========================================================= */
 
+
+/* =========================================================
+   1) DESIGN TOKENS
+   Todos los colores, sombras y medidas reutilizables.
+   ========================================================= */
 :root {
+    /* --- Colores de la marca --- */
     --hotel-red: #F00000;
     --hotel-red-hover: #D90000;
     --hotel-red-dark: #B80000;
     --hotel-blue: #001426;
     --hotel-blue-hover: #09243A;
     --hotel-gold: #C9A227;
+    --hotel-gold-hover: #B8941F;
+    /* --- Neutros --- */
     --hotel-white: #FFFFFF;
+    --hotel-white-cream: #FFFDF5;
     --hotel-gray-light: #F3F4F6;
     --hotel-gray-border: #D1D5DB;
     --hotel-gray-text: #374151;
+    /* --- Variantes suaves del rojo (para botón eliminar) --- */
+    --hotel-red-soft-bg: #FFF1F1;
+    --hotel-red-soft-border: #F2B8B8;
+    /* --- Sombras --- */
+    --shadow-red-sm: 0 3px 8px rgba(240, 0, 0, 0.20);
+    --shadow-red-lg: 0 5px 12px rgba(240, 0, 0, 0.28);
+    --shadow-blue-sm: 0 2px 6px rgba(0, 20, 38, 0.15);
+    --shadow-blue-lg: 0 4px 9px rgba(0, 20, 38, 0.22);
+    --shadow-gold-sm: 0 2px 6px rgba(0, 20, 38, 0.08);
+    --shadow-gold-lg: 0 4px 10px rgba(201, 162, 39, 0.18);
+    /* --- Dimensiones --- */
+    --btn-height: 38px;
+    --btn-height-sm: 32px;
+    --radius-btn: 7px;
+    --radius-btn-sm: 6px;
+    /* --- Transición común a todos los botones --- */
+    --transition-btn: 0.18s ease;
 }
 
 
 /* =========================================================
-   BOTÓN BASE
+   2) BOTÓN BASE
+   Estructura visual compartida por TODAS las variantes.
+   Se usa inline-flex para alinear ícono + texto sin problemas.
    ========================================================= */
-
 .btn {
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 7px;
-    height: 38px;
+    height: var(--btn-height);
     padding: 0 15px;
-    border: 1px solid transparent;
-    border-radius: 7px;
+    border: 1px solid transparent; /* Reserva el borde para evitar saltos al hover */
+    border-radius: var(--radius-btn);
     font-family: inherit;
     font-size: 13px;
     font-weight: 600;
     line-height: 1;
-    text-decoration: none;
-    white-space: nowrap;
+    text-decoration: none; /* Por si el botón es un <a> */
+    white-space: nowrap; /* Evita que el texto se rompa en dos líneas */
     cursor: pointer;
-    transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    transition: background-color var(--transition-btn), color var(--transition-btn), border-color var(--transition-btn), box-shadow var(--transition-btn), transform var(--transition-btn);
 }
 
 
-/* BUTTON */
-
+/* =========================================================
+   3) RESET DE <button> NATIVO
+   Elimina los estilos por defecto del navegador (que varían
+   entre Chrome, Firefox y Safari).
+   ========================================================= */
 button.btn {
     appearance: none;
     -webkit-appearance: none;
@@ -52,22 +93,21 @@ button.btn {
 }
 
 
-/* HOVER */
+/* =========================================================
+   4) ESTADOS INTERACTIVOS
+   ========================================================= */
 
+/* Hover: eleva ligeramente el botón */
 .btn:hover {
     transform: translateY(-1px);
 }
 
-
-/* ACTIVE */
-
+/* Active (clic): lo devuelve a su posición original */
 .btn:active {
     transform: translateY(0);
 }
 
-
-/* DISABLED */
-
+/* Deshabilitado: opacidad reducida y sin efectos */
 .btn:disabled {
     opacity: 0.55;
     cursor: not-allowed;
@@ -77,155 +117,111 @@ button.btn {
 
 
 /* =========================================================
-   BOTÓN PEQUEÑO
+   5) VARIANTE PEQUEÑA
+   Para tablas, toolbars o acciones secundarias.
    ========================================================= */
-
 .btn-sm {
-    height: 32px;
+    height: var(--btn-height-sm);
     padding: 0 11px;
     font-size: 12px;
-    border-radius: 6px;
+    border-radius: var(--radius-btn-sm);
 }
 
 
 /* =========================================================
-   AGREGAR / NUEVO
+   6) BOTONES PRIMARIOS ROJOS
+   Variantes: agregar / nuevo / guardar.
+   Todas comparten el mismo estilo; antes estaban duplicadas.
    ========================================================= */
-
 .btn-agregar,
-.btn-nuevo {
+.btn-nuevo,
+.btn-guardar {
     background: var(--hotel-red) !important;
-    color: #ffffff !important;
+    color: var(--hotel-white) !important;
     border-color: var(--hotel-red) !important;
-    box-shadow: 0 3px 8px rgba(240, 0, 0, 0.20);
+    box-shadow: var(--shadow-red-sm);
 }
 
     .btn-agregar:hover,
-    .btn-nuevo:hover {
+    .btn-nuevo:hover,
+    .btn-guardar:hover {
         background: var(--hotel-red-hover) !important;
-        color: #ffffff !important;
+        color: var(--hotel-white) !important;
         border-color: var(--hotel-red-hover) !important;
-        box-shadow: 0 5px 12px rgba(240, 0, 0, 0.28);
+        box-shadow: var(--shadow-red-lg);
     }
 
 
 /* =========================================================
-   MODIFICAR / EDITAR
+   7) BOTONES PRIMARIOS AZULES
+   Variantes: modificar / editar / buscar / volver.
+   Antes estaban en 4 bloques distintos con el mismo estilo.
    ========================================================= */
-
 .btn-modificar,
-.btn-editar {
+.btn-editar,
+.btn-buscar,
+.btn-volver {
     background: var(--hotel-blue) !important;
-    color: #ffffff !important;
+    color: var(--hotel-white) !important;
     border-color: var(--hotel-blue) !important;
-    box-shadow: 0 2px 6px rgba(0, 20, 38, 0.15);
+    box-shadow: var(--shadow-blue-sm);
 }
 
     .btn-modificar:hover,
-    .btn-editar:hover {
+    .btn-editar:hover,
+    .btn-buscar:hover,
+    .btn-volver:hover {
         background: var(--hotel-blue-hover) !important;
-        color: #ffffff !important;
+        color: var(--hotel-white) !important;
         border-color: var(--hotel-blue-hover) !important;
-        box-shadow: 0 4px 9px rgba(0, 20, 38, 0.22);
+        box-shadow: var(--shadow-blue-lg);
     }
 
 
 /* =========================================================
-   ELIMINAR
+   8) BOTÓN ELIMINAR (ROJO SUAVE)
+   Estado normal: fondo claro rosado con texto rojo oscuro.
+   Hover: se invierte a rojo sólido con texto blanco.
    ========================================================= */
-
 .btn-eliminar {
-    background: #FFF1F1 !important;
+    background: var(--hotel-red-soft-bg) !important;
     color: var(--hotel-red-dark) !important;
-    border-color: #F2B8B8 !important;
+    border-color: var(--hotel-red-soft-border) !important;
 }
 
     .btn-eliminar:hover {
         background: var(--hotel-red) !important;
-        color: #ffffff !important;
+        color: var(--hotel-white) !important;
         border-color: var(--hotel-red) !important;
-        box-shadow: 0 4px 9px rgba(240, 0, 0, 0.20);
+        box-shadow: var(--shadow-red-lg);
     }
 
 
 /* =========================================================
-   BUSCAR
+   9) BOTÓN CANCELAR (BLANCO CON ACENTO DORADO)
+   Fondo blanco, borde dorado. Al hover, fondo crema sutil.
    ========================================================= */
-
-.btn-buscar {
-    background: var(--hotel-blue) !important;
-    color: #ffffff !important;
-    border-color: var(--hotel-blue) !important;
-}
-
-    .btn-buscar:hover {
-        background: var(--hotel-blue-hover) !important;
-        color: #ffffff !important;
-        border-color: var(--hotel-blue-hover) !important;
-    }
-
-
-/* =========================================================
-   GUARDAR
-   ========================================================= */
-
-/* =========================================================
-   CANCELAR
-   ========================================================= */
-
 .btn-cancelar {
-    background: #ffffff !important;
-    color: #001426 !important;
-    border: 1px solid #C9A227 !important;
-    box-shadow: 0 2px 6px rgba(0, 20, 38, 0.08);
+    background: var(--hotel-white) !important;
+    color: var(--hotel-blue) !important;
+    border: 1px solid var(--hotel-gold) !important;
+    box-shadow: var(--shadow-gold-sm);
 }
 
     .btn-cancelar:hover {
-        background: #FFFDF5 !important;
-        color: #001426 !important;
-        border-color: #B8941F !important;
-        box-shadow: 0 4px 10px rgba(201, 162, 39, 0.18);
+        background: var(--hotel-white-cream) !important;
+        color: var(--hotel-blue) !important;
+        border-color: var(--hotel-gold-hover) !important;
+        box-shadow: var(--shadow-gold-lg);
     }
 
 
 /* =========================================================
-   GUARDAR
+   10) BOTONES OUTLINE (ROJO / AZUL)
+   Sin fondo por defecto; al hover se rellenan.
    ========================================================= */
 
-.btn-guardar {
-    background: #F00000 !important;
-    color: #FFFFFF !important;
-    border: 1px solid #F00000 !important;
-    box-shadow: 0 3px 8px rgba(240, 0, 0, 0.20);
-}
-
-    .btn-guardar:hover {
-        background: #D90000 !important;
-        color: #FFFFFF !important;
-        border-color: #D90000 !important;
-        box-shadow: 0 5px 12px rgba(240, 0, 0, 0.28);
-    }
-/* =========================================================
-   VOLVER
-   ========================================================= */
-
-.btn-volver {
-    background: var(--hotel-blue) !important;
-    color: #ffffff !important;
-    border-color: var(--hotel-blue) !important;
-}
-
-    .btn-volver:hover {
-        background: var(--hotel-blue-hover) !important;
-        color: #ffffff !important;
-        border-color: var(--hotel-blue-hover) !important;
-    }
-
-
-/* =========================================================
-   OUTLINE ROJO
-   ========================================================= */
-
+/* --- Outline rojo --- */
 .btn-outline-rojo {
     background: transparent !important;
     color: var(--hotel-red) !important;
@@ -234,14 +230,10 @@ button.btn {
 
     .btn-outline-rojo:hover {
         background: var(--hotel-red) !important;
-        color: #ffffff !important;
+        color: var(--hotel-white) !important;
     }
 
-
-/* =========================================================
-   OUTLINE AZUL
-   ========================================================= */
-
+/* --- Outline azul --- */
 .btn-outline-azul {
     background: transparent !important;
     color: var(--hotel-blue) !important;
@@ -250,14 +242,14 @@ button.btn {
 
     .btn-outline-azul:hover {
         background: var(--hotel-blue) !important;
-        color: #ffffff !important;
+        color: var(--hotel-white) !important;
     }
 
 
 /* =========================================================
-   ICONOS
+   11) ÍCONOS DENTRO DE BOTONES
+   Ajuste fino para que el ícono no descuadre la altura.
    ========================================================= */
-
 .btn i {
     font-size: 12px;
     line-height: 1;

@@ -1,123 +1,287 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
-    // Inputs del formulario
-    const fechaEntrada = document.getElementById("fechaEntrada");
-    const fechaSalida = document.getElementById("fechaSalida");
-    const cantPersonas = document.getElementById("cantPersonas");
-    const tipoHabitacionSelect = document.getElementById("tipoHabitacionSelect");
-    const habitacionSelect = document.getElementById("habitacionSelect");
-    const precioHabitacion = document.getElementById("precioHabitacion");
+﻿/* ============================================================
+   JS_Reserva.js
+   Lógica interactiva de la página "Nueva Reserva":
+     A) Toggle cliente existente / nuevo
+     B) Autocompletar datos del cliente al seleccionarlo
+     C) Autocompletar precio al elegir tipo de habitación
+     D) Filtrar habitaciones disponibles por tipo + fechas
+     E) Autocompletar piso al elegir habitación
+     F) Actualizar el resumen en tiempo real
+   ============================================================ */
 
-    // Elementos de la Card Resumen
-    const lblHabitacion = document.getElementById("lblHabitacion");
-    const lblTipo = document.getElementById("lblTipo");
-    const lblEntrada = document.getElementById("lblEntrada");
-    const lblSalida = document.getElementById("lblSalida");
-    const lblNoches = document.getElementById("lblNoches");
-    const lblPrecioNoches = document.getElementById("lblPrecioNoches");
-    const lblPersonas = document.getElementById("lblPersonas");
-    const lblTotal = document.getElementById("lblTotal");
+document.addEventListener('DOMContentLoaded', function () {
 
-    // Función para calcular noches evitando problemas de UTC/Zona Horaria
-    function actualizarFechasYNoches() {
-        const valEntrada = fechaEntrada ? fechaEntrada.value : "";
-        const valSalida = fechaSalida ? fechaSalida.value : "";
+    // ============================================================
+    // REFERENCIAS A LOS ELEMENTOS DEL DOM
+    // Se buscan una sola vez para no repetir getElementById
+    // en cada evento (mejora rendimiento y legibilidad).
+    // ============================================================
+    const fechaEntrada = document.getElementById('fechaEntrada');
+    const fechaSalida = document.getElementById('fechaSalida');
+    const cantPersonas = document.getElementById('cantPersonas');
 
-        if (lblEntrada) lblEntrada.textContent = valEntrada || "--";
-        if (lblSalida) lblSalida.textContent = valSalida || "--";
+    const radiosTipo = document.querySelectorAll('input[name="tipoClienteRadio"]');
+    const inputTipoCliente = document.getElementById('inputTipoCliente');
+    const bloqueExistente = document.getElementById('bloqueClienteExistente');
+    const clienteSelect = document.getElementById('clienteSelect');
+    const clienteDni = document.getElementById('clienteDni');
+    const clienteNombre = document.getElementById('clienteNombre');
+    const clienteTelefono = document.getElementById('clienteTelefono');
+    const clienteEmail = document.getElementById('clienteEmail');
 
-        if (valEntrada && valSalida) {
-            // Dividir la fecha YYYY-MM-DD directamente para evitar errores de timezone
-            const [y1, m1, d1] = valEntrada.split('-').map(Number);
-            const [y2, m2, d2] = valSalida.split('-').map(Number);
+    const tipoHabitacion = document.getElementById('tipoHabitacionSelect');
+    const precioHabitacion = document.getElementById('precioHabitacion');
+    const habitacionSelect = document.getElementById('habitacionSelect');
+    const pisoHabitacion = document.getElementById('pisoHabitacion');
 
-            const f1 = new Date(y1, m1 - 1, d1);
-            const f2 = new Date(y2, m2 - 1, d2);
+    // Elementos del resumen
+    const lblHabitacion = document.getElementById('lblHabitacion');
+    const lblTipo = document.getElementById('lblTipo');
+    const lblEntrada = document.getElementById('lblEntrada');
+    const lblSalida = document.getElementById('lblSalida');
+    const lblNoches = document.getElementById('lblNoches');
+    const lblPrecioNoches = document.getElementById('lblPrecioNoches');
+    const lblPersonas = document.getElementById('lblPersonas');
+    const lblTotal = document.getElementById('lblTotal');
+    const inputCostoTotal = document.getElementById('inputCostoTotal');
 
-            const diferenciaMs = f2 - f1;
-            const dias = Math.round(diferenciaMs / (1000 * 60 * 60 * 24));
+    // Variable interna: precio actual en número (para cálculos)
+    let precioActual = 0;
 
-            if (lblNoches) {
-                lblNoches.textContent = dias > 0 ? dias : "0";
+    // ============================================================
+    // A) TOGGLE CLIENTE EXISTENTE / NUEVO
+    // Al cambiar el radio:
+    //   - existente → muestra selector, campos readonly
+    //   - nuevo     → oculta selector, campos editables
+    // ============================================================
+    radiosTipo.forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            const esExistente = this.value === 'existente';
+
+            // Guardar en el hidden para que el controlador sepa qué hacer
+            inputTipoCliente.value = esExistente ? 'existente' : 'nuevo';
+
+            // Mostrar/ocultar el bloque del selector
+            bloqueExistente.style.display = esExistente ? 'block' : 'none';
+
+            // readonly en los campos según el modo
+            [clienteDni, clienteNombre, clienteTelefono, clienteEmail].forEach(function (input) {
+                input.readOnly = esExistente;
+            });
+
+            // Si es nuevo, limpiar los campos y el selector
+            if (!esExistente) {
+                clienteSelect.value = '';
+                clienteDni.value = '';
+                clienteNombre.value = '';
+                clienteTelefono.value = '';
+                clienteEmail.value = '';
             }
-        } else {
-            if (lblNoches) lblNoches.textContent = "0";
+        });
+    });
+
+    // ============================================================
+    // B) AUTOCOMPLETAR DATOS AL ELEGIR CLIENTE EXISTENTE
+    // Los datos vienen como data-attributes en cada <option>.
+    // ============================================================
+    clienteSelect.addEventListener('change', function () {
+        const opcion = this.options[this.selectedIndex];
+
+        clienteDni.value = opcion.dataset.dni || '';
+        clienteNombre.value = opcion.dataset.nombre || '';
+        clienteTelefono.value = opcion.dataset.telefono || '';
+        clienteEmail.value = opcion.dataset.email || '';
+    });
+
+    // ============================================================
+    // C) AUTOCOMPLETAR PRECIO Y FILTRAR HABITACIONES
+    // Al cambiar el tipo de habitación:
+    //   - Se lee su precio del data-precio
+    //   - Se cargan SOLO las habitaciones disponibles de ese tipo
+    // ============================================================
+    tipoHabitacion.addEventListener('change', function () {
+        // Limpiar precio si no hay tipo seleccionado
+        if (!this.value) {
+            precioActual = 0;
+            precioHabitacion.value = '';
+            habitacionSelect.innerHTML = '<option value="">-- Primero elija un tipo --</option>';
+            habitacionSelect.disabled = true;
+            pisoHabitacion.value = '';
+            actualizarResumen();
+            return;
         }
 
-        actualizarCostoTotal();
-    }
+        // Buscar el precio del tipo (por Id en el array de habitaciones)
+        // Se toma el precio de la primera habitación de ese tipo.
+        const habitacionDelTipo = HABITACIONES.find(
+            h => String(h.TipoId) === String(this.value) || String(h.Tipo) === String(this.value)
+        );
 
-    // Función para actualizar el tipo y la habitación seleccionada
-    function actualizarDetalleHabitacion() {
-        if (tipoHabitacionSelect && lblTipo) {
-            const selectedOpt = tipoHabitacionSelect.options[tipoHabitacionSelect.selectedIndex];
-            lblTipo.textContent = (tipoHabitacionSelect.value && selectedOpt) ? selectedOpt.text : "--";
+        // Si no encontramos precio, dejamos 0
+        precioActual = habitacionDelTipo ? parseFloat(habitacionDelTipo.Precio) : 0;
+        precioHabitacion.value = 'S/. ' + precioActual.toFixed(2);
+
+        // Cargar las habitaciones disponibles de ese tipo
+        cargarHabitacionesDisponibles(this.value);
+
+        actualizarResumen();
+    });
+
+    // ============================================================
+    // D) CARGAR HABITACIONES DISPONIBLES
+    // Filtra por tipo Y por disponibilidad en el rango de fechas.
+    // ============================================================
+    function cargarHabitacionesDisponibles(tipoId) {
+        // Reset
+        habitacionSelect.innerHTML = '<option value="">-- Seleccione habitación --</option>';
+        pisoHabitacion.value = '';
+
+        if (!tipoId) {
+            habitacionSelect.disabled = true;
+            return;
         }
 
-        if (habitacionSelect && lblHabitacion) {
-            const selectedOpt = habitacionSelect.options[habitacionSelect.selectedIndex];
-            lblHabitacion.textContent = (habitacionSelect.value && selectedOpt) ? selectedOpt.text : "--";
+        // Obtener fechas actuales
+        const entrada = fechaEntrada.value;
+        const salida = fechaSalida.value;
+
+        // Filtrar habitaciones por tipo
+        const delTipo = HABITACIONES.filter(function (h) {
+            return String(h.TipoId) === String(tipoId) || String(h.Tipo) === String(tipoId);
+        });
+
+        // Filtrar las que NO estén ocupadas en el rango
+        const disponibles = delTipo.filter(function (h) {
+            return !estaOcupada(h.Id, entrada, salida);
+        });
+
+        if (disponibles.length === 0) {
+            habitacionSelect.disabled = true;
+            habitacionSelect.innerHTML = '<option value="">Sin habitaciones disponibles</option>';
+            return;
         }
-    }
 
-    // Función para calcular el costo total
-    function actualizarCostoTotal() {
-        const noches = parseInt(lblNoches ? lblNoches.textContent : 0) || 0;
-
-        // Limpiar de texto cualquier símbolo para parsear sólo números (ej. 'S/. 140.00' -> 140.00)
-        let rawPrecio = precioHabitacion ? precioHabitacion.value : "0";
-        rawPrecio = rawPrecio.replace(/[^0-9.]/g, '');
-        const precio = parseFloat(rawPrecio) || 0;
-
-        if (lblPrecioNoches) {
-            lblPrecioNoches.textContent = `S/. ${precio.toFixed(2)}`;
-        }
-
-        const total = noches * precio;
-
-        if (lblTotal) {
-            lblTotal.textContent = `S/. ${total.toFixed(2)}`;
-        }
-    }
-
-    // Registrar Eventos con 'input' y 'change'
-    if (fechaEntrada) {
-        fechaEntrada.addEventListener("input", actualizarFechasYNoches);
-        fechaEntrada.addEventListener("change", actualizarFechasYNoches);
-    }
-    if (fechaSalida) {
-        fechaSalida.addEventListener("input", actualizarFechasYNoches);
-        fechaSalida.addEventListener("change", actualizarFechasYNoches);
-    }
-
-    if (cantPersonas) {
-        cantPersonas.addEventListener("input", function () {
-            if (lblPersonas) lblPersonas.textContent = this.value || "--";
+        // Poblar el selector
+        habitacionSelect.disabled = false;
+        disponibles.forEach(function (h) {
+            const opt = document.createElement('option');
+            opt.value = h.Id;
+            opt.textContent = 'Hab. ' + h.Numero;
+            opt.dataset.piso = h.Piso;
+            opt.dataset.precio = h.Precio;
+            habitacionSelect.appendChild(opt);
         });
     }
 
-    if (tipoHabitacionSelect) {
-        tipoHabitacionSelect.addEventListener("change", actualizarDetalleHabitacion);
+    // ============================================================
+    // FUNCIÓN AUXILIAR: ¿La habitación está ocupada en el rango?
+    // Compara contra RESERVAS_EXISTENTES. Se consideran rangos
+    // solapados si: entrada < resSalida && salida > resEntrada.
+    // ============================================================
+    function estaOcupada(habitacionId, entrada, salida) {
+        if (!entrada || !salida) return false;
+
+        const f1 = new Date(entrada);
+        const f2 = new Date(salida);
+
+        return RESERVAS_EXISTENTES.some(function (r) {
+            // Ignorar la reserva actual (si estamos editando)
+            if (r.IdReserva && r.IdReserva === ID_RESERVA_ACTUAL) return false;
+
+            if (String(r.HabitacionId) !== String(habitacionId)) return false;
+
+            const rEntrada = new Date(r.FechaEntrada);
+            const rSalida = new Date(r.FechaSalida);
+
+            return f1 < rSalida && f2 > rEntrada;
+        });
     }
 
-    if (habitacionSelect) {
-        habitacionSelect.addEventListener("change", actualizarDetalleHabitacion);
+    // ============================================================
+    // E) AUTOCOMPLETAR PISO AL ELEGIR HABITACIÓN
+    // ============================================================
+    habitacionSelect.addEventListener('change', function () {
+        const opcion = this.options[this.selectedIndex];
+        pisoHabitacion.value = opcion.dataset.piso || '';
+
+        // Si la habitación tiene otro precio, actualizarlo
+        if (opcion.dataset.precio) {
+            precioActual = parseFloat(opcion.dataset.precio);
+            precioHabitacion.value = 'S/. ' + precioActual.toFixed(2);
+        }
+
+        actualizarResumen();
+    });
+
+    // ============================================================
+    // F) ACTUALIZAR EL RESUMEN
+    // Se recalcula todo cada vez que cambia algo relevante.
+    // ============================================================
+    [fechaEntrada, fechaSalida, cantPersonas].forEach(function (el) {
+        el.addEventListener('change', actualizarResumen);
+        el.addEventListener('input', actualizarResumen);
+    });
+
+    // Cuando cambian las fechas, hay que recargar las habitaciones
+    // porque la disponibilidad puede haber cambiado.
+    fechaEntrada.addEventListener('change', recargarHabitaciones);
+    fechaSalida.addEventListener('change', recargarHabitaciones);
+
+    function recargarHabitaciones() {
+        if (tipoHabitacion.value) {
+            cargarHabitacionesDisponibles(tipoHabitacion.value);
+        }
     }
 
-    if (precioHabitacion) {
-        precioHabitacion.addEventListener("input", actualizarCostoTotal);
-        precioHabitacion.addEventListener("change", actualizarCostoTotal);
+    function actualizarResumen() {
+        // --- Habitación ---
+        const opHab = habitacionSelect.options[habitacionSelect.selectedIndex];
+        lblHabitacion.textContent = habitacionSelect.value ? opHab.textContent : '--';
+
+        // --- Tipo ---
+        const opTipo = tipoHabitacion.options[tipoHabitacion.selectedIndex];
+        lblTipo.textContent = tipoHabitacion.value ? opTipo.textContent : '--';
+
+        // --- Entrada / Salida ---
+        lblEntrada.textContent = fechaEntrada.value || '--';
+        lblSalida.textContent = fechaSalida.value || '--';
+
+        // --- Noches ---
+        const noches = calcularNoches(fechaEntrada.value, fechaSalida.value);
+        lblNoches.textContent = noches;
+
+        // --- Precio por noche ---
+        lblPrecioNoches.textContent = 'S/. ' + precioActual.toFixed(2);
+
+        // --- Personas ---
+        lblPersonas.textContent = cantPersonas.value || '1';
+
+        // --- Total ---
+        const total = noches * precioActual;
+        lblTotal.textContent = 'S/. ' + total.toFixed(2);
+
+        // Guardar el total en el campo oculto para que lo reciba el controlador
+        if (inputCostoTotal) {
+            inputCostoTotal.value = total.toFixed(2);
+        }
     }
 
-    // Observador para detectar si el precio o selects cambian dinámicamente por AJAX desde otros scripts
-    if (precioHabitacion) {
-        const observer = new MutationObserver(actualizarCostoTotal);
-        observer.observe(precioHabitacion, { attributes: true, attributeFilter: ['value'] });
+    // ============================================================
+    // UTILIDAD: CALCULAR NÚMERO DE NOCHES
+    // Devuelve 0 si las fechas no son válidas o si la salida
+    // es anterior o igual a la entrada.
+    // ============================================================
+    function calcularNoches(entrada, salida) {
+        if (!entrada || !salida) return 0;
+
+        const f1 = new Date(entrada);
+        const f2 = new Date(salida);
+        const diff = Math.floor((f2 - f1) / (1000 * 60 * 60 * 24));
+
+        return diff > 0 ? diff : 0;
     }
 
-    // Ejecución inicial para sincronizar al cargar la página
-    actualizarFechasYNoches();
-    actualizarDetalleHabitacion();
-    if (cantPersonas && cantPersonas.value && lblPersonas) {
-        lblPersonas.textContent = cantPersonas.value;
-    }
+    // Inicializar el resumen al cargar
+    actualizarResumen();
 });
+

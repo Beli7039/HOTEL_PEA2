@@ -1,4 +1,14 @@
-﻿@model HOTEL_PEA2.Models.ViewModels.ReservaViewModel
+﻿@* ============================================================
+   VISTA: Nueva Reserva
+   Controlador: ReservaController
+   Acción: NuevaReserva (GET) / GuardarReserva (POST)
+   Descripción: Formulario en 4 secciones:
+                1) Datos de la reserva
+                2) Datos del cliente (existente o nuevo)
+                3) Detalle de la habitación
+                4) Resumen calculado en tiempo real
+   ============================================================ *@
+@model HOTEL_PEA2.Models.ViewModels.ReservaViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Nueva Reserva";
@@ -8,6 +18,9 @@
 
 <partial name="_Header" />
 
+@* ============================================================
+   ENCABEZADO DE PÁGINA
+   ============================================================ *@
 <section class="page-header">
     <div class="title-section">
         <div class="title-icon">
@@ -23,8 +36,7 @@
 
     <div class="header-buttons">
         <a asp-action="Index" class="btn btn-cancelar">
-            <i class="fa-solid fa-xmark"></i>
-            Cancelar
+            <i class="fa-solid fa-xmark"></i> Cancelar
         </a>
         <button type="submit" form="formReserva" class="btn btn-guardar">
             <i class="fa-regular fa-floppy-disk"></i> Guardar Reserva
@@ -32,13 +44,22 @@
     </div>
 </section>
 
+@* ============================================================
+   FORMULARIO PRINCIPAL
+   ============================================================ *@
 <form id="formReserva" asp-action="GuardarReserva" method="post" class="reserva-layout">
 
+    @* Campos ocultos: Id de reserva (para edición) y Costo Total calculado *@
     <input type="hidden" asp-for="Reserva.IdReserva" />
     <input type="hidden" asp-for="Reserva.CostoTotal" id="inputCostoTotal" />
+    @* Marca si el cliente es nuevo o existente (lo lee el controlador) *@
+    <input type="hidden" id="inputTipoCliente" name="TipoCliente" value="existente" />
 
     <div class="reserva-main">
 
+        @* ============================================================
+           SECCIÓN 1: DATOS DE LA RESERVA
+           ============================================================ *@
         <article class="card-reserva">
             <h2 class="card-title">
                 <i class="fa-regular fa-calendar-check"></i> DATOS DE LA RESERVA
@@ -48,16 +69,19 @@
                 <div class="form-group">
                     <label asp-for="Reserva.FechaEntrada">Fecha de Entrada</label>
                     <input asp-for="Reserva.FechaEntrada" type="date" id="fechaEntrada" />
+                    <span asp-validation-for="Reserva.FechaEntrada" class="field-validation-error"></span>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Reserva.FechaSalida">Fecha de Salida</label>
                     <input asp-for="Reserva.FechaSalida" type="date" id="fechaSalida" />
+                    <span asp-validation-for="Reserva.FechaSalida" class="field-validation-error"></span>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Reserva.CantidadPersonas">Cantidad Personas</label>
-                    <input asp-for="Reserva.CantidadPersonas" id="cantPersonas" required min="1" />
+                    <input asp-for="Reserva.CantidadPersonas" id="cantPersonas"
+                           type="number" required min="1" max="20" />
                 </div>
 
                 <div class="form-group">
@@ -71,48 +95,84 @@
             </div>
         </article>
 
+        @* ============================================================
+           SECCIÓN 2: DATOS DEL CLIENTE
+           Toggle entre cliente existente y cliente nuevo.
+           ============================================================ *@
         <article class="card-reserva">
             <h2 class="card-title">
-                <i class="fa-regular fa-user"></i>
-                DATOS DEL CLIENTE
+                <i class="fa-regular fa-user"></i> DATOS DEL CLIENTE
             </h2>
-            <div class="form-grid-4">
+
+            @* --- Toggle (dos radios estilizados como píldoras) --- *@
+            <div class="cliente-toggle">
+                <label class="toggle-option">
+                    <input type="radio" name="tipoClienteRadio" value="existente" checked />
+                    <i class="fa-solid fa-users"></i>
+                    <span>Cliente existente</span>
+                </label>
+                <label class="toggle-option">
+                    <input type="radio" name="tipoClienteRadio" value="nuevo" />
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>Cliente nuevo</span>
+                </label>
+            </div>
+
+            @* --- Bloque visible SOLO si elige cliente existente --- *@
+            <div id="bloqueClienteExistente" class="mt-20">
                 <div class="form-group">
-                    <label asp-for="Reserva.IdCliente">Cliente</label>
-                    <select asp-for="Reserva.IdCliente" id="clienteSelect" required class="form-control">
-                        <option value="">Seleccione un cliente</option>
+                    <label asp-for="Reserva.IdCliente">Seleccione un cliente</label>
+                    <select asp-for="Reserva.IdCliente" id="clienteSelect" class="form-control">
+                        <option value="">-- Seleccione un cliente --</option>
                         @if (ViewBag.ClientesData != null)
                         {
                             foreach (var c in ViewBag.ClientesData)
                             {
                                 <option value="@c.Id"
                                         data-dni="@c.Dni"
+                                        data-nombre="@c.Nombre"
                                         data-telefono="@c.Telefono"
                                         data-email="@c.Email">
-                                    @c.Nombre
+                                    @c.Nombre - @c.Dni
                                 </option>
                             }
                         }
                     </select>
                 </div>
+            </div>
 
+            @* --- Campos del cliente (editables si es nuevo, readonly si es existente) --- *@
+            <div class="form-grid-4 mt-20">
                 <div class="form-group">
                     <label asp-for="Cliente.Dni">DNI / Pasaporte</label>
-                    <input asp-for="Cliente.Dni" id="clienteDni" type="text" placeholder="Documento" readonly />
+                    <input asp-for="Cliente.Dni" id="clienteDni" type="text"
+                           placeholder="Documento" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Cliente.Nombres">Nombre Completo</label>
+                    <input asp-for="Cliente.Nombres" id="clienteNombre" type="text"
+                           placeholder="Nombre completo" readonly />
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Cliente.Telefono">Teléfono</label>
-                    <input asp-for="Cliente.Telefono" id="clienteTelefono" type="tel" placeholder="Teléfono" readonly />
+                    <input asp-for="Cliente.Telefono" id="clienteTelefono" type="tel"
+                           placeholder="Teléfono" readonly />
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Cliente.Email">Email</label>
-                    <input asp-for="Cliente.Email" id="clienteEmail" type="email" placeholder="Email" readonly />
+                    <input asp-for="Cliente.Email" id="clienteEmail" type="email"
+                           placeholder="Email" readonly />
                 </div>
             </div>
         </article>
 
+        @* ============================================================
+           SECCIÓN 3: DETALLE DE LA HABITACIÓN
+           Orden: Tipo → Precio → Nro. Habitación → Piso
+           ============================================================ *@
         <article class="card-reserva">
             <h2 class="card-title">
                 <i class="fa-solid fa-bed"></i> DETALLE DE LA HABITACIÓN
@@ -121,49 +181,46 @@
             <div class="form-grid-4">
                 <div class="form-group">
                     <label asp-for="Reserva.TipoHabitacion">Tipo de Habitación</label>
-                    <select asp-for="Reserva.TipoHabitacion" id="tipoHabitacionSelect" asp-items="@Model.ListaTipoHabitacion" class="form-control" required>
-                        <option value="">Seleccione tipo</option>
+                    <select asp-for="Reserva.TipoHabitacion" id="tipoHabitacionSelect"
+                            asp-items="@Model.ListaTipoHabitacion" class="form-control" required>
+                        <option value="">-- Seleccione tipo --</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Habitacion.Precio">Precio por Noche</label>
-                    <input asp-for="Habitacion.Precio" id="precioHabitacion" type="text" placeholder="S/." readonly />
+                    <input asp-for="Habitacion.Precio" id="precioHabitacion" type="text"
+                           placeholder="S/. 0.00" readonly />
+                </div>
+
+                @* Nro. de Habitación va ANTES que Piso (como pediste) *@
+                <div class="form-group">
+                    <label asp-for="Reserva.IdHabitacion">Nro. de Habitación</label>
+                    <select asp-for="Reserva.IdHabitacion" id="habitacionSelect"
+                            required class="form-control" disabled>
+                        <option value="">-- Primero elija un tipo --</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Habitacion.Piso">Piso</label>
-                    <input asp-for="Habitacion.Piso" id="pisoHabitacion" type="text" placeholder="Piso" readonly />
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Reserva.IdHabitacion">Nro. de Habitación</label>
-                    <select asp-for="Reserva.IdHabitacion" id="habitacionSelect" required class="form-control">
-                        <option value="">Seleccione habitación</option>
-                        @if (ViewBag.HabitacionesData != null)
-                        {
-                            foreach (var h in ViewBag.HabitacionesData)
-                            {
-                                <option value="@h.Id"
-                                        data-precio="@h.Precio"
-                                        data-piso="@h.Piso"
-                                        data-tipo="@h.TipoNombre">
-                                    @h.Numero
-                                </option>
-                            }
-                        }
-                    </select>
+                    <input asp-for="Habitacion.Piso" id="pisoHabitacion" type="text"
+                           placeholder="Piso" readonly />
                 </div>
             </div>
 
             <div class="form-group mt-20">
                 <label asp-for="Reserva.Observaciones">Observaciones</label>
-                <textarea asp-for="Reserva.Observaciones" rows="3" placeholder="Ingrese observaciones adicionales..."></textarea>
+                <textarea asp-for="Reserva.Observaciones" rows="3"
+                          placeholder="Ingrese observaciones adicionales..."></textarea>
             </div>
         </article>
 
     </div>
 
+    @* ============================================================
+       COLUMNA DERECHA: RESUMEN EN TIEMPO REAL
+       ============================================================ *@
     <aside class="resumen-card">
         <h2 class="card-title">
             <i class="fa-regular fa-clipboard"></i> RESUMEN DE LA RESERVA
@@ -211,5 +268,23 @@
     </aside>
 
 </form>
+
+@* ============================================================
+   DATOS PARA EL JAVASCRIPT
+   Se serializan los ViewBag a JSON para que JS pueda filtrar
+   habitaciones disponibles y autocompletar.
+   ============================================================ *@
+<script>
+    // Todas las habitaciones con su tipo y precio
+    const HABITACIONES = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                ViewBag.HabitacionesData ?? new List<object>()));
+
+    // Reservas activas (para saber qué habitaciones están ocupadas)
+    const RESERVAS_EXISTENTES = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                ViewBag.ReservasExistentes ?? new List<object>()));
+
+    // Id de la reserva actual (si estamos editando, para no chocar con ella misma)
+    const ID_RESERVA_ACTUAL = @(Model.Reserva?.IdReserva ?? 0);
+</script>
 
 <script src="~/js/JS_Reserva.js" asp-append-version="true"></script>

@@ -1,46 +1,115 @@
-﻿/* ==========================================
-   TOPBAR Y ENCABEZADOS DE PÁGINA
-   ========================================== */
+﻿/* ============================================================
+   TOPBAR, ENCABEZADOS Y FORMULARIOS — MIRABUS
+   Estructura:
+     1) Design tokens
+     2) Topbar (barra superior fija)
+     3) Contenido principal
+     4) Botón del menú
+     5) Info del usuario
+     6) Encabezado de página (título + breadcrumb + botones)
+     7) Layout de formulario (grid con resumen lateral)
+     8) Tarjetas de formulario
+     9) Título de tarjeta
+    10) Grillas de campos (3 y 4 columnas)
+    11) Campos (label + input/select/textarea)
+    12) Estados de validación
+    13) Utilidades
+    14) Resumen lateral (ítems + total)
+    15) Toolbar y buscador
+    16) Tabla de reservas
+    17) Estados vacíos
+    18) Responsive
+   ============================================================ */
 
+
+/* ============================================================
+   1) DESIGN TOKENS
+   ============================================================ */
+:root {
+    /* --- Colores de la marca --- */
+    --accent-red: #F00000;
+    --accent-red-hover: #D90000;
+    --accent-red-soft: rgba(240, 0, 0, 0.10);
+    --accent-red-softer: rgba(240, 0, 0, 0.08);
+    /* --- Superficies --- */
+    --bg-card: #ffffff;
+    --bg-page: #f5f7fb;
+    --bg-thead: #f8fafc;
+    --bg-row-hover: #fafbfc;
+    /* --- Textos --- */
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    /* --- Bordes --- */
+    --border-input: #d1d5db;
+    --border-soft: #e5e7eb;
+    --border-row: #eef0f2;
+    --border-subtle: rgba(0, 0, 0, 0.03);
+    /* --- Estados --- */
+    --color-error: #dc2626;
+    /* --- Sombras --- */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-topbar: 0 2px 8px rgba(0, 0, 0, 0.05);
+    /* --- Radios --- */
+    --radius-sm: 7px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    /* --- Espaciados --- */
+    --gap-xs: 6px;
+    --gap-sm: 12px;
+    --gap-md: 16px;
+    --gap-lg: 20px;
+    --gap-xl: 24px;
+    /* --- Dimensiones --- */
+    --topbar-height: 70px;
+    --sidebar-width: 240px;
+    --input-height: 42px;
+    --input-height-sm: 38px;
+    /* --- Transiciones --- */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.2s ease;
+}
+
+
+/* ============================================================
+   2) TOPBAR (BARRA SUPERIOR FIJA)
+   Se posiciona a la derecha del sidebar y queda fija al scroll.
+   ============================================================ */
 .topbar {
     position: fixed;
     top: 0;
-    left: var(--sidebar-width, 240px);
-    width: calc(100% - var(--sidebar-width, 240px));
-    height: 70px;
-    background-color: var(--bg-card, #ffffff);
+    left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    height: var(--topbar-height);
+    background-color: var(--bg-card);
     display: flex;
     justify-content: flex-end;
     align-items: center;
     padding: 0 32px;
-    box-shadow: var( --shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.05) );
+    box-shadow: var(--shadow-topbar);
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     z-index: 999;
 }
 
 
-/* ==========================================
-   CONTENIDO PRINCIPAL
-   ========================================== */
-
+/* ============================================================
+   3) CONTENIDO PRINCIPAL
+   Compensa el sidebar (margen) y la topbar (padding-top).
+   ============================================================ */
 .main-content {
-    margin-left: var(--sidebar-width, 240px);
-    padding-top: 102px;
-    padding-left: 32px;
-    padding-right: 32px;
-    padding-bottom: 32px;
+    margin-left: var(--sidebar-width);
+    padding: 102px 32px 32px 32px; /* top right bottom left */
     min-height: 100vh;
 }
 
 
-/* ==========================================
-   BOTÓN DEL MENÚ
-   ========================================== */
-
+/* ============================================================
+   4) BOTÓN DEL MENÚ (ícono hamburguesa / toggle)
+   ============================================================ */
 .menu-btn {
     width: 42px;
     height: 42px;
-    background: var(--accent-red, #F00000);
+    background: var(--accent-red);
     color: #ffffff;
     border-radius: 50%;
     display: flex;
@@ -48,28 +117,27 @@
     align-items: center;
     font-size: 18px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color var(--transition-normal);
 }
 
     .menu-btn:hover {
-        background: var(--accent-red-hover, #D90000);
+        background: var(--accent-red-hover);
     }
 
 
-/* ==========================================
-   INFORMACIÓN DEL USUARIO
-   ========================================== */
-
+/* ============================================================
+   5) INFORMACIÓN DEL USUARIO (avatar + nombre)
+   ============================================================ */
 .user-info {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--gap-sm);
 }
 
 .user-icon {
     width: 40px;
     height: 40px;
-    background: var(--accent-red, #F00000);
+    background: var(--accent-red);
     color: #ffffff;
     border-radius: 50%;
     display: flex;
@@ -79,30 +147,30 @@
 }
 
 
-/* ==========================================
-   ENCABEZADO DE PÁGINA
-   ========================================== */
-
+/* ============================================================
+   6) ENCABEZADO DE PÁGINA
+   Título + breadcrumb a la izquierda, botones a la derecha.
+   ============================================================ */
 .page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: var(--gap-xl);
     flex-wrap: wrap;
-    gap: 16px;
+    gap: var(--gap-md);
 }
 
 .title-section {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: var(--gap-md);
 }
 
 .title-icon {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: var(--accent-red, #F00000);
+    background: var(--accent-red);
     color: #ffffff;
     display: flex;
     justify-content: center;
@@ -113,7 +181,7 @@
 .title-section h1 {
     font-size: 28px;
     font-weight: 700;
-    color: var(--text-primary, #111827);
+    color: var(--text-primary);
     margin: 0;
     line-height: 1.2;
 }
@@ -121,194 +189,173 @@
 .breadcrumb {
     margin-top: 4px;
     font-size: 13px;
-    color: var(--text-secondary, #6b7280);
+    color: var(--text-secondary);
 }
 
     .breadcrumb span {
-        color: var(--accent-red, #F00000);
+        color: var(--accent-red);
         font-weight: 600;
     }
 
-
-/* ==========================================
-   BOTONES DEL HEADER
-   ========================================== */
-
+/* Bloque de botones del header */
 .header-buttons {
     display: flex;
-    gap: 12px;
+    gap: var(--gap-sm);
 }
 
 
-/* ==========================================
-   LAYOUT DEL FORMULARIO
-   ========================================== */
-
+/* ============================================================
+   7) LAYOUT DE FORMULARIO
+   Grid de dos columnas: formulario principal (1fr) + resumen (320px).
+   ============================================================ */
 .reserva-layout {
     display: grid;
     grid-template-columns: 1fr 320px;
-    gap: 20px;
+    gap: var(--gap-lg);
     align-items: start;
 }
 
 
-/* ==========================================
-   TARJETAS DE FORMULARIO
-   ========================================== */
-
+/* ============================================================
+   8) TARJETAS DE FORMULARIO Y RESUMEN
+   Comparten el mismo estilo visual (blanco, borde redondeado, sombra).
+   ============================================================ */
 .card-reserva,
 .resumen-card {
-    background: var(--bg-card, #ffffff);
-    border-radius: var(--radius-lg, 16px);
-    padding: 24px;
-    margin-bottom: 20px;
-    box-shadow: var( --shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.05) );
-    border: 1px solid rgba(0, 0, 0, 0.03);
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--gap-xl);
+    margin-bottom: var(--gap-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-subtle);
 }
 
 
-/* ==========================================
-   TÍTULO DE TARJETA
-   ========================================== */
-
+/* ============================================================
+   9) TÍTULO DE TARJETA
+   ============================================================ */
 .card-title {
-    color: var(--accent-red, #F00000);
+    color: var(--accent-red);
     font-weight: 700;
     font-size: 18px;
-    margin-bottom: 20px;
+    margin-bottom: var(--gap-lg);
 }
 
 
-/* ==========================================
-   GRILLA DE FORMULARIO
-   ========================================== */
-
+/* ============================================================
+   10) GRILLAS DE CAMPOS
+   - form-grid-3: 3 columnas
+   - form-grid-4: 4 columnas
+   En pantallas pequeñas se reducen (ver sección responsive).
+   ============================================================ */
 .form-grid-3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: var(--gap-md);
 }
 
 .form-grid-4 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: var(--gap-md);
 }
 
 
-/* ==========================================
-   GRUPO DEL FORMULARIO
-   ========================================== */
-
+/* ============================================================
+   11) CAMPOS DE FORMULARIO (label + input/select/textarea)
+   ============================================================ */
 .form-group {
     display: flex;
     flex-direction: column;
-    min-width: 0;
+    min-width: 0; /* Evita desbordes en grids */
 }
-
-
-    /* ==========================================
-   LABEL
-   ========================================== */
 
     .form-group label {
         display: block;
         margin-bottom: 6px;
         font-size: 13px;
         font-weight: 600;
-        color: var(--text-primary, #111827);
+        color: var(--text-primary);
     }
 
-
-    /* ==========================================
-   INPUT / SELECT / TEXTAREA
-   ========================================== */
-
+    /* Base común de todos los controles */
     .form-group input,
     .form-group select,
     .form-group textarea {
         width: 100%;
         box-sizing: border-box;
-        border: 1px solid #d1d5db;
-        border-radius: var(--radius-sm, 8px);
+        border: 1px solid var(--border-input);
+        border-radius: var(--radius-md);
         padding: 10px 14px;
         font-family: inherit;
         font-size: 14px;
-        color: var(--text-primary, #111827);
+        color: var(--text-primary);
         background-color: #ffffff;
         outline: none;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        transition: border-color var(--transition-normal), box-shadow var(--transition-normal), background-color var(--transition-normal);
     }
 
-
-    /* Altura consistente */
-
+    /* Altura consistente para inputs y selects (no textarea) */
     .form-group input,
     .form-group select {
-        height: 42px;
+        height: var(--input-height);
     }
 
-
-    /* Textarea */
-
+    /* Textarea: altura mínima y resize solo vertical */
     .form-group textarea {
         min-height: 100px;
         resize: vertical;
     }
 
-
         /* Placeholder */
-
         .form-group input::placeholder,
         .form-group textarea::placeholder {
-            color: #9ca3af;
+            color: var(--text-muted);
         }
 
-
-        /* ==========================================
-   FOCUS
-   ========================================== */
-
+        /* Focus: borde rojo con halo suave */
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-            border-color: var(--accent-red, #F00000);
-            box-shadow: 0 0 0 3px rgba(240, 0, 0, 0.10);
+            border-color: var(--accent-red);
+            box-shadow: 0 0 0 3px var(--accent-red-soft);
             background-color: #ffffff;
         }
 
 
-        /* ==========================================
-   ESTADOS DE VALIDACIÓN
-   ========================================== */
+        /* ============================================================
+   12) ESTADOS DE VALIDACIÓN
+   ============================================================ */
 
+        /* Campo con error: borde rojo */
         .form-group input.input-validation-error,
         .form-group select.input-validation-error,
         .form-group textarea.input-validation-error {
-            border-color: #dc2626;
+            border-color: var(--color-error);
         }
 
+/* Mensaje de error debajo del campo */
 .field-validation-error {
     display: block;
     margin-top: 5px;
-    color: #dc2626;
+    color: var(--color-error);
     font-size: 12px;
 }
 
 
-/* ==========================================
-   MARGEN
-   ========================================== */
-
+/* ============================================================
+   13) UTILIDADES
+   ============================================================ */
 .mt-20 {
-    margin-top: 20px;
+    margin-top: var(--gap-lg);
 }
 
 
-/* ==========================================
-   RESUMEN
-   ========================================== */
+/* ============================================================
+   14) RESUMEN LATERAL (ítems y total)
+   ============================================================ */
 
+/* Fila de resumen: descripción a la izquierda, valor a la derecha */
 .resumen-item {
     display: flex;
     justify-content: space-between;
@@ -316,105 +363,87 @@
     padding: 12px 0;
     border-bottom: 1px solid #f3f4f6;
     font-size: 14px;
-    color: var(--text-secondary, #6b7280);
+    color: var(--text-secondary);
 }
 
     .resumen-item strong {
-        color: var(--text-primary, #111827);
+        color: var(--text-primary);
     }
 
-
-/* ==========================================
-   TOTAL
-   ========================================== */
-
+/* Total final: borde punteado arriba y tipografía destacada */
 .total-final {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 24px;
-    padding-top: 16px;
-    border-top: 2px dashed #e5e7eb;
+    margin-top: var(--gap-xl);
+    padding-top: var(--gap-md);
+    border-top: 2px dashed var(--border-soft);
     font-size: 20px;
-    color: var(--accent-red, #F00000);
+    color: var(--accent-red);
     font-weight: 700;
 }
 
-    .total-final span {
-        float: none;
-    }
 
-
-/* =========================================================
-   LISTADO DE RESERVAS
-   ========================================================= */
-
+/* ============================================================
+   15) TOOLBAR Y BUSCADOR
+   ============================================================ */
 .reserva-toolbar {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: var(--gap-lg);
 }
-
-
-/* ==========================================
-   BUSCADOR
-   ========================================== */
 
 .reserva-search {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 24px;
+    margin-bottom: var(--gap-xl);
 }
 
     .reserva-search label {
         margin: 0;
         font-size: 13px;
         font-weight: 600;
-        color: var(--text-primary, #111827);
+        color: var(--text-primary);
     }
 
     .reserva-search input {
         width: 250px;
-        height: 38px;
+        height: var(--input-height-sm);
         box-sizing: border-box;
         padding: 0 12px;
-        border: 1px solid #d1d5db;
-        border-radius: 7px;
+        border: 1px solid var(--border-input);
+        border-radius: var(--radius-sm);
         background: #ffffff;
-        color: #111827;
+        color: var(--text-primary);
         font-family: inherit;
         font-size: 13px;
         outline: none;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
     }
 
         .reserva-search input::placeholder {
-            color: #9ca3af;
+            color: var(--text-muted);
         }
 
         .reserva-search input:focus {
-            border-color: var(--accent-red, #F00000);
-            box-shadow: 0 0 0 3px rgba(240, 0, 0, 0.08);
+            border-color: var(--accent-red);
+            box-shadow: 0 0 0 3px var(--accent-red-softer);
         }
 
 
-/* =========================================================
-   TABLA
-   ========================================================= */
+/* ============================================================
+   16) TABLA DE RESERVAS
+   ============================================================ */
 
+/* Contenedor con scroll horizontal si la tabla no cabe */
 .tabla-container {
     width: 100%;
     overflow-x: auto;
     background: #ffffff;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-soft);
     border-radius: 10px;
 }
-
-
-/* ==========================================
-   TABLA PRINCIPAL
-   ========================================== */
 
 .tabla-reservas {
     width: 100%;
@@ -422,17 +451,13 @@
     font-size: 13px;
 }
 
-
-    /* ==========================================
-   CABECERA
-   ========================================== */
-
+    /* --- Cabecera --- */
     .tabla-reservas thead {
-        background: #f8fafc;
+        background: var(--bg-thead);
     }
 
         .tabla-reservas thead tr {
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--border-soft);
         }
 
     .tabla-reservas th {
@@ -444,14 +469,10 @@
         white-space: nowrap;
     }
 
-
-    /* ==========================================
-   FILAS
-   ========================================== */
-
+    /* --- Filas --- */
     .tabla-reservas tbody tr {
-        border-bottom: 1px solid #eef0f2;
-        transition: background-color 0.15s ease;
+        border-bottom: 1px solid var(--border-row);
+        transition: background-color var(--transition-fast);
     }
 
         .tabla-reservas tbody tr:last-child {
@@ -459,48 +480,32 @@
         }
 
         .tabla-reservas tbody tr:hover {
-            background-color: #fafbfc;
+            background-color: var(--bg-row-hover);
         }
 
-
-    /* ==========================================
-   CELDAS
-   ========================================== */
-
+    /* --- Celdas --- */
     .tabla-reservas td {
         padding: 13px 14px;
         vertical-align: middle;
     }
 
-
-    /* Cliente */
-
+    /* Estilos semánticos por columna */
     .tabla-reservas .cliente {
         color: #1f2937;
         font-weight: 600;
     }
 
-
-    /* Fecha */
-
     .tabla-reservas .fecha {
-        color: #6b7280;
+        color: var(--text-secondary);
         font-size: 12px;
     }
-
-
-    /* Estado */
 
     .tabla-reservas .estado {
         color: #4b5563;
         font-size: 12px;
     }
 
-
-/* ==========================================
-   COLUMNA ACCIONES
-   ========================================== */
-
+/* Columna de acciones (alineada a la derecha) */
 .columna-acciones {
     width: 180px;
     text-align: right !important;
@@ -511,16 +516,12 @@
     text-align: right;
 }
 
-
-/* ==========================================
-   ACCIONES
-   ========================================== */
-
+/* Contenedor de botones de acción dentro de la celda */
 .acciones {
     display: inline-flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 6px;
+    gap: var(--gap-xs);
 }
 
     .acciones form {
@@ -530,24 +531,24 @@
     }
 
 
-/* ==========================================
-   SIN REGISTROS
-   ========================================== */
-
+/* ============================================================
+   17) ESTADO VACÍO / SIN REGISTROS
+   ============================================================ */
 .sin-registros {
     padding: 40px 20px !important;
     text-align: center;
-    color: #9ca3af;
+    color: var(--text-muted);
     font-size: 13px;
 }
 
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+/* ============================================================
+   18) RESPONSIVE
+   ============================================================ */
 
+/* Pantallas grandes: el layout pasa a 1 columna y los campos
+   de 4 columnas se reducen a 2. */
 @media (max-width: 1200px) {
-
     .reserva-layout {
         grid-template-columns: 1fr;
     }
@@ -557,9 +558,8 @@
     }
 }
 
-
+/* Tablets: el sidebar se colapsa (asumido por CSS externo) */
 @media (max-width: 992px) {
-
     .topbar {
         left: 80px;
         width: calc(100% - 80px);
@@ -570,9 +570,8 @@
     }
 }
 
-
+/* Móviles medianos: grids a 1 columna, header vertical */
 @media (max-width: 768px) {
-
     .form-grid-3,
     .form-grid-4 {
         grid-template-columns: 1fr;
@@ -597,9 +596,8 @@
         }
 }
 
-
+/* Móviles pequeños: tabla más compacta y acciones con wrap */
 @media (max-width: 700px) {
-
     .acciones {
         flex-wrap: wrap;
     }
@@ -612,4 +610,55 @@
     .columna-acciones {
         width: auto;
     }
+}
+
+/* ============================================================
+   TOGGLE: CLIENTE EXISTENTE / NUEVO
+   ============================================================ */
+.cliente-toggle {
+    display: flex;
+    gap: 8px;
+    padding: 6px;
+    background: #f3f4f6;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.toggle-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    transition: all 0.2s ease;
+}
+
+    /* Ocultar el radio nativo */
+    .toggle-option input[type="radio"] {
+        display: none;
+    }
+
+    /* Estado activo: fondo blanco con sombra y color de marca */
+    .toggle-option:has(input:checked) {
+        background: #ffffff;
+        color: var(--accent-red, #F00000);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+/* Campos readonly (piso, precio, datos autocompletados) */
+.form-group input[readonly] {
+    background-color: #f9fafb;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+/* Selector de habitación deshabilitado */
+.form-group select:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
 }

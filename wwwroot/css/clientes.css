@@ -1,135 +1,332 @@
-﻿.clientes-container {
-    width: 100%;
-    max-width: none;
-    padding: 20px;
+﻿/* ============================================================
+   MÓDULO CLIENTES — MIRABUS
+   Estructura:
+     1) Design tokens
+     2) Contenedor principal
+     3) Encabezado de la página
+     4) Botones
+     5) Grid de dos columnas (form + tabla)
+     6) Tarjetas (cards)
+     7) Formulario (labels, inputs, selects)
+     8) Fila de botones del formulario
+     9) Tabla de clientes
+    10) Estado vacío / sin datos
+    11) Tarjeta de información adicional
+   ============================================================ */
+
+
+/* ============================================================
+   1) DESIGN TOKENS
+   ============================================================ */
+:root {
+    /* --- Colores de la marca --- */
+    --brand-red: #e00000;
+    --brand-red-hover: #c00000;
+    /* --- Superficies --- */
+    --bg-card: #ffffff;
+    --bg-page: #f5f7fb;
+    --border-soft: #dddddd;
+    /* --- Textos --- */
+    --text-primary: #1a1a2e;
+    --text-secondary: #888888;
+    /* --- Radios --- */
+    --radius-sm: 10px; /* Inputs y selects */
+    --radius-md: 12px; /* Botones */
+    --radius-lg: 20px; /* Tarjetas */
+    /* --- Espaciados --- */
+    --gap-xs: 15px;
+    --gap-sm: 20px;
+    --gap-md: 25px;
+    --gap-lg: 30px;
+    /* --- Alturas --- */
+    --altura-tabla: 450px;
+    --altura-card: 700px;
+    /* --- Tipografía --- */
+    --fs-h1: 48px;
+    --fs-card-title: 24px;
+    --fs-icon: 30px;
+    /* --- Transiciones --- */
+    --transition-fast: 0.2s ease;
 }
 
+
+/* ============================================================
+   2) CONTENEDOR PRINCIPAL
+   ============================================================ */
+.clientes-container {
+    width: 100%;
+    max-width: none;
+    padding: var(--gap-sm);
+    background: var(--bg-page);
+}
+
+
+/* ============================================================
+   3) ENCABEZADO DE LA PÁGINA
+   Icono + título a la izquierda, botones a la derecha.
+   ============================================================ */
 .clientes-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: var(--gap-lg);
 }
 
+/* Bloque icono + texto */
 .titulo {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: var(--gap-sm);
 }
 
+/* Círculo rojo con ícono */
 .icon-header {
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    background: #e00000;
-    color: white;
+    background: var(--brand-red);
+    color: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 30px;
+    font-size: var(--fs-icon);
 }
 
 .titulo h1 {
     margin: 0;
-    font-size: 48px;
+    font-size: var(--fs-h1);
+    color: var(--text-primary);
 }
 
 .titulo p {
     margin-top: 8px;
-    color: #888;
+    color: var(--text-secondary);
 }
 
+
+/* ============================================================
+   4) BOTONES
+   ============================================================ */
+
+/* Botones primarios (rojo sólido): nuevo / guardar */
 .btn-nuevo,
 .btn-guardar {
-    background: #e00000;
-    color: white;
+    background: var(--brand-red);
+    color: #ffffff;
     border: none;
-    border-radius: 12px;
-    padding: 14px 25px;
+    border-radius: var(--radius-md);
+    padding: 14px var(--gap-md);
     cursor: pointer;
+    font-weight: 600;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
 
+    .btn-nuevo:hover,
+    .btn-guardar:hover {
+        background: var(--brand-red-hover);
+        transform: translateY(-1px);
+    }
+
+/* Botón cancelar (blanco con borde suave) */
 .btn-cancelar {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 14px 25px;
+    background: #ffffff;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 14px var(--gap-md);
+    cursor: pointer;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
+    .btn-cancelar:hover {
+        background: #f9f9f9;
+        border-color: #c0c0c0;
+    }
+
+
+/* ============================================================
+   5) GRID DE DOS COLUMNAS
+   Izquierda: formulario (48%). Derecha: tabla (52%).
+   ============================================================ */
 .clientes-grid {
     display: grid;
     grid-template-columns: 48% 52%;
-    gap: 20px;
+    gap: var(--gap-sm);
     width: 100%;
 }
 
+
+/* ============================================================
+   6) TARJETAS (CARDS)
+   ============================================================ */
 .card {
-    background: #fff;
-    border-radius: 20px;
-    padding: 25px;
-    min-height: 700px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--gap-md);
+    min-height: var(--altura-card);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 }
 
+/* Título de cada tarjeta (ej. "Datos del Cliente", "Lista") */
 .card-title {
-    color: #e00000;
-    font-size: 24px;
+    color: var(--brand-red);
+    font-size: var(--fs-card-title);
     font-weight: 700;
-    margin-bottom: 25px;
+    margin-bottom: var(--gap-md);
 }
 
+
+/* ============================================================
+   7) FORMULARIO
+   Grid de 2 columnas para los campos.
+   ============================================================ */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: var(--gap-sm);
 }
 
     .form-grid label {
         display: block;
         margin-bottom: 8px;
         font-weight: 600;
+        color: var(--text-primary);
     }
 
     .form-grid input,
     .form-grid select {
         width: 100%;
         padding: 14px;
-        border: 1px solid #ddd;
-        border-radius: 10px;
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-sm);
         box-sizing: border-box;
+        font-family: inherit;
+        font-size: 14px;
+        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     }
 
+        /* Estado focus: borde rojo con halo suave */
+        .form-grid input:focus,
+        .form-grid select:focus {
+            outline: none;
+            border-color: var(--brand-red);
+            box-shadow: 0 0 0 3px rgba(224, 0, 0, 0.12);
+        }
+
+
+/* ============================================================
+   8) FILA DE BOTONES DEL FORMULARIO
+   Alineados a la derecha.
+   ============================================================ */
 .botones {
-    margin-top: 25px;
+    margin-top: var(--gap-md);
     display: flex;
     justify-content: flex-end;
-    gap: 15px;
+    gap: var(--gap-xs);
 }
 
+
+/* ============================================================
+   9) TABLA DE CLIENTES
+   ============================================================ */
+
+/* Cabecera de la tabla (buscador + acciones) */
 .tabla-top {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: var(--gap-sm);
 }
 
 .tabla-clientes {
     width: 100%;
+    border-collapse: collapse;
 }
 
+    /* Área scrolleable dentro del tbody */
     .tabla-clientes tbody {
-        height: 450px;
+        height: var(--altura-tabla);
+        display: block; /* Necesario para que height funcione */
+        overflow-y: auto;
     }
 
+    /* Filas y celdas básicas para que la tabla sea legible */
+    .tabla-clientes th,
+    .tabla-clientes td {
+        padding: 12px 10px;
+        text-align: left;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 14px;
+    }
+
+    .tabla-clientes th {
+        font-weight: 700;
+        color: var(--text-primary);
+        background: #fafafa;
+    }
+
+    .tabla-clientes tr:hover td {
+        background: #fef6f6;
+    }
+
+
+/* ============================================================
+   10) ESTADO VACÍO / SIN DATOS
+   Se muestra cuando la tabla no tiene registros.
+   ============================================================ */
 .sin-datos {
-    height: 450px;
+    height: var(--altura-tabla);
     text-align: center;
     vertical-align: middle;
     font-size: 18px;
-    color: #888;
+    color: var(--text-secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+
+/* ============================================================
+   11) TARJETA DE INFORMACIÓN ADICIONAL
+   Bloque inferior debajo del grid principal.
+   ============================================================ */
 .info-card {
-    margin-top: 25px;
-    background: white;
-    padding: 20px;
-    border-radius: 20px;
+    margin-top: var(--gap-md);
+    background: var(--bg-card);
+    padding: var(--gap-sm);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+
+/* ============================================================
+   12) RESPONSIVIDAD
+   En pantallas medianas, las dos columnas se apilan.
+   ============================================================ */
+@media (max-width: 992px) {
+    .clientes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .clientes-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--gap-sm);
+    }
+
+    .titulo h1 {
+        font-size: 32px;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .botones {
+        flex-direction: column-reverse;
+    }
+
+        .botones button {
+            width: 100%;
+        }
 }
