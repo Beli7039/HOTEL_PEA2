@@ -55,7 +55,7 @@ namespace HOTEL_PEA2.Migrations
                 {
                     IdTipoHabitacion = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NombreTipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NombreTipo = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PrecioBase = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Capacidad = table.Column<int>(type: "int", nullable: false)
@@ -88,7 +88,7 @@ namespace HOTEL_PEA2.Migrations
                 {
                     IdHabitacion = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Numero = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Numero = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Piso = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Capacidad = table.Column<int>(type: "int", nullable: false),
                     Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -158,6 +158,12 @@ namespace HOTEL_PEA2.Migrations
                 column: "IdTipoHabitacion");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Habitacion_Numero",
+                table: "Habitacion",
+                column: "Numero",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reserva_IdCliente",
                 table: "Reserva",
                 column: "IdCliente");
@@ -171,6 +177,12 @@ namespace HOTEL_PEA2.Migrations
                 name: "IX_Reserva_IdRecepcionista",
                 table: "Reserva",
                 column: "IdRecepcionista");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tipo_Habitacion_NombreTipo",
+                table: "Tipo_Habitacion",
+                column: "NombreTipo",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuario_UserName",

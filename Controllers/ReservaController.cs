@@ -11,14 +11,29 @@ namespace HOTEL_PEA2.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        // ============================================================
+        // CONSTANTES DE NEGOCIO
+        // Cargo por gestión administrativa cuando hay modificaciones.
+        // ============================================================
+        private const decimal PORCENTAJE_CARGO_ADMIN = 0.10m;   // 10%
+        private const decimal CARGO_ADMIN_MINIMO = 20.00m;  // S/ 20.00 mínimo
+
         public ReservaController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         // ============================================================
+        // Helper: calcular el cargo administrativo
+        // ============================================================
+        private decimal CalcularCargoAdministrativo(decimal montoBase)
+        {
+            var cargo = montoBase * PORCENTAJE_CARGO_ADMIN;
+            return cargo < CARGO_ADMIN_MINIMO ? CARGO_ADMIN_MINIMO : cargo;
+        }
+
+        // ============================================================
         // GET: /Reserva
-        // Lista de reservas con filtro opcional por nombre de cliente.
         // ============================================================
         public async Task<IActionResult> Index(string criterio)
         {
@@ -34,24 +49,21 @@ namespace HOTEL_PEA2.Controllers
                      r.Cliente.Apellidos.Contains(criterio)));
             }
 
-            var listaReservas = await query.ToListAsync();
+            var listaReservas = await query
+                .OrderByDescending(r => r.FechaEntrada)
+                .ToListAsync();
+
+            ViewBag.Criterio = criterio;
             return View(listaReservas);
         }
 
         // ============================================================
         // GET: /Reserva/NuevaReserva
-        // Carga la vista con los datos necesarios para el formulario:
-        //   - Reserva nueva o existente
-        //   - Listas para los <select>
-        //   - Datos extra para el JavaScript (auto-relleno y filtro)
         // ============================================================
         public async Task<IActionResult> NuevaReserva(int? id)
         {
             ReservaViewModel vm = new ReservaViewModel();
 
-            // --------------------------------------------------------
-            // 1) Cargar la reserva (nueva o existente)
-            // --------------------------------------------------------
             if (id == null || id == 0)
             {
                 vm.Reserva = new Reserva
@@ -59,7 +71,8 @@ namespace HOTEL_PEA2.Controllers
                     FechaEntrada = DateTime.Today,
                     FechaSalida = DateTime.Today.AddDays(1),
                     Estado = "Pendiente",
-                    CantidadPersonas = 1
+                    CantidadPersonas = 1,
+                    CargoAdministrativo = 0
                 };
             }
             else
@@ -68,9 +81,6 @@ namespace HOTEL_PEA2.Controllers
                 if (vm.Reserva == null) return NotFound();
             }
 
-            // --------------------------------------------------------
-            // 2) Listas simples para los <select>
-            // --------------------------------------------------------
             vm.ListaClientes = await _context.Cliente
                 .Select(x => new SelectListItem
                 {
@@ -92,11 +102,6 @@ namespace HOTEL_PEA2.Controllers
                     Value = x.IdTipoHabitacion.ToString()
                 }).ToListAsync();
 
-            // --------------------------------------------------------
-            // 3) Datos extra para el JavaScript
-            // --------------------------------------------------------
-
-            // Clientes: con DNI, teléfono, email y nombre completo
             ViewBag.ClientesData = await _context.Cliente
                 .Select(c => new
                 {
@@ -108,8 +113,6 @@ namespace HOTEL_PEA2.Controllers
                 })
                 .ToListAsync();
 
-            // Habitaciones: con precio, piso y tipo (Id + nombre)
-            // ⬅️ CAMBIO: se agrega TipoId para poder filtrar por Id de tipo
             ViewBag.HabitacionesData = await _context.Habitacion
                 .Include(h => h.TipoHabitacion)
                 .Select(h => new
@@ -118,12 +121,11 @@ namespace HOTEL_PEA2.Controllers
                     Numero = h.Numero,
                     Precio = h.Precio,
                     Piso = h.Piso,
-                    TipoId = h.IdTipoHabitacion,   // ⬅️ NUEVO
+                    TipoId = h.IdTipoHabitacion,
                     Tipo = h.TipoHabitacion != null ? h.TipoHabitacion.NombreTipo : ""
                 })
                 .ToListAsync();
 
-            // ⬅️ NUEVO: Reservas activas (para que JS sepa qué habitaciones están ocupadas)
             ViewBag.ReservasExistentes = await _context.Reserva
                 .Where(r => r.Estado != "Cancelada")
                 .Select(r => new
@@ -140,28 +142,19 @@ namespace HOTEL_PEA2.Controllers
 
         // ============================================================
         // POST: /Reserva/GuardarReserva
-        // Maneja dos casos:
-        //   A) Cliente existente → usa su IdCliente
-        //   B) Cliente nuevo     → crea primero el Cliente y luego la Reserva
         // ============================================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GuardarReserva(
             ReservaViewModel vm,
-            string TipoCliente = "existente")   // ⬅️ NUEVO: viene del hidden
+            string TipoCliente = "existente")
         {
-            // Validación básica
             if (vm == null || vm.Reserva == null)
-            {
                 return BadRequest();
-            }
 
-            // --------------------------------------------------------
-            // A) CLIENTE NUEVO: crear primero el Cliente
-            // --------------------------------------------------------
+            // A) CLIENTE NUEVO
             if (TipoCliente == "nuevo")
             {
-                // Validar que tengamos los datos mínimos del cliente
                 if (vm.Cliente == null ||
                     string.IsNullOrWhiteSpace(vm.Cliente.Dni) ||
                     string.IsNullOrWhiteSpace(vm.Cliente.Nombres))
@@ -170,59 +163,48 @@ namespace HOTEL_PEA2.Controllers
                     return View("NuevaReserva", vm);
                 }
 
-                // Verificar que el DNI no exista ya
                 var existeDni = await _context.Cliente
                     .AnyAsync(c => c.Dni == vm.Cliente.Dni);
 
                 if (existeDni)
                 {
-                    ModelState.AddModelError("Cliente.Dni",
-                        "Ya existe un cliente con ese DNI.");
+                    ModelState.AddModelError("Cliente.Dni", "Ya existe un cliente con ese DNI.");
                     return View("NuevaReserva", vm);
                 }
 
-                // Crear el nuevo Cliente
                 var nuevoCliente = new Cliente
                 {
                     Dni = vm.Cliente.Dni,
-                    Nombres = vm.Cliente.Nombres,   // viene del campo "Nombre Completo"
-                    Apellidos = "",                  // se puede dividir si quieres
+                    Nombres = vm.Cliente.Nombres,
+                    Apellidos = "",
                     Telefono = vm.Cliente.Telefono,
                     Email = vm.Cliente.Email
                 };
 
                 _context.Cliente.Add(nuevoCliente);
-
-                // Guardar para que se genere el IdCliente
                 await _context.SaveChangesAsync();
 
-                // Asignar el IdCliente recién creado a la reserva
                 vm.Reserva.IdCliente = nuevoCliente.IdCliente;
             }
-            // --------------------------------------------------------
-            // B) CLIENTE EXISTENTE: usar el IdCliente seleccionado
-            // --------------------------------------------------------
+            // B) CLIENTE EXISTENTE
             else
             {
                 if (vm.Reserva.IdCliente == 0)
                 {
-                    ModelState.AddModelError("Reserva.IdCliente",
-                        "Debe seleccionar un cliente.");
+                    ModelState.AddModelError("Reserva.IdCliente", "Debe seleccionar un cliente.");
                     return View("NuevaReserva", vm);
                 }
             }
 
-            // --------------------------------------------------------
-            // C) Guardar la reserva (nueva o edición)
-            // --------------------------------------------------------
+            // C) GUARDAR
             if (vm.Reserva.IdReserva == 0)
             {
-                // Nueva reserva
+                // Nueva reserva → sin cargo administrativo
+                vm.Reserva.CargoAdministrativo = 0;
                 _context.Reserva.Add(vm.Reserva);
             }
             else
             {
-                // Editar reserva existente
                 var reservaEnDb = await _context.Reserva.FindAsync(vm.Reserva.IdReserva);
                 if (reservaEnDb == null) return NotFound();
 
@@ -235,16 +217,298 @@ namespace HOTEL_PEA2.Controllers
                 reservaEnDb.IdCliente = vm.Reserva.IdCliente;
                 reservaEnDb.IdHabitacion = vm.Reserva.IdHabitacion;
                 reservaEnDb.IdRecepcionista = vm.Reserva.IdRecepcionista;
+                // CargoAdministrativo NO se toca aquí (solo se acumula en
+                // Reprogramar / ModificarHabitacion)
 
                 if (!string.IsNullOrEmpty(vm.Reserva.TipoHabitacion))
-                {
                     reservaEnDb.TipoHabitacion = vm.Reserva.TipoHabitacion;
-                }
 
                 _context.Reserva.Update(reservaEnDb);
             }
 
             await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // ============================================================
+        // GET: /Reserva/Reprogramar/5
+        // ============================================================
+        public async Task<IActionResult> Reprogramar(int id)
+        {
+            var reserva = await _context.Reserva
+                .Include(r => r.Cliente)
+                .Include(r => r.Habitacion)
+                .FirstOrDefaultAsync(r => r.IdReserva == id);
+
+            if (reserva == null) return NotFound();
+
+            if (reserva.Estado == "Cancelada")
+            {
+                TempData["Error"] = "No se puede reprogramar una reserva cancelada.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewBag.PorcentajeCargo = PORCENTAJE_CARGO_ADMIN;
+            ViewBag.CargoMinimo = CARGO_ADMIN_MINIMO;
+
+            return View(reserva);
+        }
+
+        // ============================================================
+        // POST: /Reserva/Reprogramar
+        // ============================================================
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reprogramar(int IdReserva, DateTime FechaEntrada,
+                                                     DateTime FechaSalida, int CantidadPersonas)
+        {
+            var reserva = await _context.Reserva
+                .Include(r => r.Habitacion)
+                .FirstOrDefaultAsync(r => r.IdReserva == IdReserva);
+
+            if (reserva == null) return NotFound();
+
+            // Validar fechas
+            if (FechaSalida <= FechaEntrada)
+            {
+                ModelState.AddModelError("", "La fecha de salida debe ser posterior a la de entrada.");
+                ViewBag.PorcentajeCargo = PORCENTAJE_CARGO_ADMIN;
+                ViewBag.CargoMinimo = CARGO_ADMIN_MINIMO;
+                return View(reserva);
+            }
+
+            // Verificar disponibilidad
+            var ocupada = await _context.Reserva.AnyAsync(r =>
+                r.IdReserva != IdReserva &&
+                r.IdHabitacion == reserva.IdHabitacion &&
+                r.Estado != "Cancelada" &&
+                r.FechaEntrada < FechaSalida &&
+                r.FechaSalida > FechaEntrada);
+
+            if (ocupada)
+            {
+                ModelState.AddModelError("",
+                    "La habitación ya está reservada en ese rango de fechas.");
+                ViewBag.PorcentajeCargo = PORCENTAJE_CARGO_ADMIN;
+                ViewBag.CargoMinimo = CARGO_ADMIN_MINIMO;
+                return View(reserva);
+            }
+
+            // Recalcular base y aplicar cargo administrativo
+            var precio = reserva.Habitacion?.Precio ?? 0;
+            var noches = (FechaSalida - FechaEntrada).Days;
+            var nuevoBase = noches * precio;
+
+            // El cargo se calcula sobre el nuevo total base
+            var cargoNuevo = CalcularCargoAdministrativo(nuevoBase);
+
+            // Acumular al cargo existente
+            reserva.CargoAdministrativo += cargoNuevo;
+
+            reserva.FechaEntrada = FechaEntrada;
+            reserva.FechaSalida = FechaSalida;
+            reserva.CantidadPersonas = CantidadPersonas;
+            reserva.CostoTotal = nuevoBase;
+
+            await _context.SaveChangesAsync();
+
+            TempData["Exito"] = $"Reserva reprogramada. Se agregó un cargo administrativo de S/ {cargoNuevo:F2}.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // ============================================================
+        // GET: /Reserva/ModificarHabitacion/5
+        // ============================================================
+        public async Task<IActionResult> ModificarHabitacion(int id)
+        {
+            var reserva = await _context.Reserva
+                .Include(r => r.Cliente)
+                .Include(r => r.Habitacion)
+                    .ThenInclude(h => h.TipoHabitacion)
+                .FirstOrDefaultAsync(r => r.IdReserva == id);
+
+            if (reserva == null) return NotFound();
+
+            if (reserva.Estado == "Cancelada")
+            {
+                TempData["Error"] = "No se puede modificar una reserva cancelada.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewBag.TiposHabitacion = await _context.Tipo_Habitacion
+                .AsNoTracking()
+                .ToListAsync();
+
+            ViewBag.HabitacionesData = await _context.Habitacion
+                .Include(h => h.TipoHabitacion)
+                .AsNoTracking()
+                .Select(h => new
+                {
+                    Id = h.IdHabitacion,
+                    Numero = h.Numero,
+                    Precio = h.Precio,
+                    Piso = h.Piso,
+                    TipoId = h.IdTipoHabitacion,
+                    Tipo = h.TipoHabitacion != null ? h.TipoHabitacion.NombreTipo : ""
+                })
+                .ToListAsync();
+
+            ViewBag.ReservasExistentes = await _context.Reserva
+                .Where(r => r.Estado != "Cancelada")
+                .AsNoTracking()
+                .Select(r => new
+                {
+                    IdReserva = r.IdReserva,
+                    HabitacionId = r.IdHabitacion,
+                    FechaEntrada = r.FechaEntrada,
+                    FechaSalida = r.FechaSalida
+                })
+                .ToListAsync();
+
+            ViewBag.PorcentajeCargo = PORCENTAJE_CARGO_ADMIN;
+            ViewBag.CargoMinimo = CARGO_ADMIN_MINIMO;
+
+            return View(reserva);
+        }
+
+        // ============================================================
+        // POST: /Reserva/ModificarHabitacion
+        // ============================================================
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ModificarHabitacion(int IdReserva, int IdHabitacion,
+                                                              string TipoHabitacion)
+        {
+            var reserva = await _context.Reserva.FindAsync(IdReserva);
+            if (reserva == null) return NotFound();
+
+            if (IdHabitacion == 0)
+            {
+                ModelState.AddModelError("", "Debe seleccionar una habitación.");
+                return await RecargarVistaModificar(reserva);
+            }
+
+            var habitacion = await _context.Habitacion.FindAsync(IdHabitacion);
+            if (habitacion == null)
+            {
+                ModelState.AddModelError("", "La habitación seleccionada no existe.");
+                return await RecargarVistaModificar(reserva);
+            }
+
+            // Verificar disponibilidad
+            var ocupada = await _context.Reserva.AnyAsync(r =>
+                r.IdReserva != IdReserva &&
+                r.IdHabitacion == IdHabitacion &&
+                r.Estado != "Cancelada" &&
+                r.FechaEntrada < reserva.FechaSalida &&
+                r.FechaSalida > reserva.FechaEntrada);
+
+            if (ocupada)
+            {
+                ModelState.AddModelError("",
+                    "La habitación seleccionada ya está ocupada en las fechas de esta reserva.");
+                return await RecargarVistaModificar(reserva);
+            }
+
+            // Recalcular base y aplicar cargo administrativo
+            var noches = (reserva.FechaSalida - reserva.FechaEntrada).Days;
+            var nuevoBase = noches * habitacion.Precio;
+
+            var cargoNuevo = CalcularCargoAdministrativo(nuevoBase);
+
+            reserva.CargoAdministrativo += cargoNuevo;
+
+            reserva.IdHabitacion = IdHabitacion;
+            reserva.TipoHabitacion = TipoHabitacion;
+            reserva.CostoTotal = nuevoBase;
+
+            await _context.SaveChangesAsync();
+
+            TempData["Exito"] = $"Habitación modificada. Se agregó un cargo administrativo de S/ {cargoNuevo:F2}.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<IActionResult> RecargarVistaModificar(Reserva reserva)
+        {
+            ViewBag.TiposHabitacion = await _context.Tipo_Habitacion.AsNoTracking().ToListAsync();
+
+            ViewBag.HabitacionesData = await _context.Habitacion
+                .Include(h => h.TipoHabitacion)
+                .AsNoTracking()
+                .Select(h => new
+                {
+                    Id = h.IdHabitacion,
+                    Numero = h.Numero,
+                    Precio = h.Precio,
+                    Piso = h.Piso,
+                    TipoId = h.IdTipoHabitacion,
+                    Tipo = h.TipoHabitacion != null ? h.TipoHabitacion.NombreTipo : ""
+                })
+                .ToListAsync();
+
+            ViewBag.ReservasExistentes = await _context.Reserva
+                .Where(r => r.Estado != "Cancelada")
+                .AsNoTracking()
+                .Select(r => new
+                {
+                    IdReserva = r.IdReserva,
+                    HabitacionId = r.IdHabitacion,
+                    FechaEntrada = r.FechaEntrada,
+                    FechaSalida = r.FechaSalida
+                })
+                .ToListAsync();
+
+            ViewBag.PorcentajeCargo = PORCENTAJE_CARGO_ADMIN;
+            ViewBag.CargoMinimo = CARGO_ADMIN_MINIMO;
+
+            return View("ModificarHabitacion", reserva);
+        }
+
+        // ============================================================
+        // GET: /Reserva/Cancelar/5
+        // ============================================================
+        public async Task<IActionResult> Cancelar(int id)
+        {
+            var reserva = await _context.Reserva
+                .Include(r => r.Cliente)
+                .Include(r => r.Habitacion)
+                .FirstOrDefaultAsync(r => r.IdReserva == id);
+
+            if (reserva == null) return NotFound();
+
+            if (reserva.Estado == "Cancelada")
+            {
+                TempData["Error"] = "Esta reserva ya está cancelada.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(reserva);
+        }
+
+        // ============================================================
+        // POST: /Reserva/Cancelar
+        // ============================================================
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CancelarConfirmado(int IdReserva, string Motivo)
+        {
+            var reserva = await _context.Reserva.FindAsync(IdReserva);
+            if (reserva == null) return NotFound();
+
+            reserva.Estado = "Cancelada";
+
+            // Concatenar observaciones con el motivo y la política de no devolución
+            var notaCancelacion = $"CANCELADA - SIN DERECHO A DEVOLUCIÓN";
+            if (!string.IsNullOrWhiteSpace(Motivo))
+                notaCancelacion += $". Motivo: {Motivo}";
+
+            reserva.Observaciones = string.IsNullOrWhiteSpace(reserva.Observaciones)
+                ? notaCancelacion
+                : $"{reserva.Observaciones} | {notaCancelacion}";
+
+            await _context.SaveChangesAsync();
+
+            TempData["Exito"] = "Reserva cancelada. No aplica devolución según la política del hotel.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -261,6 +525,7 @@ namespace HOTEL_PEA2.Controllers
             _context.Reserva.Remove(reserva);
             await _context.SaveChangesAsync();
 
+            TempData["Exito"] = "Reserva eliminada correctamente.";
             return RedirectToAction(nameof(Index));
         }
     }

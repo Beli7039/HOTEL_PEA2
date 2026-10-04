@@ -19,7 +19,10 @@ namespace HOTEL_PEA2.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Nombre exacto de tablas (tu BD usa singular y con guion bajo)
+            // ============================================================
+            // NOMBRES DE TABLAS
+            // Se mantienen los nombres exactos que ya usa la BD.
+            // ============================================================
             modelBuilder.Entity<Cliente>().ToTable("Cliente");
             modelBuilder.Entity<Habitacion>().ToTable("Habitacion");
             modelBuilder.Entity<Recepcionista>().ToTable("Recepcionista");
@@ -27,36 +30,79 @@ namespace HOTEL_PEA2.Data
             modelBuilder.Entity<Tipo_Habitacion>().ToTable("Tipo_Habitacion");
             modelBuilder.Entity<Usuario>().ToTable("Usuario");
 
-            // DNI único
+            // ============================================================
+            // ÍNDICES ÚNICOS (evitan datos duplicados)
+            // ============================================================
+
+            // DNI único en Cliente
             modelBuilder.Entity<Cliente>()
                 .HasIndex(c => c.Dni)
                 .IsUnique();
 
-            // Usuario.UserName único
+            // UserName único en Usuario
             modelBuilder.Entity<Usuario>()
                 .HasIndex(u => u.UserName)
                 .IsUnique();
 
-            // Relaciones Reserva
+            // Numero único en Habitacion
+            modelBuilder.Entity<Habitacion>()
+                .HasIndex(h => h.Numero)
+                .IsUnique();
+
+            // NombreTipo único en Tipo_Habitacion
+            modelBuilder.Entity<Tipo_Habitacion>()
+                .HasIndex(t => t.NombreTipo)
+                .IsUnique();
+
+            // ============================================================
+            // PRECISIÓN DE DECIMALES
+            // Se define explícitamente decimal(18,2) para evitar
+            // advertencias de EF Core y garantizar que no se trunquen
+            // los valores. 18 dígitos totales, 2 decimales.
+            // ============================================================
+            modelBuilder.Entity<Habitacion>()
+                .Property(h => h.Precio)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Tipo_Habitacion>()
+                .Property(t => t.PrecioBase)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Reserva>()
+                .Property(r => r.CostoTotal)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Reserva>()
+                .Property(r => r.CargoAdministrativo)
+                .HasPrecision(18, 2);
+
+            // ============================================================
+            // RELACIONES CON DELETE RESTRICT
+            // Evita borrar un registro que tenga dependencias.
+            // ============================================================
+
+            // Reserva -> Cliente
             modelBuilder.Entity<Reserva>()
                 .HasOne(r => r.Cliente)
                 .WithMany()
                 .HasForeignKey(r => r.IdCliente)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Reserva -> Habitacion
             modelBuilder.Entity<Reserva>()
                 .HasOne(r => r.Habitacion)
                 .WithMany()
                 .HasForeignKey(r => r.IdHabitacion)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Reserva -> Recepcionista
             modelBuilder.Entity<Reserva>()
                 .HasOne(r => r.Recepcionista)
                 .WithMany()
                 .HasForeignKey(r => r.IdRecepcionista)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Relación Habitacion -> Tipo_Habitacion
+            // Habitacion -> Tipo_Habitacion
             modelBuilder.Entity<Habitacion>()
                 .HasOne(h => h.TipoHabitacion)
                 .WithMany()

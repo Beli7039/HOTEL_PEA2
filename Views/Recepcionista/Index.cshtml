@@ -4,41 +4,133 @@
     ViewData["Title"] = "Recepcionistas";
 }
 
-<link rel="stylesheet" href="~/css/clientes.css" />
+<link rel="stylesheet" href="~/css/recepcionistas.css" asp-append-version="true" />
 
-<div class="clientes-container">
-    <div class="clientes-header">
+<div class="recepcionistas-container">
+
+    <div class="recepcionistas-header">
         <div class="titulo">
-            <div class="icon-header"><i class="fa-solid fa-users"></i></div>
-            <div><h1>Recepcionistas</h1><p>Inicio / Recepcionistas</p></div>
+            <div class="icon-header">
+                <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <div>
+                <h1>Recepcionistas</h1>
+                <p>Inicio / Recepcionistas</p>
+            </div>
         </div>
-        <a asp-action="Create" class="btn-nuevo"><i class="fa-solid fa-plus"></i> Nuevo</a>
+        <a asp-action="Create" class="btn-nuevo">
+            <i class="fa-solid fa-plus"></i> Nuevo Recepcionista
+        </a>
     </div>
 
     <div class="card">
         <div class="card-title">LISTA DE RECEPCIONISTAS</div>
-        <table class="tabla-clientes">
-            <thead>
-                <tr><th>ID</th><th>Nombres</th><th>Usuario</th><th>Teléfono</th><th>Email</th><th>Estado</th><th>Acciones</th></tr>
-            </thead>
-            <tbody>
-                @foreach (var r in Model)
-                {
-                    <tr>
-                        <td>@r.IdRecepcionista</td>
-                        <td>@r.Nombres @r.Apellidos</td>
-                        <td>@r.Usuario</td>
-                        <td>@r.Telefono</td>
-                        <td>@r.Email</td>
-                        <td>@r.Estado</td>
-                        <td style="display:flex; gap:6px;">
-                            <a asp-action="Edit" asp-route-id="@r.IdRecepcionista" class="btn-guardar" style="background:#ffc107;color:#000;"><i class="fa-solid fa-pen"></i></a>
-                            <a asp-action="Details" asp-route-id="@r.IdRecepcionista" class="btn-guardar" style="background:#0d6efd;"><i class="fa-solid fa-eye"></i></a>
-                            <a asp-action="Delete" asp-route-id="@r.IdRecepcionista" class="btn-guardar" style="background:#dc3545;"><i class="fa-solid fa-trash"></i></a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+
+        <form asp-action="Index" method="get" class="barra-busqueda">
+            <div class="input-busqueda">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" name="criterio" value="@ViewBag.Criterio"
+                       placeholder="Buscar por nombres, apellidos o usuario..." />
+            </div>
+            <button type="submit" class="btn-buscar">
+                <i class="fa-solid fa-search"></i> Buscar
+            </button>
+            @if (!string.IsNullOrWhiteSpace(ViewBag.Criterio as string))
+            {
+                <a asp-action="Index" class="btn-limpiar">
+                    <i class="fa-solid fa-xmark"></i> Limpiar
+                </a>
+            }
+        </form>
+
+        @if (!Model.Any())
+        {
+            <div class="sin-registros">
+                <i class="fa-solid fa-inbox"></i>
+                <p>No hay recepcionistas registrados.</p>
+            </div>
+        }
+        else
+        {
+            <div class="tabla-wrapper">
+                <table class="tabla-recepcionistas">
+                    <thead>
+                        <tr>
+                            <th class="col-id">ID</th>
+                            <th class="col-nombre">Nombre Completo</th>
+                            <th class="col-usuario">Usuario</th>
+                            <th class="col-telefono">Teléfono</th>
+                            <th class="col-email">Email</th>
+                            <th class="col-estado">Estado</th>
+                            <th class="col-acciones">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in Model)
+                        {
+                            <tr>
+                                <td class="col-id">@r.IdRecepcionista</td>
+                                <td class="col-nombre">
+                                    <div class="nombre-recepcionista">
+                                        <span class="avatar">
+                                            @(r.Nombres?.Substring(0, 1).ToUpper() ?? "?")
+                                        </span>
+                                        <span>@r.Apellidos, @r.Nombres</span>
+                                    </div>
+                                </td>
+                                <td class="col-usuario">
+                                    <span class="usuario-badge">
+                                        <i class="fa-solid fa-at"></i> @r.Usuario
+                                    </span>
+                                </td>
+                                <td class="col-telefono">
+                                    @if (!string.IsNullOrWhiteSpace(r.Telefono))
+                                    {
+                                        <i class="fa-solid fa-phone icon-inline"></i>
+                                        @r.Telefono
+                                    }
+                                    else
+                                    {
+                                        <span class="texto-vacio">—</span>
+                                    }
+                                </td>
+                                <td class="col-email">
+                                    @if (!string.IsNullOrWhiteSpace(r.Email))
+                                    {
+                                        <i class="fa-solid fa-envelope icon-inline"></i>
+                                        @r.Email
+                                    }
+                                    else
+                                    {
+                                        <span class="texto-vacio">—</span>
+                                    }
+                                </td>
+                                <td class="col-estado">
+                                    <span class="estado-badge estado-@(r.Estado?.ToLower())">
+                                        @r.Estado
+                                    </span>
+                                </td>
+                                <td class="col-acciones">
+                                    <div class="acciones">
+                                        <a asp-action="Edit" asp-route-id="@r.IdRecepcionista"
+                                           class="btn-accion btn-editar" title="Editar">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@r.IdRecepcionista"
+                                           class="btn-accion btn-detalle" title="Ver detalles">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@r.IdRecepcionista"
+                                           class="btn-accion btn-eliminar" title="Eliminar">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
 </div>

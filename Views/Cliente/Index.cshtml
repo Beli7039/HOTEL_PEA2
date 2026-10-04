@@ -4,10 +4,13 @@
     ViewData["Title"] = "Clientes";
 }
 
-<link rel="stylesheet" href="~/css/clientes.css" />
+<link rel="stylesheet" href="~/css/clientes.css" asp-append-version="true" />
 
 <div class="clientes-container">
 
+    @* ============================================================
+       ENCABEZADO
+       ============================================================ *@
     <div class="clientes-header">
         <div class="titulo">
             <div class="icon-header">
@@ -18,83 +21,126 @@
                 <p>Inicio / Clientes</p>
             </div>
         </div>
-
         <a asp-action="Create" class="btn-nuevo">
-            <i class="fa-solid fa-plus"></i>
-            Nuevo Cliente
+            <i class="fa-solid fa-plus"></i> Nuevo Cliente
         </a>
     </div>
 
+    @* ============================================================
+       TARJETA CON TABLA
+       ============================================================ *@
     <div class="card">
-
         <div class="card-title">LISTA DE CLIENTES</div>
 
-        <form asp-action="Index" method="get" class="tabla-top">
-            <div>
-                Mostrar
-                <select disabled>
-                    <option>10</option>
-                </select>
-                registros
+        @* --- Barra de búsqueda --- *@
+        <form asp-action="Index" method="get" class="barra-busqueda">
+            <div class="input-busqueda">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" name="criterio" value="@ViewBag.Criterio"
+                       placeholder="Buscar por DNI, nombres o apellidos..." />
             </div>
-
-            <div style="display:flex; gap:8px;">
-                <input type="text" name="buscar" value="@ViewBag.Buscar"
-                       placeholder="Buscar cliente..." />
-                <button type="submit" class="btn-guardar">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-            </div>
+            <button type="submit" class="btn-buscar">
+                <i class="fa-solid fa-search"></i> Buscar
+            </button>
+            @if (!string.IsNullOrWhiteSpace(ViewBag.Criterio as string))
+            {
+                <a asp-action="Index" class="btn-limpiar">
+                    <i class="fa-solid fa-xmark"></i> Limpiar
+                </a>
+            }
         </form>
 
-        <table class="tabla-clientes">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>DNI</th>
-                    <th>NOMBRES</th>
-                    <th>TELÉFONO</th>
-                    <th>ESTADO</th>
-                    <th>ACCIONES</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model != null && Model.Any())
-                {
-                    @foreach (var item in Model)
-                    {
+        @* --- Tabla o mensaje vacío --- *@
+        @if (!Model.Any())
+        {
+            <div class="sin-registros">
+                <i class="fa-solid fa-inbox"></i>
+                <p>No hay clientes registrados.</p>
+            </div>
+        }
+        else
+        {
+            <div class="tabla-wrapper">
+                <table class="tabla-clientes">
+                    <thead>
                         <tr>
-                            <td>@item.IdCliente</td>
-                            <td>@item.Dni</td>
-                            <td>@item.Nombres @item.Apellidos</td>
-                            <td>@item.Telefono</td>
-                            <td>@item.Estado</td>
-                            <td style="display:flex; gap:6px;">
-                                <a asp-action="Edit" asp-route-id="@item.IdCliente"
-                                   class="btn-guardar" style="background:#ffc107;color:#000;">
-                                    <i class="fa-solid fa-pen"></i>
-                                </a>
-                                <a asp-action="Details" asp-route-id="@item.IdCliente"
-                                   class="btn-guardar" style="background:#0d6efd;">
-                                    <i class="fa-solid fa-eye"></i>
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@item.IdCliente"
-                                   class="btn-guardar" style="background:#dc3545;">
-                                    <i class="fa-solid fa-trash"></i>
-                                </a>
-                            </td>
+                            <th class="col-id">ID</th>
+                            <th class="col-dni">DNI</th>
+                            <th class="col-nombre">Nombre Completo</th>
+                            <th class="col-telefono">Teléfono</th>
+                            <th class="col-email">Email</th>
+                            <th class="col-fecha">Registro</th>
+                            <th class="col-estado">Estado</th>
+                            <th class="col-acciones">Acciones</th>
                         </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="6" class="sin-datos">
-                            Aún no hay clientes registrados.
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var c in Model)
+                        {
+                            <tr>
+                                <td class="col-id">@c.IdCliente</td>
+                                <td class="col-dni">
+                                    <span class="dni-badge">@c.Dni</span>
+                                </td>
+                                <td class="col-nombre">
+                                    <div class="nombre-cliente">
+                                        <span class="avatar">
+                                            @(c.Nombres?.Substring(0, 1).ToUpper() ?? "?")
+                                        </span>
+                                        <span>@c.Apellidos, @c.Nombres</span>
+                                    </div>
+                                </td>
+                                <td class="col-telefono">
+                                    @if (!string.IsNullOrWhiteSpace(c.Telefono))
+                                    {
+                                        <i class="fa-solid fa-phone icon-inline"></i>
+                                        @c.Telefono
+                                    }
+                                    else
+                                    {
+                                        <span class="texto-vacio">—</span>
+                                    }
+                                </td>
+                                <td class="col-email">
+                                    @if (!string.IsNullOrWhiteSpace(c.Email))
+                                    {
+                                        <i class="fa-solid fa-envelope icon-inline"></i>
+                                        @c.Email
+                                    }
+                                    else
+                                    {
+                                        <span class="texto-vacio">—</span>
+                                    }
+                                </td>
+                                <td class="col-fecha">
+                                    @c.FechaRegistro.ToString("dd/MM/yyyy")
+                                </td>
+                                <td class="col-estado">
+                                    <span class="estado-badge estado-@(c.Estado?.ToLower())">
+                                        @c.Estado
+                                    </span>
+                                </td>
+                                <td class="col-acciones">
+                                    <div class="acciones">
+                                        <a asp-action="Edit" asp-route-id="@c.IdCliente"
+                                           class="btn-accion btn-editar" title="Editar">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@c.IdCliente"
+                                           class="btn-accion btn-detalle" title="Ver detalles">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@c.IdCliente"
+                                           class="btn-accion btn-eliminar" title="Eliminar">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
 </div>

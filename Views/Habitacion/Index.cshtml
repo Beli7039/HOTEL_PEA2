@@ -4,12 +4,15 @@
     ViewData["Title"] = "Habitaciones";
 }
 
-<link rel="stylesheet" href="~/css/clientes.css" />
+<link rel="stylesheet" href="~/css/habitaciones.css" asp-append-version="true" />
 
-<div class="clientes-container">
-    <div class="clientes-header">
+<div class="habitaciones-container">
+
+    <div class="habitaciones-header">
         <div class="titulo">
-            <div class="icon-header"><i class="fa-solid fa-bed"></i></div>
+            <div class="icon-header">
+                <i class="fa-solid fa-bed"></i>
+            </div>
             <div>
                 <h1>Habitaciones</h1>
                 <p>Inicio / Habitaciones</p>
@@ -23,38 +26,69 @@
     <div class="card">
         <div class="card-title">LISTA DE HABITACIONES</div>
 
-        <table class="tabla-clientes">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Número</th>
-                    <th>Piso</th>
-                    <th>Capacidad</th>
-                    <th>Precio</th>
-                    <th>Tipo</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var h in Model)
-                {
-                    <tr>
-                        <td>@h.IdHabitacion</td>
-                        <td>@h.Numero</td>
-                        <td>@h.Piso</td>
-                        <td>@h.Capacidad</td>
-                        <td>S/. @h.Precio</td>
-                        <td>@h.TipoHabitacion?.NombreTipo</td>
-                        <td>@h.Estado</td>
-                        <td style="display:flex; gap:6px;">
-                            <a asp-action="Edit" asp-route-id="@h.IdHabitacion" class="btn-guardar" style="background:#ffc107;color:#000;"><i class="fa-solid fa-pen"></i></a>
-                            <a asp-action="Details" asp-route-id="@h.IdHabitacion" class="btn-guardar" style="background:#0d6efd;"><i class="fa-solid fa-eye"></i></a>
-                            <a asp-action="Delete" asp-route-id="@h.IdHabitacion" class="btn-guardar" style="background:#dc3545;"><i class="fa-solid fa-trash"></i></a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        @if (!Model.Any())
+        {
+            <div class="sin-registros">
+                <i class="fa-solid fa-inbox"></i>
+                <p>No hay habitaciones registradas.</p>
+            </div>
+        }
+        else
+        {
+            <div class="tabla-wrapper">
+                <table class="tabla-habitaciones">
+                    <thead>
+                        <tr>
+                            <th class="col-id">ID</th>
+                            <th class="col-numero">Número</th>
+                            <th class="col-piso">Piso</th>
+                            <th class="col-capacidad">Capacidad</th>
+                            <th class="col-precio">Precio</th>
+                            <th class="col-tipo">Tipo</th>
+                            <th class="col-estado">Estado</th>
+                            <th class="col-acciones">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var h in Model)
+                        {
+                            <tr>
+                                <td class="col-id">@h.IdHabitacion</td>
+                                <td class="col-numero">
+                                    <span class="numero-badge">@h.Numero</span>
+                                </td>
+                                <td class="col-piso">@h.Piso</td>
+                                <td class="col-capacidad">@h.Capacidad</td>
+                                <td class="col-precio">
+                                    S/. @h.Precio.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)
+                                </td>
+                                <td class="col-tipo">@h.TipoHabitacion?.NombreTipo</td>
+                                <td class="col-estado">
+                                    <span class="estado-badge estado-@(h.Estado?.ToLower())">
+                                        @h.Estado
+                                    </span>
+                                </td>
+                                <td class="col-acciones">
+                                    <div class="acciones">
+                                        <a asp-action="Edit" asp-route-id="@h.IdHabitacion"
+                                           class="btn-accion btn-editar" title="Editar">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@h.IdHabitacion"
+                                           class="btn-accion btn-detalle" title="Ver detalles">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@h.IdHabitacion"
+                                           class="btn-accion btn-eliminar" title="Eliminar">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
 </div>

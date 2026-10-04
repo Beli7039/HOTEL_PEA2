@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HOTEL_PEA2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260926144817_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20261004151515_AjustarPrecisionDecimales")]
+    partial class AjustarPrecisionDecimales
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,17 +85,21 @@ namespace HOTEL_PEA2.Migrations
 
                     b.Property<string>("Numero")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Piso")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Precio")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("IdHabitacion");
 
                     b.HasIndex("IdTipoHabitacion");
+
+                    b.HasIndex("Numero")
+                        .IsUnique();
 
                     b.ToTable("Habitacion", (string)null);
                 });
@@ -152,7 +156,12 @@ namespace HOTEL_PEA2.Migrations
                     b.Property<int>("CantidadPersonas")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("CargoAdministrativo")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("CostoTotal")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Estado")
@@ -207,12 +216,16 @@ namespace HOTEL_PEA2.Migrations
 
                     b.Property<string>("NombreTipo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("PrecioBase")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("IdTipoHabitacion");
+
+                    b.HasIndex("NombreTipo")
+                        .IsUnique();
 
                     b.ToTable("Tipo_Habitacion", (string)null);
                 });

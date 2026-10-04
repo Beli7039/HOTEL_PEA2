@@ -1,0 +1,202 @@
+﻿@model HOTEL_PEA2.Models.Reserva
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Modificar Habitación";
+    decimal porcentaje = (decimal)(ViewBag.PorcentajeCargo ?? 0.10m);
+    decimal minimo = (decimal)(ViewBag.CargoMinimo ?? 20.00m);
+}
+<link rel="stylesheet" href="~/css/reserva.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/botones.css" asp-append-version="true" />
+
+<partial name="_Header" />
+
+<section class="page-header">
+    <div class="title-section">
+        <div class="title-icon" style="background:#0d6efd;">
+            <i class="fa-solid fa-bed"></i>
+        </div>
+        <div>
+            <h1>Modificar Habitación #@Model.IdReserva</h1>
+            <nav class="breadcrumb">
+                <span>Inicio</span> / <span>Reservas</span> /
+                <strong>Modificar Habitación</strong>
+            </nav>
+        </div>
+    </div>
+
+    <div class="header-buttons">
+        <a asp-action="Index" class="btn btn-cancelar">
+            <i class="fa-solid fa-xmark"></i> Cancelar
+        </a>
+        <button type="submit" form="formModificar" class="btn btn-guardar">
+            <i class="fa-regular fa-floppy-disk"></i> Guardar Cambios
+        </button>
+    </div>
+</section>
+
+@* ⚠️ Aviso de cargo administrativo *@
+<div class="aviso-cargo">
+    <i class="fa-solid fa-circle-info"></i>
+    <div>
+        <strong>Cargo por gestión administrativa</strong>
+        <p>
+            Al cambiar de habitación se aplicará un cargo equivalente al
+            <strong>@(porcentaje * 100)%</strong> del nuevo total
+            (mínimo <strong>S/ @minimo.ToString("F2")</strong>).
+        </p>
+    </div>
+</div>
+
+<form id="formModificar" asp-action="ModificarHabitacion" method="post" class="reserva-layout">
+    <input type="hidden" name="IdReserva" value="@Model.IdReserva" />
+
+    <div class="reserva-main">
+
+        <article class="card-reserva">
+            <h2 class="card-title">
+                <i class="fa-regular fa-circle-info"></i> INFORMACIÓN DE LA RESERVA
+            </h2>
+
+            <div class="info-actual">
+                <div class="info-item">
+                    <span>Cliente:</span>
+                    <strong>@(Model.Cliente?.Nombres) @(Model.Cliente?.Apellidos)</strong>
+                </div>
+                <div class="info-item">
+                    <span>Fechas:</span>
+                    <strong>@Model.FechaEntrada.ToString("dd/MM/yyyy") → @Model.FechaSalida.ToString("dd/MM/yyyy")</strong>
+                </div>
+                <div class="info-item">
+                    <span>Habitación actual:</span>
+                    <strong>@Model.Habitacion?.Numero (@Model.Habitacion?.TipoHabitacion?.NombreTipo)</strong>
+                </div>
+                <div class="info-item">
+                    <span>Costo actual:</span>
+                    <strong>S/. @Model.CostoTotal.ToString("F2")</strong>
+                </div>
+            </div>
+        </article>
+
+        <article class="card-reserva">
+            <h2 class="card-title">
+                <i class="fa-solid fa-bed"></i> NUEVA HABITACIÓN
+            </h2>
+
+            @Html.ValidationSummary(true, "", new { @class = "field-validation-error" })
+
+            <div class="form-grid-4">
+                <div class="form-group">
+                    <label>Tipo de Habitación</label>
+                    <select id="tipoHabitacionSelect" name="TipoHabitacion" class="form-control" required>
+                        <option value="">-- Seleccione tipo --</option>
+                        @if (ViewBag.TiposHabitacion != null)
+                        {
+                            foreach (var t in ViewBag.TiposHabitacion)
+                            {
+                                if (Model.Habitacion?.TipoHabitacion?.IdTipoHabitacion == t.IdTipoHabitacion)
+                                {
+                                    <option value="@t.NombreTipo" data-id="@t.IdTipoHabitacion" selected>@t.NombreTipo</option>
+                                }
+                                else
+                                {
+                                    <option value="@t.NombreTipo" data-id="@t.IdTipoHabitacion">@t.NombreTipo</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Precio por Noche</label>
+                    <input type="text" id="precioHabitacion" readonly placeholder="S/. 0.00" />
+                </div>
+
+                <div class="form-group">
+                    <label>Nro. de Habitación</label>
+                    <select id="habitacionSelect" name="IdHabitacion" required class="form-control" disabled>
+                        <option value="">-- Primero elija un tipo --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Piso</label>
+                    <input type="text" id="pisoHabitacion" readonly placeholder="Piso" />
+                </div>
+            </div>
+        </article>
+
+    </div>
+
+    <aside class="resumen-card">
+        <h2 class="card-title">
+            <i class="fa-regular fa-clipboard"></i> NUEVO RESUMEN
+        </h2>
+
+        <div class="resumen-item">
+            <span>Habitación:</span>
+            <strong id="lblHabitacion">--</strong>
+        </div>
+        <div class="resumen-item">
+            <span>Tipo:</span>
+            <strong id="lblTipo">--</strong>
+        </div>
+        <div class="resumen-item">
+            <span>Piso:</span>
+            <strong id="lblPiso">--</strong>
+        </div>
+        <div class="resumen-item">
+            <span>Noches:</span>
+            <strong id="lblNoches">@((Model.FechaSalida - Model.FechaEntrada).Days)</strong>
+        </div>
+        <div class="resumen-item">
+            <span>Precio por Noche:</span>
+            <strong id="lblPrecio">S/. 0.00</strong>
+        </div>
+
+        <hr class="resumen-divisor" />
+
+        <div class="resumen-item">
+            <span>Subtotal (noches):</span>
+            <strong id="lblBase">S/. 0.00</strong>
+        </div>
+        <div class="resumen-item resumen-cargo">
+            <span>Cargo administrativo:</span>
+            <strong id="lblCargo">S/. 0.00</strong>
+        </div>
+        @if (Model.CargoAdministrativo > 0)
+        {
+            <div class="resumen-item">
+                <span>Cargos previos:</span>
+                <strong>S/. @Model.CargoAdministrativo.ToString("F2")</strong>
+            </div>
+        }
+
+        <div class="total-final">
+            <span>TOTAL A PAGAR:</span>
+            <strong id="lblTotal">S/. 0.00</strong>
+        </div>
+
+        <div class="aviso-no-devolucion">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Este cambio aplica cargo administrativo no reembolsable.
+        </div>
+    </aside>
+</form>
+
+<script>
+    const HABITACIONES = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                                ViewBag.HabitacionesData ?? new List<object>()));
+
+    const RESERVAS_EXISTENTES = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                                ViewBag.ReservasExistentes ?? new List<object>()));
+
+    const ID_RESERVA_ACTUAL    = @Model.IdReserva;
+    const ID_HABITACION_ACTUAL = @Model.IdHabitacion;
+    const FECHA_ENTRADA        = '@Model.FechaEntrada.ToString("yyyy-MM-dd")';
+    const FECHA_SALIDA         = '@Model.FechaSalida.ToString("yyyy-MM-dd")';
+    const NOCHES               = @((Model.FechaSalida - Model.FechaEntrada).Days);
+    const PORCENTAJE_CARGO     = @porcentaje.ToString(System.Globalization.CultureInfo.InvariantCulture);
+    const CARGO_MINIMO         = @minimo.ToString(System.Globalization.CultureInfo.InvariantCulture);
+    const CARGO_PREVIO         = @Model.CargoAdministrativo.ToString(System.Globalization.CultureInfo.InvariantCulture);
+</script>
+<script src="~/js/JS_ModificarHabitacion.js" asp-append-version="true"></script>

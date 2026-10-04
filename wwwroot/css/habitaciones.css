@@ -1,28 +1,28 @@
 ﻿/* ============================================================
-   MÓDULO CLIENTES — Estilos
+   MÓDULO HABITACIONES — Estilos
    ============================================================ */
 
-.clientes-container {
+.habitaciones-container {
     padding: 20px;
     background: #f5f7fb;
     min-height: 100vh;
 }
 
 /* --- Encabezado --- */
-.clientes-header {
+.habitaciones-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
 }
 
-    .clientes-header .titulo {
+    .habitaciones-header .titulo {
         display: flex;
         align-items: center;
         gap: 20px;
     }
 
-    .clientes-header .icon-header {
+    .habitaciones-header .icon-header {
         width: 70px;
         height: 70px;
         border-radius: 50%;
@@ -34,20 +34,20 @@
         font-size: 30px;
     }
 
-    .clientes-header h1 {
+    .habitaciones-header h1 {
         margin: 0;
         font-size: 42px;
         color: #111827;
         line-height: 1.1;
     }
 
-    .clientes-header p {
+    .habitaciones-header p {
         margin-top: 6px;
         color: #888;
         font-size: 14px;
     }
 
-    .clientes-header .btn-nuevo {
+    .habitaciones-header .btn-nuevo {
         background: #e00000;
         color: white;
         border: none;
@@ -63,7 +63,7 @@
         transition: background 0.2s ease, transform 0.2s ease;
     }
 
-        .clientes-header .btn-nuevo:hover {
+        .habitaciones-header .btn-nuevo:hover {
             background: #c00000;
             transform: translateY(-2px);
         }
@@ -80,106 +80,29 @@
     color: #e00000;
     font-size: 22px;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     letter-spacing: 0.5px;
 }
 
-/* --- Barra de búsqueda --- */
-.barra-busqueda {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.input-busqueda {
-    position: relative;
-    flex: 1;
-    min-width: 240px;
-    max-width: 400px;
-}
-
-    .input-busqueda i {
-        position: absolute;
-        left: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #9ca3af;
-        font-size: 14px;
-    }
-
-    .input-busqueda input {
-        width: 100%;
-        height: 42px;
-        padding: 0 14px 0 40px;
-        border: 1px solid #d1d5db;
-        border-radius: 10px;
-        font-size: 14px;
-        background: #fff;
-        outline: none;
-        transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-        .input-busqueda input:focus {
-            border-color: #e00000;
-            box-shadow: 0 0 0 3px rgba(224, 0, 0, 0.10);
-        }
-
-.btn-buscar,
-.btn-limpiar {
-    height: 42px;
-    padding: 0 18px;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: background 0.2s ease, transform 0.15s ease;
-}
-
-.btn-buscar {
-    background: #e00000;
-    color: #fff;
-}
-
-    .btn-buscar:hover {
-        background: #c00000;
-        transform: translateY(-1px);
-    }
-
-.btn-limpiar {
-    background: #f3f4f6;
-    color: #374151;
-}
-
-    .btn-limpiar:hover {
-        background: #e5e7eb;
-    }
-
-/* --- Wrapper de tabla --- */
+/* --- Wrapper de la tabla --- */
 .tabla-wrapper {
     overflow-x: auto;
     border-radius: 10px;
 }
 
 /* --- Tabla --- */
-.tabla-clientes {
+.tabla-habitaciones {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
 }
 
-    .tabla-clientes thead {
+    .tabla-habitaciones thead {
         background: #fafafa;
         border-bottom: 2px solid #f0f0f0;
     }
 
-    .tabla-clientes th {
+    .tabla-habitaciones th {
         padding: 14px 12px;
         text-align: left;
         font-weight: 700;
@@ -190,50 +113,55 @@
         white-space: nowrap;
     }
 
-    .tabla-clientes tbody tr {
+    .tabla-habitaciones tbody tr {
         border-bottom: 1px solid #f5f5f5;
         transition: background-color 0.15s ease;
     }
 
-        .tabla-clientes tbody tr:hover {
+        .tabla-habitaciones tbody tr:hover {
             background-color: #fef6f6;
         }
 
-    .tabla-clientes td {
+    .tabla-habitaciones td {
         padding: 14px 12px;
         vertical-align: middle;
         color: #1f2937;
     }
 
-/* --- Anchos por columna --- */
+/* --- Anchos y alineaciones por columna --- */
 .col-id {
     width: 60px;
     text-align: center;
 }
 
-.col-dni {
-    width: 110px;
+.col-numero {
+    width: 100px;
 }
 
-.col-nombre {
-    min-width: 220px;
-}
-
-.col-telefono {
-    width: 140px;
-}
-
-.col-email {
-    min-width: 200px;
-}
-
-.col-fecha {
-    width: 110px;
+.col-piso {
+    width: 70px;
     text-align: center;
 }
 
-.col-estado {
+.col-capacidad {
+    width: 100px;
+    text-align: center;
+}
+
+.col-precio {
     width: 110px;
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 600;
+    color: #e00000;
+}
+
+.col-tipo {
+    width: 130px;
+}
+
+.col-estado {
+    width: 130px;
 }
 
 .col-acciones {
@@ -241,52 +169,18 @@
     text-align: center;
 }
 
-/* --- Badge DNI --- */
-.dni-badge {
+/* --- Badge del número de habitación --- */
+.numero-badge {
     display: inline-block;
     background: #f3f4f6;
     color: #111827;
-    padding: 4px 10px;
+    padding: 4px 12px;
     border-radius: 8px;
     font-weight: 600;
     font-size: 13px;
-    font-family: 'Courier New', monospace;
 }
 
-/* --- Avatar + nombre --- */
-.nombre-cliente {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.avatar {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #e00000, #ff6b6b);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 14px;
-    flex-shrink: 0;
-}
-
-/* --- Íconos inline --- */
-.icon-inline {
-    color: #9ca3af;
-    margin-right: 6px;
-    font-size: 12px;
-}
-
-.texto-vacio {
-    color: #d1d5db;
-    font-style: italic;
-}
-
-/* --- Badge estado --- */
+/* --- Badge de estado --- */
 .estado-badge {
     display: inline-block;
     padding: 5px 12px;
@@ -296,12 +190,17 @@
     white-space: nowrap;
 }
 
-.estado-activo {
+.estado-disponible {
     background: #e8f9ea;
     color: #28a745;
 }
 
-.estado-inactivo {
+.estado-ocupada {
+    background: #fff4e5;
+    color: #ff9800;
+}
+
+.estado-mantenimiento {
     background: #fee2e2;
     color: #dc2626;
 }
@@ -369,22 +268,22 @@
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
-    .clientes-header {
+    .habitaciones-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 16px;
     }
 
-        .clientes-header h1 {
+        .habitaciones-header h1 {
             font-size: 32px;
         }
 
-    .tabla-clientes {
+    .tabla-habitaciones {
         font-size: 13px;
     }
 
-        .tabla-clientes th,
-        .tabla-clientes td {
+        .tabla-habitaciones th,
+        .tabla-habitaciones td {
             padding: 10px 8px;
         }
 }

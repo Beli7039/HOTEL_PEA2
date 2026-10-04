@@ -14,22 +14,31 @@ namespace HOTEL_PEA2.Controllers
             _context = context;
         }
 
+        // ============================================================
         // GET: /Cliente
-        public async Task<IActionResult> Index(string? buscar)
+        // Lista de clientes ordenados por apellido y nombre.
+        // AsNoTracking mejora rendimiento porque es solo lectura.
+        // ============================================================
+        public async Task<IActionResult> Index(string criterio)
         {
-            var query = _context.Cliente.AsQueryable();
+            var query = _context.Cliente.AsNoTracking().AsQueryable();
 
-            if (!string.IsNullOrEmpty(buscar))
+            // Filtro de búsqueda por DNI, nombres o apellidos
+            if (!string.IsNullOrWhiteSpace(criterio))
             {
                 query = query.Where(c =>
-                    c.Nombres.Contains(buscar) ||
-                    c.Apellidos.Contains(buscar) ||
-                    c.Dni.Contains(buscar));
+                    c.Dni.Contains(criterio) ||
+                    c.Nombres.Contains(criterio) ||
+                    c.Apellidos.Contains(criterio));
             }
 
-            var lista = await query.OrderBy(c => c.IdCliente).ToListAsync();
-            ViewBag.Buscar = buscar;
-            return View(lista);
+            var clientes = await query
+                .OrderBy(c => c.Apellidos)
+                .ThenBy(c => c.Nombres)
+                .ToListAsync();
+
+            ViewBag.Criterio = criterio;
+            return View(clientes);
         }
 
         // GET: /Cliente/Details/5
@@ -38,10 +47,10 @@ namespace HOTEL_PEA2.Controllers
             if (id == null) return NotFound();
 
             var cliente = await _context.Cliente
-                .FirstOrDefaultAsync(c => c.IdCliente == id);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.IdCliente == id);
 
             if (cliente == null) return NotFound();
-
             return View(cliente);
         }
 
@@ -58,7 +67,19 @@ namespace HOTEL_PEA2.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Validar DNI único
+                var existeDni = await _context.Cliente
+                    .AnyAsync(c => c.Dni == cliente.Dni);
+
+                if (existeDni)
+                {
+                    ModelState.AddModelError("Dni", "Ya existe un cliente con ese DNI.");
+                    return View(cliente);
+                }
+
                 cliente.FechaRegistro = DateTime.Now;
+                cliente.Estado = "ACTIVO";
+
                 _context.Add(cliente);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -73,7 +94,6 @@ namespace HOTEL_PEA2.Controllers
 
             var cliente = await _context.Cliente.FindAsync(id);
             if (cliente == null) return NotFound();
-
             return View(cliente);
         }
 
@@ -93,9 +113,8 @@ namespace HOTEL_PEA2.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Cliente.Any(c => c.IdCliente == id))
-                        return NotFound();
-                    throw;
+                    if (!ClienteExists(cliente.IdCliente)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -108,10 +127,10 @@ namespace HOTEL_PEA2.Controllers
             if (id == null) return NotFound();
 
             var cliente = await _context.Cliente
-                .FirstOrDefaultAsync(c => c.IdCliente == id);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.IdCliente == id);
 
             if (cliente == null) return NotFound();
-
             return View(cliente);
         }
 
@@ -127,6 +146,11 @@ namespace HOTEL_PEA2.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool ClienteExists(int id)
+        {
+            return _context.Cliente.Any(e => e.IdCliente == id);
         }
     }
 }

@@ -1,33 +1,123 @@
 ﻿@model HOTEL_PEA2.Models.Recepcionista
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Nuevo Recepcionista";
 }
 
-<link rel="stylesheet" href="~/css/clientes.css" />
+<link rel="stylesheet" href="~/css/recepcionistas.css" asp-append-version="true" />
 
-<div class="clientes-container">
-    <div class="card">
-        <div class="card-title">REGISTRO DE RECEPCIONISTA</div>
-        <form asp-action="Create" method="post">
-            <div class="form-grid">
-                <div><label>Nombres</label><input asp-for="Nombres" /></div>
-                <div><label>Apellidos</label><input asp-for="Apellidos" /></div>
-                <div><label>Usuario</label><input asp-for="Usuario" /></div>
-                <div><label>Contraseña</label><input asp-for="Contrasena" type="password" /></div>
-                <div><label>Teléfono</label><input asp-for="Telefono" /></div>
-                <div><label>Email</label><input asp-for="Email" type="email" /></div>
-                <div>
-                    <label>Estado</label>
+<div class="recepcionistas-container">
+
+    <div class="recepcionistas-header">
+        <div class="titulo">
+            <div class="icon-header">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <div>
+                <h1>Registro de Recepcionista</h1>
+                <p>Inicio / Recepcionistas / <strong>Nuevo</strong></p>
+            </div>
+        </div>
+        <a asp-action="Index" class="btn-cancelar-top">
+            <i class="fa-solid fa-arrow-left"></i> Volver al listado
+        </a>
+    </div>
+
+    <div class="card form-card">
+        <div class="card-title">DATOS DEL RECEPCIONISTA</div>
+
+        <form asp-action="Create" method="post" autocomplete="off">
+            <div asp-validation-summary="ModelOnly" class="mensaje-error"></div>
+
+            @* --- Fila 1: Nombres y Apellidos --- *@
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label asp-for="Nombres">
+                        <i class="fa-solid fa-user"></i> Nombres
+                    </label>
+                    <input asp-for="Nombres" placeholder="Ingrese los nombres" />
+                    <span asp-validation-for="Nombres" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Apellidos">
+                        <i class="fa-solid fa-user"></i> Apellidos
+                    </label>
+                    <input asp-for="Apellidos" placeholder="Ingrese los apellidos" />
+                    <span asp-validation-for="Apellidos" class="field-validation-error"></span>
+                </div>
+            </div>
+
+            @* --- Fila 2: Usuario y Contraseña --- *@
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label asp-for="Usuario">
+                        <i class="fa-solid fa-at"></i> Usuario
+                    </label>
+                    <input asp-for="Usuario" placeholder="Nombre de usuario para login" />
+                    <span asp-validation-for="Usuario" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Contrasena">
+                        <i class="fa-solid fa-lock"></i> Contraseña
+                    </label>
+                    <input asp-for="Contrasena" type="password"
+                           placeholder="Contraseña de acceso" />
+                    <span asp-validation-for="Contrasena" class="field-validation-error"></span>
+                </div>
+            </div>
+
+            @* --- Fila 3: Teléfono y Email --- *@
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label asp-for="Telefono">
+                        <i class="fa-solid fa-phone"></i> Teléfono
+                    </label>
+                    <input asp-for="Telefono" type="tel"
+                           placeholder="Ej. 987654321" />
+                    <span asp-validation-for="Telefono" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email">
+                        <i class="fa-solid fa-envelope"></i> Email
+                    </label>
+                    <input asp-for="Email" type="email"
+                           placeholder="correo@hotel.com" />
+                    <span asp-validation-for="Email" class="field-validation-error"></span>
+                </div>
+            </div>
+
+            @* --- Fila 4: Estado --- *@
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label asp-for="Estado">
+                        <i class="fa-solid fa-circle-check"></i> Estado
+                    </label>
                     <select asp-for="Estado">
                         <option value="ACTIVO">ACTIVO</option>
                         <option value="INACTIVO">INACTIVO</option>
                     </select>
+                    <span asp-validation-for="Estado" class="field-validation-error"></span>
                 </div>
             </div>
-            <div class="botones">
-                <a asp-action="Index" class="btn-cancelar"><i class="fa-solid fa-xmark"></i> Cancelar</a>
-                <button type="submit" class="btn-guardar"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
+
+            @* --- Botones --- *@
+            <div class="form-actions">
+                <a asp-action="Index" class="btn-cancelar">
+                    <i class="fa-solid fa-xmark"></i> Cancelar
+                </a>
+                <button type="submit" class="btn-guardar">
+                    <i class="fa-regular fa-floppy-disk"></i> Guardar Recepcionista
+                </button>
             </div>
         </form>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

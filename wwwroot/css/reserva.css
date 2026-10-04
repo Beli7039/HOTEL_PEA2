@@ -662,3 +662,388 @@
     color: #9ca3af;
     cursor: not-allowed;
 }
+
+/* ============================================================
+   ALERTAS
+   ============================================================ */
+.alerta {
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alerta-exito {
+    background: #e8f9ea;
+    color: #166534;
+    border-left: 4px solid #28a745;
+}
+
+.alerta-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-left: 4px solid #dc2626;
+}
+
+/* ============================================================
+   BADGE HABITACIÓN
+   ============================================================ */
+.badge-habitacion {
+    display: inline-block;
+    background: #f3f4f6;
+    color: #111827;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+/* ============================================================
+   ESTADOS
+   ============================================================ */
+.estado-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.estado-pendiente {
+    background: #fff4e5;
+    color: #c2410c;
+}
+
+.estado-confirmada {
+    background: #e8f9ea;
+    color: #15803d;
+}
+
+.estado-cancelada {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* ============================================================
+   BOTONES DE ACCIÓN DE RESERVA
+   ============================================================ */
+.acciones-reserva {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.btn-accion-reserva {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease;
+    white-space: nowrap;
+}
+
+    .btn-accion-reserva:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.1);
+        color: white;
+    }
+
+.btn-reprogramar {
+    background: #f59e0b;
+    color: #fff;
+}
+
+.btn-habitacion {
+    background: #0d6efd;
+    color: #fff;
+}
+
+.btn-cancelar-reserva {
+    background: #dc3545;
+    color: #fff;
+}
+
+.btn-eliminar-reserva {
+    background: #6b7280;
+    color: #fff;
+    padding: 7px 10px;
+}
+
+.btn-accion-reserva i {
+    font-size: 12px;
+}
+
+/* ============================================================
+   INFO ACTUAL (Reprogramar / Modificar Habitación)
+   ============================================================ */
+.info-actual {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 12px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+    .info-item span {
+        font-size: 12px;
+        color: #6b7280;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+
+    .info-item strong {
+        font-size: 15px;
+        color: #111827;
+    }
+
+/* ============================================================
+   PÁGINA CANCELAR
+   ============================================================ */
+.cancelar-wrapper {
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 70vh;
+}
+
+.cancelar-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 640px;
+    width: 100%;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.cancelar-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: #fee2e2;
+    color: #dc2626;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+.cancelar-title {
+    margin: 0 0 12px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.cancelar-subtitle {
+    color: #6b7280;
+    font-size: 15px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.cancelar-datos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    text-align: left;
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+.cancelar-dato {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+    .cancelar-dato span {
+        font-size: 12px;
+        color: #6b7280;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .cancelar-dato strong {
+        font-size: 14px;
+        color: #111827;
+    }
+
+.cancelar-botones {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+    .cancelar-botones .btn {
+        padding: 13px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        border: none;
+        font-size: 14px;
+        transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+        .cancelar-botones .btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+        }
+
+    .cancelar-botones .btn-cancelar {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .cancelar-botones .btn-cancelar-reserva {
+        background: #dc3545;
+        color: #fff;
+    }
+
+@media (max-width: 640px) {
+    .cancelar-datos {
+        grid-template-columns: 1fr;
+    }
+
+    .cancelar-botones {
+        flex-direction: column;
+    }
+
+        .cancelar-botones .btn {
+            width: 100%;
+            justify-content: center;
+        }
+}
+
+/* ============================================================
+   AVISO DE CARGO ADMINISTRATIVO
+   ============================================================ */
+.aviso-cargo {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: #fff8e1;
+    border-left: 4px solid #f59e0b;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    color: #78350f;
+}
+
+    .aviso-cargo i {
+        font-size: 22px;
+        color: #f59e0b;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .aviso-cargo strong {
+        display: block;
+        font-size: 15px;
+        margin-bottom: 4px;
+        color: #78350f;
+    }
+
+    .aviso-cargo p {
+        margin: 0;
+        font-size: 14px;
+        color: #92400e;
+        line-height: 1.5;
+    }
+
+/* Divisor dentro del resumen */
+.resumen-divisor {
+    border: none;
+    border-top: 1px dashed #e5e7eb;
+    margin: 14px 0;
+}
+
+/* Cargo administrativo destacado */
+.resumen-cargo strong {
+    color: #f59e0b !important;
+}
+
+/* Aviso pequeño al pie del resumen */
+.aviso-no-devolucion {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 10px 12px;
+    background: #fef3c7;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #92400e;
+    line-height: 1.4;
+}
+
+    .aviso-no-devolucion i {
+        color: #f59e0b;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+/* ============================================================
+   AVISO DESTACADO DE NO DEVOLUCIÓN (en Cancelar)
+   ============================================================ */
+.aviso-no-devolucion-destacado {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%);
+    border: 2px solid #dc2626;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+    .aviso-no-devolucion-destacado i {
+        font-size: 32px;
+        color: #dc2626;
+        flex-shrink: 0;
+    }
+
+    .aviso-no-devolucion-destacado strong {
+        display: block;
+        color: #991b1b;
+        font-size: 16px;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
+    }
+
+    .aviso-no-devolucion-destacado p {
+        margin: 0;
+        font-size: 14px;
+        color: #7f1d1d;
+        line-height: 1.5;
+    }

@@ -1,10 +1,8 @@
 ﻿@model IEnumerable<HOTEL_PEA2.Models.Reserva>
-
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Listado de Reservas";
 }
-
 <link rel="stylesheet" href="~/css/reserva.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/botones.css" asp-append-version="true" />
 
@@ -18,64 +16,49 @@
         </div>
     </div>
 
-    <!-- =========================
-         AGREGAR RESERVA
-         ========================= -->
+    @* Mensajes de éxito / error *@
+    @if (TempData["Exito"] != null)
+    {
+        <div class="alerta alerta-exito">
+            <i class="fa-solid fa-circle-check"></i> @TempData["Exito"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alerta alerta-error">
+            <i class="fa-solid fa-circle-exclamation"></i> @TempData["Error"]
+        </div>
+    }
+
     <div class="reserva-toolbar">
-        <a asp-action="NuevaReserva"
-           class="btn btn-agregar">
-            <i class="fa-solid fa-plus"></i>
-            Agregar Reserva
+        <a asp-action="NuevaReserva" class="btn btn-agregar">
+            <i class="fa-solid fa-plus"></i> Agregar Reserva
         </a>
     </div>
 
-    <!-- =========================
-         BUSCADOR
-         ========================= -->
-    <form asp-action="Index"
-          method="get"
-          class="reserva-search">
-        <label>
-            Buscar:
-        </label>
-        <input type="text"
-               name="criterio"
+    <form asp-action="Index" method="get" class="reserva-search">
+        <label>Buscar:</label>
+        <input type="text" name="criterio" value="@ViewBag.Criterio"
                placeholder="Ingrese nombre o apellido..." />
-        <button type="submit"
-                class="btn btn-sm btn-buscar">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            Buscar
+        <button type="submit" class="btn btn-sm btn-buscar">
+            <i class="fa-solid fa-magnifying-glass"></i> Buscar
         </button>
     </form>
-    <!-- =========================
-         TABLA
-         ========================= -->
+
     <div class="tabla-container">
         <table class="tabla-reservas">
             <thead>
                 <tr>
-                    <th>
-                        Nombre del Cliente
-                    </th>
-                    <th>
-                        Documento
-                    </th>
-                    <th>
-                        Fecha Entrada
-                    </th>
-                    <th>
-                        Fecha Salida
-                    </th>
-                    <th>
-                        Estado
-                    </th>
-                    <th class="columna-acciones">
-                        Acciones
-                    </th>
+                    <th>Cliente</th>
+                    <th>Documento</th>
+                    <th>Habitación</th>
+                    <th>Entrada</th>
+                    <th>Salida</th>
+                    <th>Estado</th>
+                    <th class="columna-acciones">Acciones</th>
                 </tr>
             </thead>
             <tbody>
-
                 @if (Model != null && Model.Any())
                 {
                     foreach (var item in Model)
@@ -85,74 +68,90 @@
                                 @(item.Cliente != null
                                                         ? item.Cliente.Nombres + " " + item.Cliente.Apellidos
                                                         : "Sin Cliente")
-                             </td>
-                             <td class="cliente">
-                                 @(item.Cliente!= null ? item.Cliente.Dni : "")
-                             </td>
+                    </td>
+                    <td>
+                        @(item.Cliente?.Dni ?? "")
+                    </td>
+                    <td>
+                        <span class="badge-habitacion">
+                            @(item.Habitacion?.Numero ?? "—")
+                        </span>
+                    </td>
+                    <td class="fecha">
+                        @item.FechaEntrada.ToString("dd/MM/yyyy")
+                    </td>
+                    <td class="fecha">
+                        @item.FechaSalida.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        <span class="estado-badge estado-@(item.Estado?.ToLower())">
+                            @item.Estado
+                        </span>
+                    </td>
+                    <td class="columna-acciones">
+                        <div class="acciones-reserva">
+                            @* Reprogramar *@
+                            @if (item.Estado != "Cancelada")
+                                    {
+                                        <a asp-action="Reprogramar"
+                                           asp-route-id="@item.IdReserva"
+                                           class="btn-accion-reserva btn-reprogramar"
+                                           title="Reprogramar fechas">
+                                            <i class="fa-regular fa-calendar-plus"></i>
+                                            <span>Reprogramar</span>
+                                        </a>
+                                    }
 
-                            <td class="fecha">
-                                @item.FechaEntrada.ToString("dd/MM/yyyy HH:mm:ss")
-                            </td>
-                            <td class="fecha">
-                                @item.FechaSalida.ToString("dd/MM/yyyy HH:mm:ss")
-                            </td>
-                            <td class="estado">
-                                @item.Estado
-                            </td>
-                            <td>
-                                <div class="acciones">
-                                    <!-- EDITAR -->
-                                    <a asp-action="NuevaReserva"
-                                       asp-route-id="@item.IdReserva"
-                                       class="btn btn-sm btn-modificar">
+                                    @* Modificar Habitación *@
+                                    @if (item.Estado != "Cancelada")
+                                    {
+                                        <a asp-action="ModificarHabitacion"
+                                           asp-route-id="@item.IdReserva"
+                                           class="btn-accion-reserva btn-habitacion"
+                                           title="Modificar habitación">
+                                            <i class="fa-solid fa-bed"></i>
+                                            <span>Habitación</span>
+                                        </a>
+                                    }
 
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                        Editar
+                                    @* Cancelar *@
+                                    @if (item.Estado != "Cancelada")
+                                    {
+                                        <a asp-action="Cancelar"
+                                           asp-route-id="@item.IdReserva"
+                                           class="btn-accion-reserva btn-cancelar-reserva"
+                                           title="Cancelar reserva">
+                                            <i class="fa-solid fa-ban"></i>
+                                            <span>Cancelar</span>
+                                        </a>
+                                    }
 
-                                    </a>
-
-
-                                    <!-- ELIMINAR -->
-
+                                    @* Eliminar *@
                                     <form asp-action="Eliminar"
                                           asp-route-id="@item.IdReserva"
-                                          method="post">
-
+                                          method="post"
+                                          style="display:inline;"
+                                          onsubmit="return confirm('¿Eliminar permanentemente esta reserva?');">
                                         <button type="submit"
-                                                class="btn btn-sm btn-eliminar"
-                                                onclick="return confirm('¿Estás seguro de eliminar esta reserva?');">
-
+                                                class="btn-accion-reserva btn-eliminar-reserva"
+                                                title="Eliminar permanentemente">
                                             <i class="fa-solid fa-trash"></i>
-                                            Eliminar
-
                                         </button>
-
                                     </form>
-
                                 </div>
-
                             </td>
-
                         </tr>
-                                }
+                    }
                 }
                 else
                 {
                     <tr>
-
-                        <td colspan="4" class="sin-registros">
-
-                            No hay registros disponibles.
-
+                        <td colspan="7" class="sin-registros">
+                            No hay reservas registradas.
                         </td>
-
                     </tr>
                 }
-
             </tbody>
-
         </table>
-
     </div>
-
 </div>

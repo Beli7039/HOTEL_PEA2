@@ -1,0 +1,229 @@
+﻿@model HOTEL_PEA2.Models.Reserva
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Reprogramar Reserva";
+    decimal porcentaje = (decimal)(ViewBag.PorcentajeCargo ?? 0.10m);
+    decimal minimo = (decimal)(ViewBag.CargoMinimo ?? 20.00m);
+}
+<link rel="stylesheet" href="~/css/reserva.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/botones.css" asp-append-version="true" />
+
+<partial name="_Header" />
+
+<section class="page-header">
+    <div class="title-section">
+        <div class="title-icon" style="background:#f59e0b;">
+            <i class="fa-regular fa-calendar-plus"></i>
+        </div>
+        <div>
+            <h1>Reprogramar Reserva #@Model.IdReserva</h1>
+            <nav class="breadcrumb">
+                <span>Inicio</span> / <span>Reservas</span> /
+                <strong>Reprogramar</strong>
+            </nav>
+        </div>
+    </div>
+
+    <div class="header-buttons">
+        <a asp-action="Index" class="btn btn-cancelar">
+            <i class="fa-solid fa-xmark"></i> Cancelar
+        </a>
+        <button type="submit" form="formReprogramar" class="btn btn-guardar">
+            <i class="fa-regular fa-floppy-disk"></i> Guardar Cambios
+        </button>
+    </div>
+</section>
+
+@* ⚠️ Aviso de cargo administrativo *@
+<div class="aviso-cargo">
+    <i class="fa-solid fa-circle-info"></i>
+    <div>
+        <strong>Cargo por gestión administrativa</strong>
+        <p>
+            Al reprogramar se aplicará un cargo equivalente al
+            <strong>@(porcentaje * 100)%</strong> del nuevo total
+            (mínimo <strong>S/ @minimo.ToString("F2")</strong>).
+        </p>
+    </div>
+</div>
+
+<form id="formReprogramar" asp-action="Reprogramar" method="post" class="reserva-layout">
+    <input type="hidden" name="IdReserva" value="@Model.IdReserva" />
+
+    <div class="reserva-main">
+
+        <article class="card-reserva">
+            <h2 class="card-title">
+                <i class="fa-regular fa-circle-info"></i> RESERVA ACTUAL
+            </h2>
+
+            <div class="info-actual">
+                <div class="info-item">
+                    <span>Cliente:</span>
+                    <strong>@(Model.Cliente?.Nombres) @(Model.Cliente?.Apellidos)</strong>
+                </div>
+                <div class="info-item">
+                    <span>Habitación:</span>
+                    <strong>@Model.Habitacion?.Numero</strong>
+                </div>
+                <div class="info-item">
+                    <span>Entrada actual:</span>
+                    <strong>@Model.FechaEntrada.ToString("dd/MM/yyyy")</strong>
+                </div>
+                <div class="info-item">
+                    <span>Salida actual:</span>
+                    <strong>@Model.FechaSalida.ToString("dd/MM/yyyy")</strong>
+                </div>
+            </div>
+        </article>
+
+        <article class="card-reserva">
+            <h2 class="card-title">
+                <i class="fa-regular fa-calendar-check"></i> NUEVAS FECHAS
+            </h2>
+
+            @Html.ValidationSummary(true, "", new { @class = "field-validation-error" })
+
+            <div class="form-grid-3">
+                <div class="form-group">
+                    <label>Fecha de Entrada</label>
+                    <input type="date" id="fechaEntrada" name="FechaEntrada"
+                           value="@Model.FechaEntrada.ToString("yyyy-MM-dd")" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de Salida</label>
+                    <input type="date" id="fechaSalida" name="FechaSalida"
+                           value="@Model.FechaSalida.ToString("yyyy-MM-dd")" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Cantidad Personas</label>
+                    <input type="number" id="cantPersonas" name="CantidadPersonas"
+                           value="@Model.CantidadPersonas" min="1" max="20" required />
+                </div>
+            </div>
+        </article>
+
+    </div>
+
+    <aside class="resumen-card">
+        <h2 class="card-title">
+            <i class="fa-regular fa-clipboard"></i> NUEVO RESUMEN
+        </h2>
+
+        <div class="resumen-item">
+            <span>Habitación:</span>
+            <strong>@Model.Habitacion?.Numero</strong>
+        </div>
+        <div class="resumen-item">
+            <span>Tipo:</span>
+            <strong>@Model.Habitacion?.TipoHabitacion?.NombreTipo</strong>
+        </div>
+        <div class="resumen-item">
+            <span>Nueva Entrada:</span>
+            <strong id="lblEntrada">--</strong>
+        </div>
+        <div class="resumen-item">
+            <span>Nueva Salida:</span>
+            <strong id="lblSalida">--</strong>
+        </div>
+        <div class="resumen-item">
+            <span>Noches:</span>
+            <strong id="lblNoches">0</strong>
+        </div>
+        <div class="resumen-item">
+            <span>Precio por Noche:</span>
+            <strong>S/. @Model.Habitacion?.Precio.ToString("F2")</strong>
+        </div>
+        <div class="resumen-item">
+            <span>Personas:</span>
+            <strong id="lblPersonas">@Model.CantidadPersonas</strong>
+        </div>
+
+        <hr class="resumen-divisor" />
+
+        <div class="resumen-item">
+            <span>Subtotal (noches):</span>
+            <strong id="lblBase">S/. 0.00</strong>
+        </div>
+        <div class="resumen-item resumen-cargo">
+            <span>Cargo administrativo:</span>
+            <strong id="lblCargo">S/. 0.00</strong>
+        </div>
+        @if (Model.CargoAdministrativo > 0)
+        {
+            <div class="resumen-item">
+                <span>Cargos previos:</span>
+                <strong>S/. @Model.CargoAdministrativo.ToString("F2")</strong>
+            </div>
+        }
+
+        <div class="total-final">
+            <span>TOTAL A PAGAR:</span>
+            <strong id="lblTotal">S/. 0.00</strong>
+        </div>
+
+        <div class="aviso-no-devolucion">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Este cambio aplica cargo administrativo no reembolsable.
+        </div>
+    </aside>
+</form>
+
+@section Scripts {
+    <script>
+        (function () {
+            const precioNoche       = @(Model.Habitacion?.Precio ?? 0);
+            const porcentajeCargo   = @porcentaje.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            const cargoMinimo       = @minimo.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            const cargoPrevio       = @Model.CargoAdministrativo.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+            const fechaEntrada = document.getElementById('fechaEntrada');
+            const fechaSalida  = document.getElementById('fechaSalida');
+            const cantPersonas = document.getElementById('cantPersonas');
+            const lblEntrada   = document.getElementById('lblEntrada');
+            const lblSalida    = document.getElementById('lblSalida');
+            const lblNoches    = document.getElementById('lblNoches');
+            const lblPersonas  = document.getElementById('lblPersonas');
+            const lblBase      = document.getElementById('lblBase');
+            const lblCargo     = document.getElementById('lblCargo');
+            const lblTotal     = document.getElementById('lblTotal');
+
+            function calcularNoches(a, b) {
+                if (!a || !b) return 0;
+                const f1 = new Date(a);
+                const f2 = new Date(b);
+                const d = Math.floor((f2 - f1) / (1000 * 60 * 60 * 24));
+                return d > 0 ? d : 0;
+            }
+
+            function calcularCargo(base) {
+                const c = base * porcentajeCargo;
+                return c < cargoMinimo ? cargoMinimo : c;
+            }
+
+            function actualizar() {
+                const noches = calcularNoches(fechaEntrada.value, fechaSalida.value);
+                const base = noches * precioNoche;
+                const cargo = calcularCargo(base);
+                const total = base + cargo + cargoPrevio;
+
+                lblEntrada.textContent  = fechaEntrada.value || '--';
+                lblSalida.textContent   = fechaSalida.value  || '--';
+                lblNoches.textContent   = noches;
+                lblPersonas.textContent = cantPersonas.value || '1';
+                lblBase.textContent     = 'S/. ' + base.toFixed(2);
+                lblCargo.textContent    = 'S/. ' + cargo.toFixed(2);
+                lblTotal.textContent    = 'S/. ' + total.toFixed(2);
+            }
+
+            [fechaEntrada, fechaSalida, cantPersonas].forEach(el => {
+                el.addEventListener('change', actualizar);
+                el.addEventListener('input',  actualizar);
+            });
+
+            actualizar();
+        })();
+    </script>
+}

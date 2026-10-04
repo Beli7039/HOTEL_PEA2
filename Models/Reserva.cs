@@ -16,17 +16,18 @@ namespace HOTEL_PEA2.Models
 
         public decimal CostoTotal { get; set; }
 
+        
+        // (reprogramaciones y cambios de habitación).
+        public decimal CargoAdministrativo { get; set; } = 0;
+
         public string? Estado { get; set; }
 
-        // PROPIEDAD AGREGADA
         public string? TipoHabitacion { get; set; }
 
-        // FOREIGN KEYS
         public int IdCliente { get; set; }
         public int IdHabitacion { get; set; }
         public int? IdRecepcionista { get; set; }
 
-        // PROPIEDADES DE NAVEGACIÓN
         [ForeignKey("IdCliente")]
         public Cliente? Cliente { get; set; }
 

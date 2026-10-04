@@ -14,75 +14,140 @@ namespace HOTEL_PEA2.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        // ============================================================
+        // GET: /Recepcionista
+        // Lista de recepcionistas ordenados por apellido.
+        // ============================================================
+        public async Task<IActionResult> Index(string criterio)
         {
-            return View(await _context.Recepcionista.ToListAsync());
+            var query = _context.Recepcionista.AsNoTracking().AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(criterio))
+            {
+                query = query.Where(r =>
+                    r.Nombres.Contains(criterio) ||
+                    r.Apellidos.Contains(criterio) ||
+                    r.Usuario.Contains(criterio));
+            }
+
+            var recepcionistas = await query
+                .OrderBy(r => r.Apellidos)
+                .ThenBy(r => r.Nombres)
+                .ToListAsync();
+
+            ViewBag.Criterio = criterio;
+            return View(recepcionistas);
         }
 
+        // GET: /Recepcionista/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
-            var r = await _context.Recepcionista.FindAsync(id);
-            if (r == null) return NotFound();
-            return View(r);
+
+            var recepcionista = await _context.Recepcionista
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.IdRecepcionista == id);
+
+            if (recepcionista == null) return NotFound();
+            return View(recepcionista);
         }
 
-        public IActionResult Create() => View();
+        // GET: /Recepcionista/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
 
+        // POST: /Recepcionista/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Recepcionista r)
+        public async Task<IActionResult> Create(Recepcionista recepcionista)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(r);
+                // Validar que el usuario no exista
+                var existeUsuario = await _context.Recepcionista
+                    .AnyAsync(r => r.Usuario == recepcionista.Usuario);
+
+                if (existeUsuario)
+                {
+                    ModelState.AddModelError("Usuario", "Ya existe un recepcionista con ese usuario.");
+                    return View(recepcionista);
+                }
+
+                recepcionista.Estado = "ACTIVO";
+
+                _context.Add(recepcionista);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(r);
+            return View(recepcionista);
         }
 
+        // GET: /Recepcionista/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
-            var r = await _context.Recepcionista.FindAsync(id);
-            if (r == null) return NotFound();
-            return View(r);
+
+            var recepcionista = await _context.Recepcionista.FindAsync(id);
+            if (recepcionista == null) return NotFound();
+            return View(recepcionista);
         }
 
+        // POST: /Recepcionista/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Recepcionista r)
+        public async Task<IActionResult> Edit(int id, Recepcionista recepcionista)
         {
-            if (id != r.IdRecepcionista) return NotFound();
+            if (id != recepcionista.IdRecepcionista) return NotFound();
+
             if (ModelState.IsValid)
             {
-                _context.Update(r);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Update(recepcionista);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!RecepcionistaExists(recepcionista.IdRecepcionista)) return NotFound();
+                    else throw;
+                }
                 return RedirectToAction(nameof(Index));
             }
-            return View(r);
+            return View(recepcionista);
         }
 
+        // GET: /Recepcionista/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
-            var r = await _context.Recepcionista.FindAsync(id);
-            if (r == null) return NotFound();
-            return View(r);
+
+            var recepcionista = await _context.Recepcionista
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.IdRecepcionista == id);
+
+            if (recepcionista == null) return NotFound();
+            return View(recepcionista);
         }
 
+        // POST: /Recepcionista/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var r = await _context.Recepcionista.FindAsync(id);
-            if (r != null)
+            var recepcionista = await _context.Recepcionista.FindAsync(id);
+            if (recepcionista != null)
             {
-                _context.Recepcionista.Remove(r);
+                _context.Recepcionista.Remove(recepcionista);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool RecepcionistaExists(int id)
+        {
+            return _context.Recepcionista.Any(e => e.IdRecepcionista == id);
         }
     }
 }

@@ -1,0 +1,99 @@
+﻿@model HOTEL_PEA2.Models.Reserva
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Cancelar Reserva";
+}
+<link rel="stylesheet" href="~/css/reserva.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/botones.css" asp-append-version="true" />
+
+<partial name="_Header" />
+
+<div class="cancelar-wrapper">
+
+    <div class="cancelar-card">
+        <div class="cancelar-icon">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+
+        <h1 class="cancelar-title">¿Cancelar esta reserva?</h1>
+
+        <p class="cancelar-subtitle">
+            Esta acción marcará la reserva como <strong>CANCELADA</strong>.
+            Los datos se conservarán en el sistema.
+        </p>
+
+        @* ⚠️ Aviso importante de política *@
+        <div class="aviso-no-devolucion-destacado">
+            <i class="fa-solid fa-ban"></i>
+            <div>
+                <strong>SIN DERECHO A DEVOLUCIÓN</strong>
+                <p>
+                    Según la política del hotel, al cancelar una reserva
+                    <strong>no se realiza devolución del monto abonado</strong>.
+                    El cliente acepta esta condición al confirmar.
+                </p>
+            </div>
+        </div>
+
+        <div class="cancelar-datos">
+            <div class="cancelar-dato">
+                <span>Reserva:</span>
+                <strong>#@Model.IdReserva</strong>
+            </div>
+            <div class="cancelar-dato">
+                <span>Cliente:</span>
+                <strong>@(Model.Cliente?.Nombres) @(Model.Cliente?.Apellidos)</strong>
+            </div>
+            <div class="cancelar-dato">
+                <span>Documento:</span>
+                <strong>@Model.Cliente?.Dni</strong>
+            </div>
+            <div class="cancelar-dato">
+                <span>Habitación:</span>
+                <strong>@Model.Habitacion?.Numero</strong>
+            </div>
+            <div class="cancelar-dato">
+                <span>Entrada:</span>
+                <strong>@Model.FechaEntrada.ToString("dd/MM/yyyy")</strong>
+            </div>
+            <div class="cancelar-dato">
+                <span>Salida:</span>
+                <strong>@Model.FechaSalida.ToString("dd/MM/yyyy")</strong>
+            </div>
+            <div class="cancelar-dato">
+                <span>Costo total:</span>
+                <strong>S/. @Model.CostoTotal.ToString("F2")</strong>
+            </div>
+            @if (Model.CargoAdministrativo > 0)
+            {
+                <div class="cancelar-dato">
+                    <span>Cargos administrativos:</span>
+                    <strong>S/. @Model.CargoAdministrativo.ToString("F2")</strong>
+                </div>
+            }
+        </div>
+
+        <form asp-action="CancelarConfirmado" method="post">
+            <input type="hidden" name="IdReserva" value="@Model.IdReserva" />
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="motivo">
+                    <i class="fa-solid fa-comment-dots"></i> Motivo de cancelación (opcional)
+                </label>
+                <textarea id="motivo" name="Motivo" rows="3"
+                          placeholder="Ej: El cliente no puede viajar / cambio de planes..."></textarea>
+            </div>
+
+            <div class="cancelar-botones">
+                <a asp-action="Index" class="btn btn-cancelar">
+                    <i class="fa-solid fa-arrow-left"></i> No cancelar
+                </a>
+                <button type="submit" class="btn btn-cancelar-reserva"
+                        onclick="return confirm('¿Confirma la cancelación? No se realizará devolución del monto abonado.');">
+                    <i class="fa-solid fa-ban"></i> Sí, cancelar sin devolución
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
