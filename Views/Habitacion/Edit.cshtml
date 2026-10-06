@@ -3,38 +3,119 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Editar Habitación";
 }
+<link rel="stylesheet" href="~/css/habitaciones.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/botones.css" asp-append-version="true" />
 
-<link rel="stylesheet" href="~/css/clientes.css" />
+<div class="habitaciones-container">
 
-<div class="clientes-container">
-    <div class="card">
-        <div class="card-title">EDITAR HABITACIÓN</div>
+    @* ============================================================
+       ENCABEZADO
+       ============================================================ *@
+    <div class="habitaciones-header">
+        <div class="titulo">
+            <div class="icon-header" style="background:#ffc107;">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </div>
+            <div>
+                <h1>Editar Habitación</h1>
+                <p>Inicio / Habitaciones / <strong>Editar</strong></p>
+            </div>
+        </div>
+        <a asp-action="Index" class="btn-cancelar-top">
+            <i class="fa-solid fa-arrow-left"></i> Volver al listado
+        </a>
+    </div>
 
-        <form asp-action="Edit" method="post">
+    @* ============================================================
+       FORMULARIO
+       ============================================================ *@
+    <div class="card form-card">
+        <div class="card-title">
+            <i class="fa-solid fa-bed"></i> DATOS DE LA HABITACIÓN #@Model.IdHabitacion
+        </div>
+
+        <form asp-action="Edit" method="post" autocomplete="off">
+            <div asp-validation-summary="ModelOnly" class="mensaje-error"></div>
             <input type="hidden" asp-for="IdHabitacion" />
-            <div class="form-grid">
-                <div><label>Número</label><input asp-for="Numero" /></div>
-                <div><label>Piso</label><input asp-for="Piso" /></div>
-                <div><label>Capacidad</label><input asp-for="Capacidad" type="number" /></div>
-                <div><label>Precio</label><input asp-for="Precio" type="number" step="0.01" /></div>
-                <div>
-                    <label>Estado</label>
-                    <select asp-for="Estado">
-                        <option value="DISPONIBLE">DISPONIBLE</option>
-                        <option value="OCUPADA">OCUPADA</option>
-                        <option value="MANTENIMIENTO">MANTENIMIENTO</option>
-                    </select>
+
+            @* --- Fila 1: Número y Piso --- *@
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label asp-for="Numero">
+                        <i class="fa-solid fa-door-closed"></i> Número
+                    </label>
+                    <input asp-for="Numero" placeholder="Ej. 101" />
+                    <span asp-validation-for="Numero" class="field-validation-error"></span>
                 </div>
-                <div>
-                    <label>Tipo de Habitación</label>
-                    <select asp-for="IdTipoHabitacion" asp-items="ViewBag.Tipos"></select>
+
+                <div class="form-group">
+                    <label asp-for="Piso">
+                        <i class="fa-solid fa-layer-group"></i> Piso
+                    </label>
+                    <input asp-for="Piso" placeholder="Ej. 1" />
+                    <span asp-validation-for="Piso" class="field-validation-error"></span>
                 </div>
             </div>
 
-            <div class="botones">
-                <a asp-action="Index" class="btn-cancelar"><i class="fa-solid fa-xmark"></i> Cancelar</a>
-                <button type="submit" class="btn-guardar"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
+            @* --- Fila 2: Capacidad y Precio --- *@
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label asp-for="Capacidad">
+                        <i class="fa-solid fa-users"></i> Capacidad
+                    </label>
+                    <input asp-for="Capacidad" type="number" min="1" max="10" placeholder="Ej. 2" />
+                    <span asp-validation-for="Capacidad" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Precio">
+                        <i class="fa-solid fa-money-bill"></i> Precio por Noche (S/)
+                    </label>
+                    <input asp-for="Precio" type="number" step="0.01" min="0" placeholder="Ej. 50.00" />
+                    <span asp-validation-for="Precio" class="field-validation-error"></span>
+                </div>
+            </div>
+
+            @* --- Fila 3: Tipo y Estado --- *@
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label asp-for="IdTipoHabitacion">
+                        <i class="fa-solid fa-tag"></i> Tipo de Habitación
+                    </label>
+                    <select asp-for="IdTipoHabitacion" asp-items="ViewBag.IdTipoHabitacion">
+                        <option value="">-- Seleccione tipo --</option>
+                    </select>
+                    <span asp-validation-for="IdTipoHabitacion" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Estado">
+                        <i class="fa-solid fa-circle-check"></i> Estado
+                    </label>
+                    <select asp-for="Estado">
+                        <option value="Disponible">Disponible</option>
+                        <option value="Ocupada">Ocupada</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                    </select>
+                    <span asp-validation-for="Estado" class="field-validation-error"></span>
+                </div>
+            </div>
+
+            @* --- Botones --- *@
+            <div class="form-actions">
+                <a asp-action="Index" class="btn-cancelar">
+                    <i class="fa-solid fa-xmark"></i> Cancelar
+                </a>
+                <button type="submit" class="btn-guardar">
+                    <i class="fa-regular fa-floppy-disk"></i> Guardar Cambios
+                </button>
             </div>
         </form>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
