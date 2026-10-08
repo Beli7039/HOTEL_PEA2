@@ -254,3 +254,38 @@ button.btn {
     font-size: 12px;
     line-height: 1;
 }
+
+/* =========================================================
+   BOTÓN DE REPORTE 
+   ========================================================= */
+
+.btn-report {
+    background: var(--hotel-blue) !important;
+    color: var(--hotel-white) !important;
+    border-color: var(--hotel-blue) !important;
+    box-shadow: var(--shadow-blue-sm);
+    margin-left: 8px; 
+}
+
+    .btn-report:hover {
+        background: var(--hotel-blue-hover) !important;
+        color: var(--hotel-white) !important;
+        border-color: var(--hotel-blue-hover) !important;
+        box-shadow: var(--shadow-blue-lg);
+        transform: translateY(-1px);
+    }
+
+    .btn-report:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    .btn-report .btn-icon {
+        width: 12px;
+        height: 12px;
+        transition: transform 0.2s ease;
+    }
+
+    .btn-report:hover .btn-icon {
+        transform: scale(1.1);
+    }

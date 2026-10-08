@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ReferencePath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win64_x64\dotnet\</ReferencePath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,10 +13,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="QuestPDF" Version="2026.9.1" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Reports\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{c0c07587-41a7-46c8-8fbd-3f9c8ebe2ddc}" />
   </ItemGroup>
 
 </Project>

@@ -4,6 +4,9 @@ using HOTEL_PEA2.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+//using CrystalDecisions.CrystalReports.Engine;
 
 namespace HOTEL_PEA2.Controllers
 {
@@ -217,8 +220,6 @@ namespace HOTEL_PEA2.Controllers
                 reservaEnDb.IdCliente = vm.Reserva.IdCliente;
                 reservaEnDb.IdHabitacion = vm.Reserva.IdHabitacion;
                 reservaEnDb.IdRecepcionista = vm.Reserva.IdRecepcionista;
-                // CargoAdministrativo NO se toca aquí (solo se acumula en
-                // Reprogramar / ModificarHabitacion)
 
                 if (!string.IsNullOrEmpty(vm.Reserva.TipoHabitacion))
                     reservaEnDb.TipoHabitacion = vm.Reserva.TipoHabitacion;
@@ -527,6 +528,91 @@ namespace HOTEL_PEA2.Controllers
 
             TempData["Exito"] = "Reserva eliminada correctamente.";
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> ReporteReserva()
+        {
+            // 1. Consulta con todos tus campos (incluyendo Salida y Observaciones)
+            var datosReporte = await _context.Reserva
+                .Include(r => r.Cliente)
+                .Select(r => new
+                {
+                    CodigoReserva = r.IdReserva,
+                    DniCliente = r.Cliente.Dni,
+                    NombreCliente = r.Cliente.Nombres,
+                    HoraLlegada = r.FechaEntrada,
+                    FechaSalida = r.FechaSalida,    
+                    Observaciones = r.Observaciones,
+                    CostoTotal = r.CostoTotal
+                })
+                .ToListAsync();
+
+            var pdfBytes = QuestPDF.Fluent.Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    // Opcional: Si tienes muchas columnas, puedes usar orientación Horizontal (Landscape) para que entre holgado
+                    page.Size(QuestPDF.Helpers.PageSizes.A4.Landscape());
+                    page.Margin(1, QuestPDF.Infrastructure.Unit.Centimetre);
+                    page.PageColor(QuestPDF.Helpers.Colors.White);
+
+                    // ==========================================
+                    // TÍTULO: Centrado, Mayúsculas y Negro
+                    // ==========================================
+                    page.Header().AlignCenter().PaddingBottom(15).Text("REPORTE RESUMIDO DE RESERVAS")
+                        .Bold().FontSize(16).FontColor(QuestPDF.Helpers.Colors.Black);
+
+                    // ==========================================
+                    // CONTENIDO: Tabla con todas las columnas
+                    // ==========================================
+                    page.Content().PaddingVertical(10).Table(table =>
+                    {
+                        table.ColumnsDefinition(columns =>
+                        {
+                            columns.ConstantColumn(40); // Código
+                            columns.ConstantColumn(65); // DNI
+                            columns.RelativeColumn(10);  // Cliente
+                            columns.RelativeColumn(6);  // Llegada
+                            columns.RelativeColumn(6);  // Salida
+                            columns.RelativeColumn(25);// Observaciones
+                            columns.ConstantColumn(65); // Costo Total
+                        });
+
+                        // Cabeceras de la tabla
+                        table.Header(header =>
+                        {
+                            header.Cell().Background(QuestPDF.Helpers.Colors.Grey.Lighten2).Padding(4).Text("Cód.").Bold();
+                            header.Cell().Background(QuestPDF.Helpers.Colors.Grey.Lighten2).Padding(4).Text("DNI").Bold();
+                            header.Cell().Background(QuestPDF.Helpers.Colors.Grey.Lighten2).Padding(4).Text("Cliente").Bold();
+                            header.Cell().Background(QuestPDF.Helpers.Colors.Grey.Lighten2).Padding(4).Text("Llegada").Bold();
+                            header.Cell().Background(QuestPDF.Helpers.Colors.Grey.Lighten2).Padding(4).Text("Salida").Bold();
+                            header.Cell().Background(QuestPDF.Helpers.Colors.Grey.Lighten2).Padding(4).Text("Observaciones").Bold();
+                            header.Cell().Background(QuestPDF.Helpers.Colors.Grey.Lighten2).Padding(4).Text("Total").Bold();
+                        });
+
+                        // Filas dinámicas de la base de datos
+                        foreach (var item in datosReporte)
+                        {
+                            table.Cell().Padding(4).Text(item.CodigoReserva.ToString());
+                            table.Cell().Padding(4).Text(item.DniCliente ?? "");
+                            table.Cell().Padding(4).Text(item.NombreCliente ?? "");
+                            table.Cell().Padding(4).Text(item.HoraLlegada.ToString("dd/MM/yyyy"));
+                            table.Cell().Padding(4).Text(item.FechaSalida.ToString("dd/MM/yyyy"));
+                            table.Cell().Padding(4).Text(item.Observaciones ?? "-");
+                            table.Cell().Padding(4).Text($"S/ {item.CostoTotal:N2}");
+                        }
+                    });
+
+                    // Pie de página
+                    page.Footer().AlignCenter().Text(x =>
+                    {
+                        x.Span("Página ");
+                        x.CurrentPageNumber();
+                    });
+                });
+            }).GeneratePdf();
+
+            return File(pdfBytes, "application/pdf", "Reporte_Reservas_Completo.pdf");
         }
     }
 }

@@ -1,9 +1,10 @@
 using System.Globalization;
 using HOTEL_PEA2.Data;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure; // Asegúrate de incluir este using
 
 var builder = WebApplication.CreateBuilder(args);
-
+QuestPDF.Settings.License = LicenseType.Community; // O puedes usar LicenseType.Evaluation
 // ============================================================
 // CONFIGURACIÓN DE CULTURA
 // Se crea una cultura personalizada basada en "es-PE" pero con:
