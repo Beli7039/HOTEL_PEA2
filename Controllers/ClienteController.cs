@@ -21,9 +21,11 @@ namespace HOTEL_PEA2.Controllers
         // ============================================================
         public async Task<IActionResult> Index(string criterio)
         {
-            var query = _context.Cliente.AsNoTracking().AsQueryable();
+            var query = _context.Cliente
+                .AsNoTracking()
+                .Where(c => c.Estado == "ACTIVO") 
+                .AsQueryable();
 
-            // Filtro de búsqueda por DNI, nombres o apellidos
             if (!string.IsNullOrWhiteSpace(criterio))
             {
                 query = query.Where(c =>
@@ -142,7 +144,9 @@ namespace HOTEL_PEA2.Controllers
             var cliente = await _context.Cliente.FindAsync(id);
             if (cliente != null)
             {
-                _context.Cliente.Remove(cliente);
+                cliente.Estado = "Inactivo"; 
+                _context.Update(cliente);
+
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));

@@ -4,6 +4,7 @@
 }
 
 <link rel="stylesheet" href="~/css/clientes.css" />
+<link rel="stylesheet" href="~/css/botones.css" />
 
 <div class="clientes-container">
     <div class="card">
@@ -12,8 +13,8 @@
         <form asp-action="Delete" method="post">
             <input type="hidden" asp-for="IdHabitacion" />
             <div class="botones">
-                <a asp-action="Index" class="btn-cancelar"><i class="fa-solid fa-xmark"></i> Cancelar</a>
-                <button type="submit" class="btn-guardar" style="background:#dc3545;"><i class="fa-solid fa-trash"></i> Eliminar</button>
+                <a asp-action="Index" class="btn btn-cancelar"><i class="fa-solid fa-xmark"></i> Cancelar</a>
+                <button type="submit" class="btn btn-guardar" style="background:#dc3545;"><i class="fa-solid fa-trash"></i> Eliminar</button>
             </div>
         </form>
     </div>

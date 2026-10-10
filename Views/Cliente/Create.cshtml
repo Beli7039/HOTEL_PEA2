@@ -4,7 +4,7 @@
     ViewData["Title"] = "Nuevo Cliente";
 }
 
-<link rel="stylesheet" href="~/css/clientes.css" />
+<link rel="stylesheet" href="~/css/clientes.css"/>
 
 <div class="clientes-container">
     <div class="clientes-header">
@@ -24,20 +24,20 @@
             <div class="form-grid">
                 <div>
                     <label asp-for="Dni">DNI</label>
-                    <input asp-for="Dni" placeholder="Ingrese DNI" />
+                    <input asp-for="Dni" placeholder="Ingrese DNI / Pasaporte" />
                     <span asp-validation-for="Dni" class="text-danger"></span>
                 </div>
                 <div>
                     <label asp-for="Nombres">Nombres</label>
-                    <input asp-for="Nombres" placeholder="Ingrese nombres" />
+                    <input asp-for="Nombres" placeholder="Ingrese nombres" type="text" oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '');" />
                 </div>
                 <div>
                     <label asp-for="Apellidos">Apellidos</label>
-                    <input asp-for="Apellidos" placeholder="Ingrese apellidos" />
+                    <input asp-for="Apellidos" placeholder="Ingrese apellidos" type="text" oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '');" />
                 </div>
                 <div>
                     <label asp-for="Telefono">Teléfono</label>
-                    <input asp-for="Telefono" placeholder="Ingrese teléfono" />
+                    <input asp-for="Telefono" placeholder="Ingrese teléfono"  type="number"/>
                 </div>
                 <div>
                     <label asp-for="Email">Email</label>

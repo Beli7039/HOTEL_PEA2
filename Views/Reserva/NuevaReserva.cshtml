@@ -152,12 +152,13 @@
                 <div class="form-group">
                     <label asp-for="Cliente.Nombres">Nombre Completo</label>
                     <input asp-for="Cliente.Nombres" id="clienteNombre" type="text"
-                           placeholder="Nombre completo" readonly autocomplete="off" />
+                           placeholder="Nombre completo" readonly autocomplete="off"
+                           oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '');" />
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Cliente.Telefono">Teléfono</label>
-                    <input asp-for="Cliente.Telefono" id="clienteTelefono" type="tel"
+                    <input asp-for="Cliente.Telefono" id="clienteTelefono" type="number"
                            placeholder="Teléfono" readonly autocomplete="off" />
                 </div>
 
